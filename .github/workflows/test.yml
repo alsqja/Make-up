@@ -54,5 +54,5 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
       - name: Code deploy
-        run: aws deploy create-deployment --application-name Github-Actions-Deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name Github-Actions-Group --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
+        run: aws deploy create-deployment --application-name logging-system-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name develop --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
         working-directory: ${{ env.working-directory }}
