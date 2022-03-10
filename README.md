@@ -37,4 +37,4 @@
 
 ## 위키
 
-자세한 내용은 [이곳](https://github.com/alsqja/eocndgka/wiki) 참조
+자세한 내용은 [이곳](https://github.com/alsqja/Make-up/wiki) 참조
