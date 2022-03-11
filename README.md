@@ -21,10 +21,10 @@
 | [임윤정](#임윤정) | [yjlim0428]    | 프론트엔드  | 팀원 |
 | [오준영](#오준영) | [Oh-JunYoung]  | 백엔드, AI | 팀원 |
 
-[김민석]: https://github.com/alsqja/eocndgka/wiki/Members#김민석
-[김민범]: https://github.com/alsqja/eocndgka/wiki/Members#김민범
-[임윤정]: https://github.com/alsqja/eocndgka/wiki/Members#임윤정
-[오준영]: https://github.com/alsqja/eocndgka/wiki/Members#오준영
+[김민석]: https://github.com/alsqja/Make-up/wiki/Members#김민석
+[김민범]: https://github.com/alsqja/Make-up/wiki/Members#김민범
+[임윤정]: https://github.com/alsqja/Make-up/wiki/Members#임윤정
+[오준영]: https://github.com/alsqja/Make-up/wiki/Members#오준영
 
 [0505eok]: https://github.com/0505eok
 [alsqja]: https://github.com/alsqja
