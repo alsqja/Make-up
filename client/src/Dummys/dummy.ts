@@ -57,7 +57,7 @@ export const dummyUser: IUserInfo[] = [
     id: 2,
     nickname: '윤정',
     email: 'yjlim9898',
-    profile: 'https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7bcf35ce-aaa9-4f83-8ef4-3bcaaed8a896/%E1%84%82%E1%85%A1.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T071443Z&X-Amz-Expires=86400&X-Amz-Signature=472c9abbfef7e4e4d7609df26c8cabc6149dd4399353fd0c9f8e4c5a3609f335&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22%25E1%2584%2582%25E1%2585%25A1.jpeg%22&x-id=GetObject',
+    profile: 'https://cdn.discordapp.com/attachments/932434608119771198/952872711208706068/IMG_4022.png',
     following: 425,
     follower: 378
   },
