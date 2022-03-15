@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { dummyUser } from "../Dummys/dummy";
 import { useNavigate } from "react-router-dom";
@@ -50,6 +51,10 @@ const UserInfo = styled.div`
   padding: 10px 0;
   width: 100%;
   border-bottom: 1px solid #dbdbdb;
+  &:hover {
+    background-color: #dbdbdb;
+  }
+  border-radius: 20px 20px 0 0;
   .photo {
     width: 40px;
     height: 40px;
@@ -64,6 +69,7 @@ const UserInfo = styled.div`
     display: flex;
     align-items: center;
     cursor: pointer;
+    color: black;
   }
 `;
 
@@ -86,10 +92,14 @@ export const SideBar = () => {
 
   return (
     <Container>
-      <UserInfo>
-        <img className="photo" src={profile} alt="" />
-        <div className="name">{username}</div>
-      </UserInfo>
+
+      <Link to={`/mypage/${dummyUser[0].id}`}>
+        <UserInfo>
+          <img className="photo" src={profile} alt=''/>
+          <div className="name">{username}</div>
+        </UserInfo>
+      </Link>
+
       <Menu>{`팔로워 ${follower}`}</Menu>
       <Menu>{`팔로우 ${follow}`}</Menu>
       <Menu>화장하러 가기</Menu>
