@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { dummyUser } from "../Dummys/dummy";
-
+import { useNavigate } from "react-router-dom";
 const Container = styled.div`
   grid-column: span 3;
   position: fixed;
@@ -32,7 +32,7 @@ const Container = styled.div`
     /* display: flex; */
     /* flex-direction: row; */
   }
-`
+`;
 
 const Menu = styled.div`
   width: calc(100%-10px);
@@ -43,7 +43,7 @@ const Menu = styled.div`
   &:hover {
     background-color: #dbdbdb;
   }
-`
+`;
 
 const UserInfo = styled.div`
   display: flex;
@@ -65,32 +65,35 @@ const UserInfo = styled.div`
     align-items: center;
     cursor: pointer;
   }
-  `
+`;
 
 export const SideBar = () => {
-
-  const [follower, setFollower] = useState(0)
-  const [follow, setFollow] = useState(0)
-  const [username, setUsername] = useState('')
-  const [profile, setProfile] = useState('')
-
+  const [follower, setFollower] = useState(0);
+  const [follow, setFollow] = useState(0);
+  const [username, setUsername] = useState("");
+  const [profile, setProfile] = useState("");
+  const navigate = useNavigate();
   useEffect(() => {
-    setFollower(dummyUser[0].follower)
-    setFollow(dummyUser[0].following)
-    setUsername(dummyUser[0].nickname)
-    setProfile(dummyUser[0].profile)
-  }, [])
+    setFollower(dummyUser[0].follower);
+    setFollow(dummyUser[0].following);
+    setUsername(dummyUser[0].nickname);
+    setProfile(dummyUser[0].profile);
+  }, []);
+
+  const handlePost = () => {
+    navigate("/post");
+  };
 
   return (
     <Container>
       <UserInfo>
-        <img className="photo" src={profile} alt=''/>
+        <img className="photo" src={profile} alt="" />
         <div className="name">{username}</div>
       </UserInfo>
       <Menu>{`팔로워 ${follower}`}</Menu>
       <Menu>{`팔로우 ${follow}`}</Menu>
       <Menu>화장하러 가기</Menu>
-      <Menu>게시글 작성</Menu>
+      <Menu onClick={handlePost}>게시글 작성</Menu>
     </Container>
-  )
-}
+  );
+};
