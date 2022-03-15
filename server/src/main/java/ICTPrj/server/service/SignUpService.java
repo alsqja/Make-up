@@ -17,7 +17,7 @@ public class SignUpService {
 
     public UserDto SignUp(UserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 가입되어 있는 유저입니다");
         }
         
         User user = User.builder()

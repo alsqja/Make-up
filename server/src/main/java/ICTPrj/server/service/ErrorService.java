@@ -9,7 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class ErrorService {
 
-    public ErrorDto ErrorMessagePorcess(ResponseStatusException e) {
+    public ErrorDto ErrorMessageProcess(ResponseStatusException e) {
         ErrorDto errorDto = ErrorDto.builder()
                                     .code(e.getRawStatusCode())
                                     .reason(e.getReason())
