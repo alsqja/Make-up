@@ -3,6 +3,7 @@ import './App.css';
 import { Routes, BrowserRouter as Router, Route } from 'react-router-dom';
 import { Main } from './Pages/Main';
 import { Header } from './Components/Header';
+import { Post } from './Pages/Post';
 
 function App() {
 
@@ -31,7 +32,8 @@ function App() {
     <Router>
       <Header isLoginModalOn={isLoginModalOn} loginModalHandler={loginModalHandler} isSignupModalOn={isSignupModalOn} signupModalHandler={signupModalHandler}/>
       <Routes>
-        <Route path='/' element={<Main/>}/>
+        <Route path='/*' element={<Main/>}/>
+        <Route path='/post/:id' element={<Post/>}/>
       </Routes>
     </Router>
   );

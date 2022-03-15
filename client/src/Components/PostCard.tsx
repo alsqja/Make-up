@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { IPost } from "../Dummys/dummy";
 import { FaChevronRight, FaChevronLeft, FaRegHeart, FaHeart } from "react-icons/fa"
+import { useNavigate } from "react-router-dom";
 
 const PostCardContainer = styled.div`
   grid-column: 4 / span 9;
@@ -160,19 +161,22 @@ interface IProps {
 export const PostCard = ( { post }: IProps ) => {
 
   const [filePage, setFilePage] = useState(0)
+  const navigate = useNavigate();
+
+  const OpenPostHandler = (id: number) => {
+    navigate(`/post/${id}`)
+  }
 
   return (
     <PostCardContainer>
       <UserInfo>
         <img className='photo' src={post.user.profile} alt='' />
         <div className='name'>{post.user.nickname}</div>
-        {/* <FontAwesomeIcon onClick={() => {
-          deleteContents(content.id)
-        }} className='delete_button' icon={faTrashAlt} style={content.username === '김민범' ? '' : {display:'none'}}/> */}
       </UserInfo>
-      <StyledFile src={post.files[filePage]}>
+      <StyledFile src={post.files[filePage]} onClick={() => {OpenPostHandler(post.id)}}>
         <FileButtonBox>
-          <FaChevronLeft className="left_btn" onClick={() => {
+          <FaChevronLeft className="left_btn" onClick={(e) => {
+            e.stopPropagation()
             if (!post.files[filePage - 1]) {
               return ;
             }
@@ -180,7 +184,8 @@ export const PostCard = ( { post }: IProps ) => {
           }} style={
             filePage === 0 ? {opacity: '0'} : {}
           }/>
-          <FaChevronRight className="right_btn"  onClick={() => {
+          <FaChevronRight className="right_btn"  onClick={(e) => {
+            e.stopPropagation()
             if (!post.files[filePage + 1]) {
               return ;
             }
@@ -204,7 +209,9 @@ export const PostCard = ( { post }: IProps ) => {
           <div className='username'>{post.comments.length === 0 ? null : post.comments[0].user.nickname}</div>
           <div className='text'>{post.comments.length === 0 ? null : post.comments[0].content}</div>
         </div>
-        <span className='comments_button'>{post.comments.length > 1 ? `댓글 ${post.comments.length} 개 모두보기` : null}</span>
+        <span className='comments_button' onClick={() => {OpenPostHandler(post.id)}}>
+          {post.comments.length > 1 ? `댓글 ${post.comments.length} 개 모두보기` : ''}
+        </span>
       </CommentBox>
     </PostCardContainer>
   )
