@@ -3,16 +3,16 @@ package ICTPrj.server.dto;
 import ICTPrj.server.domain.entity.User;
 import lombok.*;
 
-@Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
     private Long id;
-    private String email;
     private String nickname;
     private String password;
+    private String email;
     private String profile;
 
     public static UserDto of(User user){
