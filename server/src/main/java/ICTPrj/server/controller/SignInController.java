@@ -1,7 +1,8 @@
 package ICTPrj.server.controller;
 
+import ICTPrj.server.dto.TokenWithUserDto;
 import ICTPrj.server.dto.UserDto;
-import ICTPrj.server.service.SignUpService;
+import ICTPrj.server.service.SignInService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class SignUpController {
-    private final SignUpService signUpService;
+public class SignInController {
+    private final SignInService signInService;
 
-    @PostMapping("/signup")
-    public UserDto SignUpUser(@RequestBody UserDto userDto) {
-        return signUpService.SignUp(userDto);
+    @PostMapping("/signin")
+    public TokenWithUserDto signIn(@RequestBody UserDto userDto) {
+        return signInService.signIn(userDto);
     }
 }
