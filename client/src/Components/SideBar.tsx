@@ -87,15 +87,14 @@ export const SideBar = () => {
   }, []);
 
   const handlePost = () => {
-    navigate("/post");
+    navigate("/createpost");
   };
 
   return (
     <Container>
-
       <Link to={`/mypage/${dummyUser[0].id}`}>
         <UserInfo>
-          <img className="photo" src={profile} alt=''/>
+          <img className="photo" src={profile} alt="" />
           <div className="name">{username}</div>
         </UserInfo>
       </Link>
