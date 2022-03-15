@@ -17,6 +17,6 @@ public class ErrorController {
 
     @ExceptionHandler({ResponseStatusException.class})
     public ErrorDto ErrorHandler(ResponseStatusException e) {
-        return errorService.ErrorMessagePorcess(e);
+        return errorService.ErrorMessageProcess(e);
     }
 }
