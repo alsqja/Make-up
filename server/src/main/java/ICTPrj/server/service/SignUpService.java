@@ -5,8 +5,10 @@ import ICTPrj.server.domain.entity.User;
 import ICTPrj.server.domain.repository.UserRepository;
 import ICTPrj.server.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -26,7 +28,8 @@ public class SignUpService {
                 .build();
 
         if(userRepository.findByEmail(user.getEmail()).isPresent()) {
-            return 409L;
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This user is already exist");
+//            return 409L;
 //            throw new IllegalStateException("이미 존재하는 회원 입니다.");
         }
 
