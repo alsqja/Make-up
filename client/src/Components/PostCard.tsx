@@ -169,7 +169,9 @@ export const PostCard = ( { post }: IProps ) => {
 
   return (
     <PostCardContainer>
-      <UserInfo>
+      <UserInfo onClick={() => {
+        navigate(`/mypage/${post.user.id}`)
+      }}>
         <img className='photo' src={post.user.profile} alt='' />
         <div className='name'>{post.user.nickname}</div>
       </UserInfo>

@@ -111,7 +111,7 @@ export const dummyPosts: IPost[] = [
   {
     id: 0,
     content: 'dummy1',
-    files: ['https://w.namu.la/s/f9fb14f3584bbbcb425763f3c3de7d2a8e511824bfc210144d63397a2e763a36571bc4f08a7da98895d794f1c97d6eed552ef8fc637bdca06631b00e7a45d48f597abc608c412ca8bbc3ce485421ef60d4a30ebd8a9c44015c8781d21223a4da7a871f39a25c6a3fff448ed887b75c78', 'https://w.namu.la/s/5364250d393da1e171a89d596aa2c24e910276cab918bd235fdc05030265804c5667446c73cdbca74b650c86a7843e343e643fcc46ad19a80c64de54b5bcd510813a4a3c2670364ff110456b77265d49f974f5b9c13f7a8cdcd0342e5f34fecc564c6082a8c612168438b30e0d23a09d'],
+    files: ['https://dimg.donga.com/wps/SPORTS/IMAGE/2021/04/21/106524926.1.jpg', 'https://mblogthumb-phinf.pstatic.net/MjAxNzA4MDVfNTMg/MDAxNTAxOTQwMTAyNDQw.eDNVtT3Xgcwa_x5_iJi1Of9KWamrnOKJpv_WjY_MsLcg.lguIejrJmapI8LCvMV0KdhPWBo3OHyD9rbrG0lAiQRcg.PNG.juju7913/image.png?type=w800'],
     user: dummyUser[1],
     comments: [dummyComments[1]],
     likes: [dummyLikes[0]]
@@ -119,17 +119,25 @@ export const dummyPosts: IPost[] = [
   {
     id: 1,
     content: 'dummy2',
-    files: ['https://w.namu.la/s/f9fb14f3584bbbcb425763f3c3de7d2a8e511824bfc210144d63397a2e763a36571bc4f08a7da98895d794f1c97d6eed552ef8fc637bdca06631b00e7a45d48f597abc608c412ca8bbc3ce485421ef60d4a30ebd8a9c44015c8781d21223a4da7a871f39a25c6a3fff448ed887b75c78', 'https://w.namu.la/s/5364250d393da1e171a89d596aa2c24e910276cab918bd235fdc05030265804c5667446c73cdbca74b650c86a7843e343e643fcc46ad19a80c64de54b5bcd510813a4a3c2670364ff110456b77265d49f974f5b9c13f7a8cdcd0342e5f34fecc564c6082a8c612168438b30e0d23a09d'],
+    files: ['https://pds.joins.com/news/component/htmlphoto_mmdata/202108/14/htm_20210814121233668878.JPG', 'https://image.fmkorea.com/files/attach/new/20200705/486616/1952607757/2975811322/20a74378d2616a1e5c0d15b9e6ff04e7.jpg'],
     user: dummyUser[2],
     comments: [dummyComments[0], dummyComments[2]],
     likes: []
   },
   {
     id: 2,
-    content: 'dummy2',
-    files: ['https://w.namu.la/s/f9fb14f3584bbbcb425763f3c3de7d2a8e511824bfc210144d63397a2e763a36571bc4f08a7da98895d794f1c97d6eed552ef8fc637bdca06631b00e7a45d48f597abc608c412ca8bbc3ce485421ef60d4a30ebd8a9c44015c8781d21223a4da7a871f39a25c6a3fff448ed887b75c78', 'https://w.namu.la/s/5364250d393da1e171a89d596aa2c24e910276cab918bd235fdc05030265804c5667446c73cdbca74b650c86a7843e343e643fcc46ad19a80c64de54b5bcd510813a4a3c2670364ff110456b77265d49f974f5b9c13f7a8cdcd0342e5f34fecc564c6082a8c612168438b30e0d23a09d'],
+    content: 'dummy3',
+    files: ['https://cdn.topstarnews.net/news/photo/202104/869240_604006_560.jpg', 'https://blog.kakaocdn.net/dn/dWiOE6/btq9fk342GU/hjMrPIFxsYqPZtJmNBaXd1/img.jpg'],
     user: dummyUser[3],
     comments: [],
     likes: []
-  }
+  },
+  {
+    id: 3,
+    content: 'dummy4',
+    files: ['https://w.namu.la/s/f9fb14f3584bbbcb425763f3c3de7d2a8e511824bfc210144d63397a2e763a36571bc4f08a7da98895d794f1c97d6eed552ef8fc637bdca06631b00e7a45d48f597abc608c412ca8bbc3ce485421ef60d4a30ebd8a9c44015c8781d21223a4da7a871f39a25c6a3fff448ed887b75c78', 'https://cdn.topstarnews.net/news/photo/202104/869240_604006_560.jpg'],
+    user: dummyUser[0],
+    comments: [],
+    likes: []
+  },
 ]
