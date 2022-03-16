@@ -5,6 +5,7 @@ import { Main } from './Pages/Main';
 import { Header } from './Components/Header';
 import { Post } from './Pages/Post';
 import { Mypage } from './Pages/Mypage';
+import { RecoilRoot } from 'recoil';
 
 function App() {
 
@@ -31,12 +32,14 @@ function App() {
 
   return (
     <Router>
-      <Header isLoginModalOn={isLoginModalOn} loginModalHandler={loginModalHandler} isSignupModalOn={isSignupModalOn} signupModalHandler={signupModalHandler}/>
-      <Routes>
-        <Route path='/*' element={<Main/>}/>
-        <Route path='/post/:id' element={<Post/>}/>
-        <Route path='/mypage/:id' element={<Mypage/>}/>
-      </Routes>
+      <RecoilRoot>
+        <Header isLoginModalOn={isLoginModalOn} loginModalHandler={loginModalHandler} isSignupModalOn={isSignupModalOn} signupModalHandler={signupModalHandler}/>
+        <Routes>
+          <Route path='/*' element={<Main/>}/>
+          <Route path='/post/:id' element={<Post/>}/>
+          <Route path='/mypage/:id' element={<Mypage/>}/>
+        </Routes>
+      </RecoilRoot>
     </Router>
   );
 }

@@ -1,10 +1,5 @@
-import { Link } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { isLogin } from "../store/store";
-import { LogedHeader } from "./LogedHeader";
-import LoginModal from "./LoginModal";
-import SignupModal from "./SignupModal";
 
 const HeaderOuter = styled.div`
   position: fixed;
@@ -90,43 +85,23 @@ const Btn = styled.div`
   }
 `
 
-interface IProps {
-  isLoginModalOn: boolean;
-  loginModalHandler: (modalState: number) => void;
-  isSignupModalOn: boolean;
-  signupModalHandler: (modalState: number) => void;
-}
+export const LogedHeader = () => {
 
-export const Header = ({isLoginModalOn, loginModalHandler, isSignupModalOn, signupModalHandler}: IProps) => {
+  const navigate = useNavigate();
 
-  const [login, setLogin] = useRecoilState(isLogin)
-
-  if (login) {
-    return <LogedHeader/>
+  const userInfoHandler = () => {
+    navigate(`/mypage/0`)
   }
 
   return (
     <HeaderOuter>
-      {isLoginModalOn ? 
-        (!isSignupModalOn ?
-          (<LoginModal isLoginModalOn={isLoginModalOn} loginModalHandler={loginModalHandler} signupModalHandler={signupModalHandler}/>) : 
-          (<SignupModal isSignupModalOn={isLoginModalOn} loginModalHandler={loginModalHandler} signupModalHandler={signupModalHandler} isLoginModalOn={isLoginModalOn}/>)
-        )
-        : ''
-      }
       <Container>
         <Link to='/'>
           <Logo>LOGO</Logo>
         </Link>
         <Search type={"text"}/>
         <ButtonBox>
-          <Btn onClick={() => {
-            loginModalHandler(0)
-          }}>로그인</Btn>
-          <Btn onClick={() => {
-            loginModalHandler(0)
-            signupModalHandler(0)
-          }}>회원가입</Btn>
+          <Btn onClick={userInfoHandler}>username</Btn>
         </ButtonBox>
       </Container>
     </HeaderOuter>

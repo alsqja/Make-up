@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { isLogin } from '../store/store';
 
 const Canvas = styled.div`
   position: fixed;
@@ -139,6 +141,12 @@ const LoginModal: React.FunctionComponent<IProps> = ({
     password: '',
   });
 
+  const setIsLogin = useSetRecoilState(isLogin)
+
+  const loginHandler = () => {
+    setIsLogin(true)
+  }
+
   return (
     <>
       <Canvas
@@ -178,7 +186,7 @@ const LoginModal: React.FunctionComponent<IProps> = ({
             />
           </InputWrapper>
           <ButtonWrapper>
-            <Button>
+            <Button onClick={loginHandler}>
               로그인
             </Button>
           </ButtonWrapper>

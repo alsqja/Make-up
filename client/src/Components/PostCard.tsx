@@ -136,6 +136,9 @@ const FileButtonBox = styled.div`
     margin-left: 20px;
     opacity: 0;
     cursor: pointer;
+    @media only screen and (max-width: 501px) {
+      opacity: 0.5;
+    }
   }
   > .right_btn {
     font-size: 50px;
@@ -143,6 +146,9 @@ const FileButtonBox = styled.div`
     opacity: 0;
     margin-right: 20px;
     cursor: pointer;
+    @media only screen and (max-width: 501px) {
+      opacity: 0.5;
+    }
   }
   &:hover {
     > .left_btn {
@@ -172,7 +178,7 @@ export const PostCard = ( { post }: IProps ) => {
       <UserInfo onClick={() => {
         navigate(`/mypage/${post.user.id}`)
       }}>
-        <img className='photo' src={post.user.profile} alt='' />
+        <img className='photo' src={post.user.profile} alt=''/>
         <div className='name'>{post.user.nickname}</div>
       </UserInfo>
       <StyledFile src={post.files[filePage]} onClick={() => {OpenPostHandler(post.id)}}>

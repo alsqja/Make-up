@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { defaultProfile } from '../Dummys/dummy';
 
 const Canvas = styled.div`
   position: fixed;
@@ -147,12 +149,29 @@ const SignupModal: React.FunctionComponent<IProps> = ({
   const checkPassHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checkValue = e.target.value
     setCheckPass(checkValue)
-    if (checkValue === password || password === '') {
+    if (checkValue === password || checkValue === '') {
       setIsCheck(true)
     }
     else {
       setIsCheck(false)
     }
+  }
+
+  const signupHandler = () => {
+    // axios
+    //   .post(
+    //     'http://52.79.250.177:8080/signup',
+    //     {
+    //       email,
+    //       nickname,
+    //       password,
+    //       profile: defaultProfile
+    //     }
+    //   )
+    //   .then((res) => {
+    //     console.log(res)
+    //   })
+    //   .catch((err) => console.log(err.reponse))
   }
 
   return (
@@ -216,7 +235,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
             </Warning>
           </InputWrapper>
           <ButtonWrapper>
-            <Button>
+            <Button onClick={signupHandler}>
               계정 만들기
             </Button>
           </ButtonWrapper>
