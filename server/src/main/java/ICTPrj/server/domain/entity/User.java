@@ -33,4 +33,8 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     List<Post> posts = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<Comment> comments = new ArrayList<>();
 }
