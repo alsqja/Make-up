@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { dummyPosts, IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import { SideBar } from "../Components/SideBar";
-
+import FloatBtn from "../Components/FloatBtn";
 const MainOuter = styled.div`
   padding-top: 48px;
   width: 100%;
@@ -37,23 +37,44 @@ const MainContainer = styled.div`
 `;
 
 export const Main = () => {
-
-  const [posts, setPosts] = useState<IPost[]>([])
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [scrollTopBtnIsVisible, setScrollTopBtnIsVisible] = useState(false);
 
   useEffect(() => {
-    setPosts(dummyPosts)
-  }, [])
-   
+    setPosts(dummyPosts);
+  }, []);
+
+  useEffect(() => {
+    const showTopBtnOnBottom = () => {
+      if (window.pageYOffset > 500) {
+        setScrollTopBtnIsVisible(true);
+      } else {
+        setScrollTopBtnIsVisible(false);
+      }
+    };
+    window.addEventListener("scroll", showTopBtnOnBottom);
+    return () => {
+      window.removeEventListener("scroll", showTopBtnOnBottom);
+    };
+  }, []);
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <MainOuter>
       <MainContainer>
-        <SideBar/>
+        <SideBar />
         {posts.map((post) => {
-          return (
-            <PostCard key={post.id} post={post}/>
-          )
+          return <PostCard key={post.id} post={post} />;
         })}
       </MainContainer>
+      {scrollTopBtnIsVisible && (
+        <div onClick={scrollToTop}>
+          <FloatBtn />
+        </div>
+      )}
     </MainOuter>
-  )
-}
+  );
+};
