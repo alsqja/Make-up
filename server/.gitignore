@@ -40,3 +40,4 @@ out/
 application-aws.properties
 application-db.properties
 application-jwt.properties
+application-flask.properties
