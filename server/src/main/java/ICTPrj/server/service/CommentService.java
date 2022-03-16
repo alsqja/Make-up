@@ -21,7 +21,7 @@ public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public CommentDto writeComment(String userToken, Long postId, CommentDto commentDto) {
+    public Long writeComment(String userToken, Long postId, CommentDto commentDto) {
         String userToken_ = userToken.substring(7);
         String userEmail = tokenProvider.getUserEmailFromToken(userToken_);
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
@@ -36,7 +36,7 @@ public class CommentService {
 
         System.out.println("userToken = " + user.getEmail() + ", postId = " + post.getContent() + ", commentDto = " + comment.getContent() + ", " + comment.getPost().getContent());
 
-        return CommentDto.of(commentRepository.save(comment));
+        return CommentDto.of(commentRepository.save(comment)).getId();
     }
 
 

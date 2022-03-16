@@ -11,7 +11,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/post/{id}/comment")
-    public CommentDto writeComment(@RequestHeader(value="Authorization") String userToken,
+    public Long writeComment(@RequestHeader(value="Authorization") String userToken,
                              @PathVariable(value = "id") Long postId,
                              @RequestBody CommentDto commentDto) {
         System.out.println("userToken = " + userToken + ", postId = " + postId + ", commentDto = " + commentDto);
