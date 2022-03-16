@@ -1,3 +1,10 @@
+import React, { useState } from 'react';
+import './App.css';
+import { Routes, BrowserRouter as Router, Route } from 'react-router-dom';
+import { Main } from './Pages/Main';
+import { Header } from './Components/Header';
+import { Post } from './Pages/Post';
+import { Mypage } from './Pages/Mypage';
 import React, { useState } from "react";
 import "./App.css";
 import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
@@ -6,6 +13,7 @@ import { Header } from "./Components/Header";
 import { Post } from "./Pages/Post";
 import { Mypage } from "./Pages/Mypage";
 import CreatePost from "./Pages/CreatePost";
+import { RecoilRoot } from 'recoil';
 
 function App() {
   const [isLoginModalOn, setIsLoginModalOn] = useState(false);
@@ -29,18 +37,20 @@ function App() {
 
   return (
     <Router>
-      <Header
-        isLoginModalOn={isLoginModalOn}
-        loginModalHandler={loginModalHandler}
-        isSignupModalOn={isSignupModalOn}
-        signupModalHandler={signupModalHandler}
-      />
-      <Routes>
-        <Route path="/*" element={<Main />} />
-        <Route path="/post/:id" element={<Post />} />
-        <Route path="/mypage/:id" element={<Mypage />} />
-        <Route path="/createpost" element={<CreatePost />} />
-      </Routes>
+      <RecoilRoot>
+        <Header
+          isLoginModalOn={isLoginModalOn}
+          loginModalHandler={loginModalHandler}
+          isSignupModalOn={isSignupModalOn}
+          signupModalHandler={signupModalHandler}
+        />
+        <Routes>
+          <Route path="/*" element={<Main />} />
+          <Route path="/post/:id" element={<Post />} />
+          <Route path="/mypage/:id" element={<Mypage />} />
+          <Route path="/createpost" element={<CreatePost />} />
+        </Routes>
+      </RecoilRoot>
     </Router>
   );
 }

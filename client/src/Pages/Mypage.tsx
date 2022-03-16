@@ -46,6 +46,15 @@ const UserBox = styled.div`
     height: 150px;
     margin: 0 100px 0 70px;
   }
+  @media only screen and (max-width: 501px) {
+    .profile {
+      width: 100px;
+      height: 100px;
+      margin: 0 20px 0;
+    }
+    grid-column: span 6;
+    padding: 20px 0 0 0;
+  }
 `
 
 const UserInfoBox = styled.div`
@@ -94,10 +103,16 @@ const FollowInfoBox = styled.div`
 const FollowInfo = styled.div`
   height: 30px;
   padding: 30px 15px;
+  @media only screen and (max-width: 501px) {
+    padding: 30px 5px;
+  }
 `
 
 const PostCardBox = styled.div`
   grid-column: 3 / span 8;
+  @media only screen and (max-width: 501px) {
+    grid-column: span 6;
+  }
 `
 
 export const Mypage = () => {
@@ -140,7 +155,7 @@ export const Mypage = () => {
         <PostCardBox>
           {postList?.map((post) => {
             return (
-              <PostCard post={post}/>
+              <PostCard key={post.id} post={post}/>
             )
           })}
         </PostCardBox>
