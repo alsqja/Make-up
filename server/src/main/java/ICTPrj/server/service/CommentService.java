@@ -24,7 +24,7 @@ public class CommentService {
     private final PostRepository postRepository;
 
 
-    protected User getUser(String userToken) {
+    private User getUser(String userToken) {
         String userToken_ = userToken.substring(7);
         String userEmail = tokenProvider.getUserEmailFromToken(userToken_);
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
