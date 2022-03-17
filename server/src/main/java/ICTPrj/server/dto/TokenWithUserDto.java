@@ -9,5 +9,5 @@ import lombok.*;
 @Builder
 public class TokenWithUserDto {
     private String accessToken;
-    private UserDto user;
+    private UserWithFollowDto user;
 }
