@@ -21,13 +21,13 @@ public class FileController {
         return fileService.MakeUp(uuid);
     }
 
-    @PostMapping("/getUrl/makeup")
+    @PostMapping("/geturl/makeup")
     public ArrayList<FilePathDto> PreSignedUrlForMakeup(@RequestBody FileDto fileDto){
         return getFilePaths(fileDto);
     }
 
     // 이거 없어도 될 거 같은데
-    @PostMapping("/getUrl")
+    @PostMapping("/geturl")
     public ArrayList<FilePathDto> PreSignedUrlForPost(@RequestBody FileDto fileDto){
         return getFilePaths(fileDto);
     }
