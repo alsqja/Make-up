@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { dummyUser } from "../Dummys/dummy";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { followerModal, followModal } from "../store/store";
+import { FollowModal } from "./FollowModal";
+import { FollowerModal } from "./FollowerModal";
+
 const Container = styled.div`
   grid-column: span 3;
   position: fixed;
@@ -79,6 +84,9 @@ export const SideBar = () => {
   const [username, setUsername] = useState("");
   const [profile, setProfile] = useState("");
   const navigate = useNavigate();
+  const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal)
+  const [isFollowerModalOn, setIsFollowerModalOn] = useRecoilState(followerModal)
+
   useEffect(() => {
     setFollower(dummyUser[0].follower);
     setFollow(dummyUser[0].following);
@@ -92,6 +100,8 @@ export const SideBar = () => {
 
   return (
     <Container>
+      {isFollowModalOn ? <FollowModal/> : ''}
+      {isFollowerModalOn ? <FollowerModal/> : ''}
       <Link to={`/mypage/${dummyUser[0].id}`}>
         <UserInfo>
           <img className="photo" src={profile} alt="" />
@@ -99,8 +109,12 @@ export const SideBar = () => {
         </UserInfo>
       </Link>
 
-      <Menu>{`팔로워 ${follower}`}</Menu>
-      <Menu>{`팔로우 ${follow}`}</Menu>
+      <Menu onClick={() => {
+        setIsFollowerModalOn(true)
+      }}>{`팔로워 ${follower}`}</Menu>
+      <Menu onClick={() => {
+        setIsFollowModalOn(true)
+      }}>{`팔로우 ${follow}`}</Menu>
       <Menu>화장하러 가기</Menu>
       <Menu onClick={handlePost}>게시글 작성</Menu>
     </Container>
