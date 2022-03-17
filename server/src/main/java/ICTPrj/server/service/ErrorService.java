@@ -3,6 +3,7 @@ package ICTPrj.server.service;
 import ICTPrj.server.dto.ErrorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
