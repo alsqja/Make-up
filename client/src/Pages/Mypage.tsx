@@ -183,7 +183,6 @@ export const Mypage = () => {
           })}
         </PostCardBox>
       </MyContainer>
-      {/* {settingModal ? <SettingModal setSettingModal={setSettingModal} /> : null} */}
     </Outer>
   );
 };
