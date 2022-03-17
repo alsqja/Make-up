@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - server
-  pull_request:
-    branches:
-      - server
+#   pull_request:
+#     branches:
+#       - server
 
   workflow_dispatch:
 
@@ -27,15 +27,15 @@ jobs:
         with:
           java-version: 11
       
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-        shell: bash
-        working-directory: ${{ env.working-directory }}
+#       - name: Grant execute permission for gradlew
+#         run: chmod +x ./gradlew
+#         shell: bash
+#         working-directory: ${{ env.working-directory }}
         
-      - name: Build with Gradle
-        run: ./gradlew build
-        shell: bash
-        working-directory: ${{ env.working-directory }}
+#       - name: Build with Gradle
+#         run: ./gradlew build
+#         shell: bash
+#         working-directory: ${{ env.working-directory }}
         
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip .
