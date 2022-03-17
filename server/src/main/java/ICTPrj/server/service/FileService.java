@@ -10,6 +10,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FileService {
     private final FileRepository fileRepository;
     private final AmazonS3 s3Client;
