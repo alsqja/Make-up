@@ -35,6 +35,14 @@ public class User {
     List<Post> posts = new ArrayList<>();
 
     @JsonIgnore
+    @OneToMany(mappedBy = "follower")
+    List<Follow> followers = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "following")
+    List<Follow> followings = new ArrayList<>();
+  
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     List<Comment> comments = new ArrayList<>();
 }
