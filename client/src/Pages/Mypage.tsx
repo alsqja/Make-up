@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { FaCog } from "react-icons/fa"
+import { FaCog } from "react-icons/fa";
 import { dummyUser, IUserInfo, dummyPosts, IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
-
+import SettingModal from "../Components/SettingModal";
 const Outer = styled.div`
   padding-top: 48px;
   width: 100%;
   display: flex;
   justify-content: center;
-`
+`;
 
 const MyContainer = styled.div`
   width: 1200px;
@@ -32,7 +32,7 @@ const MyContainer = styled.div`
     column-gap: 16px;
     grid-template-columns: repeat(6, 1fr);
   }
-`
+`;
 
 const UserBox = styled.div`
   grid-column: 2 / span 10;
@@ -55,7 +55,7 @@ const UserBox = styled.div`
     grid-column: span 6;
     padding: 20px 0 0 0;
   }
-`
+`;
 
 const UserInfoBox = styled.div`
   flex: 1;
@@ -66,13 +66,13 @@ const UserInfoBox = styled.div`
   .noshow {
     display: none;
   }
-`
+`;
 
 const NameBtnBox = styled.div`
   display: flex;
   align-items: center;
   /* height: 30px; */
-`
+`;
 
 const Name = styled.div`
   height: 30px;
@@ -81,7 +81,7 @@ const Name = styled.div`
   padding: 0 20px;
   font-size: 20px;
   font-weight: bold;
-`
+`;
 
 const FollowBtn = styled.div`
   height: 30px;
@@ -93,12 +93,12 @@ const FollowBtn = styled.div`
   &:hover {
     background-color: #dbdbdb;
   }
-`
+`;
 
 const FollowInfoBox = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const FollowInfo = styled.div`
   height: 30px;
@@ -106,44 +106,54 @@ const FollowInfo = styled.div`
   @media only screen and (max-width: 501px) {
     padding: 30px 5px;
   }
-`
+`;
 
 const PostCardBox = styled.div`
   grid-column: 3 / span 8;
   @media only screen and (max-width: 501px) {
     grid-column: span 6;
   }
-`
+`;
 
 export const Mypage = () => {
-
-  const location = useLocation().pathname.split('/')[2]
-  const id = +location
-  const [userInfo, setUserInfo] = useState<IUserInfo>()
-  const [isFollowed, setIsFollowed] = useState(false)
-  const [postList, setPostList] = useState<IPost[]>()
-
+  const location = useLocation().pathname.split("/")[2];
+  const id = +location;
+  const [userInfo, setUserInfo] = useState<IUserInfo>();
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [postList, setPostList] = useState<IPost[]>();
+  const [settingModal, setSettingModal] = useState(false);
   useEffect(() => {
-    setUserInfo(dummyUser.filter((user) => user.id === id)[0])
-    setPostList(dummyPosts.filter((post) => post.user.id === id))
-  }, [id])
+    setUserInfo(dummyUser.filter((user) => user.id === id)[0]);
+    setPostList(dummyPosts.filter((post) => post.user.id === id));
+  }, [id]);
 
   const followHandler = () => {
-    setIsFollowed(!isFollowed)
-  }
+    setIsFollowed(!isFollowed);
+  };
+
+  const settingClick = () => {
+    setSettingModal(true);
+  };
 
   return (
     <Outer>
       <MyContainer>
         <UserBox>
-          <img className="profile" src={userInfo?.profile} alt=''/>
+          <img className="profile" src={userInfo?.profile} alt="" />
           <UserInfoBox>
             <NameBtnBox>
               <Name>{userInfo?.nickname}</Name>
-              <FaCog style={{fontSize:'20px', cursor:'pointer'}} className={userInfo?.id !== 0 ? 'noshow' : '' /*TODO: userID*/} />
-              <FollowBtn className={userInfo?.id === 0 ? 'noshow' : ''} onClick={followHandler}>{
-                isFollowed ? '팔로우 취소' : '팔로우'
-              }</FollowBtn>
+              <FaCog
+                style={{ fontSize: "20px", cursor: "pointer" }}
+                className={userInfo?.id !== 0 ? "noshow" : "" /*TODO: userID*/}
+                onClick={settingClick}
+              />
+              <FollowBtn
+                className={userInfo?.id === 0 ? "noshow" : ""}
+                onClick={followHandler}
+              >
+                {isFollowed ? "팔로우 취소" : "팔로우"}
+              </FollowBtn>
             </NameBtnBox>
             <FollowInfoBox>
               <FollowInfo>{`게시글 TODO`}</FollowInfo>
@@ -154,12 +164,11 @@ export const Mypage = () => {
         </UserBox>
         <PostCardBox>
           {postList?.map((post) => {
-            return (
-              <PostCard key={post.id} post={post}/>
-            )
+            return <PostCard key={post.id} post={post} />;
           })}
         </PostCardBox>
       </MyContainer>
+      {settingModal ? <SettingModal setSettingModal={setSettingModal} /> : null}
     </Outer>
-  )
-}
+  );
+};
