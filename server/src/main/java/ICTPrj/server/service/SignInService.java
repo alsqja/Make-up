@@ -1,6 +1,7 @@
 package ICTPrj.server.service;
 
 import ICTPrj.server.domain.entity.User;
+import ICTPrj.server.domain.repository.FollowRepository;
 import ICTPrj.server.domain.repository.UserRepository;
 import ICTPrj.server.dto.TokenDto;
 import ICTPrj.server.dto.TokenWithUserDto;
@@ -19,7 +20,7 @@ public class SignInService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
-    public TokenWithUserDto signIn(UserDto userDto) {
+    public TokenDto signIn(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
 
@@ -30,9 +31,6 @@ public class SignInService {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDto.getEmail(), "", null);
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
-        return TokenWithUserDto.builder()
-                .accessToken(tokenDto.getAccessToken())
-                .user(userDto)
-                .build();
+        return tokenDto;
     }
 }
