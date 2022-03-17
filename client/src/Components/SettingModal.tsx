@@ -1,6 +1,7 @@
-import React, { SetStateAction, useState, Dispatch, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-
+import { userSettingModal } from "../store/store";
 const Outer = styled.div`
   display: flex;
   justify-content: center;
@@ -105,14 +106,12 @@ const WithdrawalDiv = styled.div`
   align-items: center;
 `;
 
-interface Props {
-  setSettingModal: Dispatch<SetStateAction<boolean>>;
-}
-function SettingModal({ setSettingModal }: Props) {
-  const [file, setFile] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [password, setPassword] = useState("");
-  const [checkpw, setCheckpw] = useState("");
+function SettingModal() {
+  const setIsUserSettingModalOn = useSetRecoilState(userSettingModal);
+  const [file, setFile] = useState(""); //프로필사진
+  const [nickname, setNickname] = useState(""); //닉넴
+  const [password, setPassword] = useState(""); //비번
+  const [checkpw, setCheckpw] = useState(""); //비번확인
   const [isCheck, setIsCheck] = useState(true);
   const [Withdrawal, setWithdrawal] = useState(false);
 
@@ -146,8 +145,8 @@ function SettingModal({ setSettingModal }: Props) {
   };
 
   return (
-    <Outer>
-      <Modal>
+    <Outer onClick={() => setIsUserSettingModalOn(false)}>
+      <Modal onClick={(e) => e.stopPropagation()}>
         {Withdrawal ? (
           <WithdrawalDiv>
             <div>회원님의 모든 정보가 삭제됩니다.</div>
@@ -159,7 +158,7 @@ function SettingModal({ setSettingModal }: Props) {
               <button
                 onClick={() => {
                   setWithdrawal(false);
-                  setSettingModal(false);
+                  setIsUserSettingModalOn(false);
                 }}
               >
                 취소
@@ -219,7 +218,7 @@ function SettingModal({ setSettingModal }: Props) {
             </Set>
             <Set style={{ justifyContent: "space-around" }}>
               {/* TODO */}
-              <div onClick={() => setSettingModal(false)}>돌아가기</div>
+              <div onClick={() => setIsUserSettingModalOn(false)}>돌아가기</div>
               <div>수정하기</div>
               <div onClick={() => setWithdrawal(true)}>회원탈퇴</div>
             </Set>

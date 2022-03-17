@@ -5,6 +5,10 @@ import { FaCog } from "react-icons/fa";
 import { dummyUser, IUserInfo, dummyPosts, IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import SettingModal from "../Components/SettingModal";
+import { userSettingModal, followerModal, followModal } from "../store/store";
+import { FollowModal } from "../Components/FollowModal";
+import { FollowerModal } from "../Components/FollowerModal";
+import { useRecoilState } from "recoil";
 const Outer = styled.div`
   padding-top: 48px;
   width: 100%;
@@ -121,7 +125,11 @@ export const Mypage = () => {
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const [isFollowed, setIsFollowed] = useState(false);
   const [postList, setPostList] = useState<IPost[]>();
-  const [settingModal, setSettingModal] = useState(false);
+  const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
+  const [isFollowerModalOn, setIsFollowerModalOn] =
+    useRecoilState(followerModal);
+  const [isUserSettingModalOn, setIsUserSettingModalOn] =
+    useRecoilState(userSettingModal);
   useEffect(() => {
     setUserInfo(dummyUser.filter((user) => user.id === id)[0]);
     setPostList(dummyPosts.filter((post) => post.user.id === id));
@@ -131,12 +139,15 @@ export const Mypage = () => {
     setIsFollowed(!isFollowed);
   };
 
-  const settingClick = () => {
-    setSettingModal(true);
-  };
+  // const settingClick = () => {
+  //   setSettingModal(true);
+  // };
 
   return (
     <Outer>
+      {isUserSettingModalOn ? <SettingModal /> : ""}
+      {isFollowModalOn ? <FollowModal /> : ""}
+      {isFollowerModalOn ? <FollowerModal /> : ""}
       <MyContainer>
         <UserBox>
           <img className="profile" src={userInfo?.profile} alt="" />
@@ -146,7 +157,7 @@ export const Mypage = () => {
               <FaCog
                 style={{ fontSize: "20px", cursor: "pointer" }}
                 className={userInfo?.id !== 0 ? "noshow" : "" /*TODO: userID*/}
-                onClick={settingClick}
+                onClick={() => setIsUserSettingModalOn(true)}
               />
               <FollowBtn
                 className={userInfo?.id === 0 ? "noshow" : ""}
@@ -157,8 +168,12 @@ export const Mypage = () => {
             </NameBtnBox>
             <FollowInfoBox>
               <FollowInfo>{`게시글 TODO`}</FollowInfo>
-              <FollowInfo>{`팔로워 ${userInfo?.follower}`}</FollowInfo>
-              <FollowInfo>{`팔로우 ${userInfo?.following}`}</FollowInfo>
+              <FollowInfo
+                onClick={() => setIsFollowerModalOn(true)}
+              >{`팔로워 ${userInfo?.follower}`}</FollowInfo>
+              <FollowInfo
+                onClick={() => setIsFollowModalOn(true)}
+              >{`팔로우 ${userInfo?.following}`}</FollowInfo>
             </FollowInfoBox>
           </UserInfoBox>
         </UserBox>
@@ -168,7 +183,6 @@ export const Mypage = () => {
           })}
         </PostCardBox>
       </MyContainer>
-      {settingModal ? <SettingModal setSettingModal={setSettingModal} /> : null}
     </Outer>
   );
 };
