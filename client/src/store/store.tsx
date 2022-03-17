@@ -5,7 +5,12 @@ export const isLogin = atom<boolean>({
   default: false
 })
 
-export const userId = atom<number>({
-  key: 'userId',
-  default: -1
+export const followModal = atom<boolean>({
+  key: 'followModal',
+  default: false
+})
+
+export const followerModal = atom<boolean>({
+  key: 'followerModal',
+  default: false
 })

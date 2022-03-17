@@ -1,10 +1,3 @@
-import React, { useState } from 'react';
-import './App.css';
-import { Routes, BrowserRouter as Router, Route } from 'react-router-dom';
-import { Main } from './Pages/Main';
-import { Header } from './Components/Header';
-import { Post } from './Pages/Post';
-import { Mypage } from './Pages/Mypage';
 import React, { useState } from "react";
 import "./App.css";
 import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
