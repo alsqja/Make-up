@@ -22,7 +22,7 @@ const Container = styled.div`
   height: 400px;
 `;
 
-const StyledFile = styled.div<IImgProps>`
+export const StyledFile = styled.div<IImgProps>`
   width: 100%;
   height: 100%;
   background-image: url(${(props) => `'${props.src}'`});
