@@ -41,4 +41,8 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "following")
     List<Follow> followings = new ArrayList<>();
+  
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<Comment> comments = new ArrayList<>();
 }

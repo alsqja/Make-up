@@ -28,4 +28,8 @@ public class Post {
     @JsonIgnore
     @OneToMany(mappedBy = "post")
     List<File> files = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "post")
+    List<Comment> comments = new ArrayList<>();
 }
