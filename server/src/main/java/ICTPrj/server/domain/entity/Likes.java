@@ -1,25 +1,20 @@
 package ICTPrj.server.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-public class Comment {
+public class Likes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column
-    private String content;
 
     @ManyToOne
     @JoinColumn(name = "User_id")
@@ -29,7 +24,7 @@ public class Comment {
     @JoinColumn(name = "Post_id")
     private Post post;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "comment")
-    List<Likes> likes = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "Comment_id")
+    private Comment comment;
 }
