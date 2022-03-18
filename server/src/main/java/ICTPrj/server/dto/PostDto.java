@@ -15,7 +15,6 @@ public class PostDto {
     private Long id;
     private String content;
     private Long userId;
-
     private List<File> files;
     private List<Comment> comments;
     private List<Likes> likes;

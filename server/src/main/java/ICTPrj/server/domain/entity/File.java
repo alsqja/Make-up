@@ -19,6 +19,6 @@ public class File {
     private String url;
 
     @ManyToOne
-    @JoinColumn(name = "Post_id", insertable = false, updatable = false)
+    @JoinColumn(name = "Post_id")
     private Post post;
 }
