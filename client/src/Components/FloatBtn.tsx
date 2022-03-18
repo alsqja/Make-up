@@ -19,7 +19,13 @@ const FloatingBtn = styled.div`
 function FloatBtn() {
   return (
     <div>
-      <FloatingBtn>⇪</FloatingBtn>
+      <FloatingBtn>
+        <img
+          style={{ width: "100%", height: "auto" }}
+          src={`${process.env.PUBLIC_URL}/TopBtn.png`}
+          alt="top"
+        />
+      </FloatingBtn>
     </div>
   );
 }
