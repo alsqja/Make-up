@@ -14,6 +14,7 @@ const Outer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  font-family: "S-CoreDream-3Light";
 `;
 
 const MyContainer = styled.div`
@@ -28,7 +29,7 @@ const MyContainer = styled.div`
   }
 
   @media only screen and (max-width: 768px) {
-    width: 500px;
+    width: 501px;
   }
 
   @media only screen and (max-width: 501px) {
@@ -49,6 +50,15 @@ const UserBox = styled.div`
     width: 150px;
     height: 150px;
     margin: 0 100px 0 70px;
+  }
+  @media only screen and (max-width: 768px) {
+    .profile {
+      width: 150px;
+      height: 150px;
+      margin: 0 20px 0;
+    }
+    grid-column: 1 / span 12;
+    padding: 50px 0;
   }
   @media only screen and (max-width: 501px) {
     .profile {
@@ -106,9 +116,15 @@ const FollowInfoBox = styled.div`
 
 const FollowInfo = styled.div`
   height: 30px;
-  padding: 30px 15px;
-  @media only screen and (max-width: 501px) {
+  /* padding: 30px 15px; */
+  text-align: center;
+  /* @media only screen and (max-width: 501px) {
     padding: 30px 5px;
+  } */
+  > div {
+    margin: 10px;
+    font-size: 14px;
+    font-weight: bold;
   }
 `;
 
@@ -167,13 +183,18 @@ export const Mypage = () => {
               </FollowBtn>
             </NameBtnBox>
             <FollowInfoBox>
-              <FollowInfo>{`게시글 TODO`}</FollowInfo>
-              <FollowInfo
-                onClick={() => setIsFollowerModalOn(true)}
-              >{`팔로워 ${userInfo?.follower}`}</FollowInfo>
-              <FollowInfo
-                onClick={() => setIsFollowModalOn(true)}
-              >{`팔로우 ${userInfo?.following}`}</FollowInfo>
+              <FollowInfo>
+                <div>게시글</div>
+                {`TODO`}
+              </FollowInfo>
+              <FollowInfo onClick={() => setIsFollowerModalOn(true)}>
+                <div>팔로워</div>
+                {` ${userInfo?.follower}`}
+              </FollowInfo>
+              <FollowInfo onClick={() => setIsFollowModalOn(true)}>
+                <div>팔로우</div>
+                {` ${userInfo?.following}`}
+              </FollowInfo>
             </FollowInfoBox>
           </UserInfoBox>
         </UserBox>

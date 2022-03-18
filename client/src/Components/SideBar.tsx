@@ -9,45 +9,44 @@ import { FollowModal } from "./FollowModal";
 import { FollowerModal } from "./FollowerModal";
 
 const Container = styled.div`
-  grid-column: span 3;
+  transition-duration: 0.3s;
+  font-family: "SUIT-Light";
   position: fixed;
   top: 100px;
   width: 200px;
-  /* height: 30vh; */
   padding-bottom: 15px;
   display: flex;
   flex-direction: column;
-  max-width: 256px;
-  border: 1px solid black;
-  border-radius: 20px;
-
+  margin-left: 20px;
+  @media only screen and (max-width: 1200px) {
+    margin-left: 10px;
+    width: 180px;
+  }
   @media only screen and (max-width: 768px) {
     grid-column: span 1;
-    width: 50px;
+    width: 150px;
   }
 
   @media only screen and (max-width: 500px) {
     position: fixed;
-    /* width: 400px; */
     top: 100px;
     left: 20px;
     margin: 0;
-    /* grid-column: span 6; */
     width: 200px;
     display: none;
-    /* display: flex; */
-    /* flex-direction: row; */
   }
 `;
 
 const Menu = styled.div`
-  width: calc(100%-10px);
-  padding: 10px 0 10px 10px;
+  /* transition-duration: 0.3s; */
+  width: auto;
+  text-align: center;
+  margin: 10px;
   font-size: large;
   cursor: pointer;
-  border-bottom: 1px solid #dbdbdb;
-  &:hover {
-    background-color: #dbdbdb;
+  :hover {
+    color: var(--main-color);
+    font-family: "SUIT-SemiBold";
   }
 `;
 
@@ -56,25 +55,22 @@ const UserInfo = styled.div`
   padding: 10px 0;
   width: 100%;
   border-bottom: 1px solid #dbdbdb;
-  &:hover {
-    background-color: #dbdbdb;
+  justify-content: center;
+  :hover {
+    border-bottom: 2px solid var(--main-color);
   }
-  border-radius: 20px 20px 0 0;
   .photo {
     width: 40px;
     height: 40px;
-    margin-right: 30px;
-    margin-left: 30px;
-    border-radius: 100px;
-    border: 2px solid red;
+    margin-right: 10%;
+    border-radius: 50%;
   }
   .name {
     font-weight: bolder;
-    text-align: center;
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: black;
+    color: #333;
   }
 `;
 
@@ -84,8 +80,9 @@ export const SideBar = () => {
   const [username, setUsername] = useState("");
   const [profile, setProfile] = useState("");
   const navigate = useNavigate();
-  const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal)
-  const [isFollowerModalOn, setIsFollowerModalOn] = useRecoilState(followerModal)
+  const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
+  const [isFollowerModalOn, setIsFollowerModalOn] =
+    useRecoilState(followerModal);
 
   useEffect(() => {
     setFollower(dummyUser[0].follower);
@@ -100,8 +97,8 @@ export const SideBar = () => {
 
   return (
     <Container>
-      {isFollowModalOn ? <FollowModal/> : ''}
-      {isFollowerModalOn ? <FollowerModal/> : ''}
+      {isFollowModalOn ? <FollowModal /> : ""}
+      {isFollowerModalOn ? <FollowerModal /> : ""}
       <Link to={`/mypage/${dummyUser[0].id}`}>
         <UserInfo>
           <img className="photo" src={profile} alt="" />
@@ -109,12 +106,16 @@ export const SideBar = () => {
         </UserInfo>
       </Link>
 
-      <Menu onClick={() => {
-        setIsFollowerModalOn(true)
-      }}>{`팔로워 ${follower}`}</Menu>
-      <Menu onClick={() => {
-        setIsFollowModalOn(true)
-      }}>{`팔로우 ${follow}`}</Menu>
+      <Menu
+        onClick={() => {
+          setIsFollowerModalOn(true);
+        }}
+      >{`팔로워 ${follower}`}</Menu>
+      <Menu
+        onClick={() => {
+          setIsFollowModalOn(true);
+        }}
+      >{`팔로우 ${follow}`}</Menu>
       <Menu>화장하러 가기</Menu>
       <Menu onClick={handlePost}>게시글 작성</Menu>
     </Container>

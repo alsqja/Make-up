@@ -1,8 +1,8 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { defaultProfile } from '../Dummys/dummy';
-
+import axios from "axios";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { defaultProfile } from "../Dummys/dummy";
+import { Filebox, StyledFile } from "./SettingModal";
 const Canvas = styled.div`
   position: fixed;
   left: 0;
@@ -18,22 +18,17 @@ const Canvas = styled.div`
 `;
 
 const View = styled.div`
-  /* display: flex; */
-  font-family: 'SUIT-Light';
+  font-family: "S-CoreDream-3Light";
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   position: absolute;
-
   left: calc(50vw - 320px / 2);
   top: calc(50vh - 384px / 2);
-  height: 434px;
+  height: 470px;
   width: 320px;
   background-color: white;
   border-radius: 16px;
-  box-shadow: -1px -1px 1px #ececec,
-    2px 2px 6px #b8b8b8;
   z-index: 999;
   opacity: 0;
   transition: all 0.5s;
@@ -54,25 +49,23 @@ const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px 0;
   margin-bottom: 8px;
   div {
     flex: 1 0 auto;
     text-align: left;
   }
   input {
-    font-family: 'SUIT-Light';
+    font-family: "S-CoreDream-3Light";
     text-align: center;
     font-size: 16px;
     width: 192px;
     height: 24px;
     margin: 16px;
     border: none;
-    border-bottom: 2.5px solid #e9e9e9;
-
+    border-bottom: 3px solid #e9e9e9;
     :focus {
       outline: none;
-      border-bottom-color: pink;
+      border-bottom-color: var(--main-color);
       transition: all 0.5s;
     }
   }
@@ -84,30 +77,38 @@ const ButtonWrapper = styled.div`
   /* flex: 1 0 auto; */
 `;
 
-const Button = styled.button`
-  font-family: 'OTWelcomeRA';
+export const Button = styled.button`
+  all: unset;
   font-size: 15px;
-  /* font-weight: bold; */
-  width: 192px;
-  height: 33px;
   margin-bottom: 8px;
-  border: none;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: pink;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: -1px -1px 1px #ececec,
-    1px 1px 3px #b8b8b8;
+  color: #666666;
+  background-color: #fdfdfd;
+  border: 1px solid #ebebeb;
+  border-radius: 0.25em;
+  width: 180px;
+  height: 30px;
+  text-align: center;
   :hover {
-    opacity: 0.9;
+    background-color: var(--main-color);
+    color: white;
+    transition-duration: 0.3s;
+  }
+`;
+
+export const Button1 = styled.button`
+  all: unset;
+  font-size: 14px;
+  margin-top: 10px;
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 0.3s;
+  background-image: linear-gradient(transparent 60%, var(--main-color) 40%);
+  :hover {
+    background-size: 100% 100%;
   }
 `;
 
 const SubWrapper = styled.div`
-  font-family: 'OTWelcomeRA';
   display: flex;
   margin: 8px;
   div {
@@ -120,12 +121,10 @@ const SubWrapper = styled.div`
   /* flex: 1 0 auto; */
 `;
 export const Warning = styled.div`
-  font-family: 'SUIT-Light';
   font-size: 12px;
   margin-top: -10px;
   color: red;
 `;
-
 interface IProps {
   isSignupModalOn: boolean;
   isLoginModalOn: boolean;
@@ -137,25 +136,28 @@ const SignupModal: React.FunctionComponent<IProps> = ({
   isSignupModalOn,
   signupModalHandler,
   loginModalHandler,
-  isLoginModalOn
+  isLoginModalOn,
 }) => {
-
-  const [email, setEmail] = useState('')
-  const [nickname, setNickname] = useState('')
-  const [password, setPassword] = useState('')
-  const [checkPass, setCheckPass] = useState('')
-  const [isCheck, setIsCheck] = useState(true)
-
+  const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [password, setPassword] = useState("");
+  const [checkPass, setCheckPass] = useState("");
+  const [isCheck, setIsCheck] = useState(true);
+  const [file, setFile] = useState(""); //프로필사진
   const checkPassHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checkValue = e.target.value
-    setCheckPass(checkValue)
-    if (checkValue === password || checkValue === '') {
-      setIsCheck(true)
+    const checkValue = e.target.value;
+    setCheckPass(checkValue);
+    if (checkValue === password || checkValue === "") {
+      setIsCheck(true);
+    } else {
+      setIsCheck(false);
     }
-    else {
-      setIsCheck(false)
-    }
-  }
+  };
+
+  const onClickProfile = (e: React.ChangeEvent<HTMLInputElement> | any) => {
+    const objectURL = URL.createObjectURL(e.target.files[0]);
+    setFile(objectURL);
+  };
 
   const signupHandler = () => {
     // axios
@@ -165,46 +167,68 @@ const SignupModal: React.FunctionComponent<IProps> = ({
     //       email,
     //       nickname,
     //       password,
-    //       profile: defaultProfile
+    //       profile: file
     //     }
     //   )
     //   .then((res) => {
     //     console.log(res)
     //   })
     //   .catch((err) => console.log(err.reponse))
-  }
+  };
 
   return (
     <>
       <Canvas
-        className={isLoginModalOn ? 'canvas show' : 'canvas'}
+        className={isLoginModalOn ? "canvas show" : "canvas"}
         onClick={() => {
-          loginModalHandler(1)
-          signupModalHandler(1)
+          loginModalHandler(1);
+          signupModalHandler(1);
         }}
       />
       <View
-        className={isLoginModalOn ? 'modal-view show' : 'modal-view'}
-        onClick={(e) => e.preventDefault()}
+        className={isLoginModalOn ? "modal-view show" : "modal-view"}
+        onClick={(e) => {
+          // e.preventDefault(); <-- 이걸로 하면 사진 업로드 안돼요
+          e.stopPropagation(); //<-- 그래서 이걸로 바꿨는데 문제 있으면 말씀해주세요
+        }}
       >
         <Wrapper>
           <div
             className="exit-wrapper"
-            style={{ fontSize: '15px' }}
+            style={{
+              marginLeft: "auto",
+              padding: "20px 30px 0px 0px",
+              fontSize: "20px",
+              cursor: "pointer",
+            }}
             onClick={() => {
-              loginModalHandler(1)
-              signupModalHandler(1)
+              loginModalHandler(1);
+              signupModalHandler(1);
             }}
           >
             &times;
           </div>
           <InputWrapper>
+            <Filebox style={{ marginLeft: "0", marginBottom: "10px" }}>
+              <label htmlFor="fileupload">업로드</label>
+              <input
+                type="file"
+                id="fileupload"
+                multiple={false} //파일 다중선택 불가능
+                onChange={onClickProfile}
+              />
+              {file === "" ? (
+                <StyledFile src={""} style={{ flexGrow: "0" }} />
+              ) : (
+                <StyledFile src={file} style={{ flexGrow: "0" }} />
+              )}
+            </Filebox>
             <input
               type="email"
               placeholder="E-mail"
               value={email}
               onChange={(e) => {
-                setEmail(e.target.value)
+                setEmail(e.target.value);
               }}
             />
             <input
@@ -212,7 +236,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
               placeholder="nickname"
               value={nickname}
               onChange={(e) => {
-                setNickname(e.target.value)
+                setNickname(e.target.value);
               }}
             />
             <input
@@ -220,7 +244,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
               placeholder="Password"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value)
+                setPassword(e.target.value);
               }}
             />
             <input
@@ -230,22 +254,22 @@ const SignupModal: React.FunctionComponent<IProps> = ({
               onChange={checkPassHandler}
               // onChange={handleInputValue('password')}
             />
-            <Warning style={isCheck ? { display: 'none' } : {}}>
+            <Warning style={isCheck ? { visibility: "hidden" } : {}}>
               비밀번호가 일치하지 않습니다.
             </Warning>
           </InputWrapper>
           <ButtonWrapper>
-            <Button onClick={signupHandler}>
-              계정 만들기
-            </Button>
+            <Button onClick={signupHandler}>계정 만들기</Button>
           </ButtonWrapper>
           <SubWrapper>
-            <div onClick={() => {
-              loginModalHandler(0)
-              signupModalHandler(1)
-            }}>
+            <Button1
+              onClick={() => {
+                loginModalHandler(0);
+                signupModalHandler(1);
+              }}
+            >
               이미 계정이 있나요? 로그인
-            </div>
+            </Button1>
           </SubWrapper>
         </Wrapper>
       </View>
