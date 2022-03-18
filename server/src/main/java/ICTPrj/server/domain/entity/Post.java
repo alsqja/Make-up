@@ -22,7 +22,7 @@ public class Post {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "User_id", insertable = false, updatable = false)
+    @JoinColumn(name = "User_id")
     private User user;
 
     @JsonIgnore
