@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { useSetRecoilState } from 'recoil';
-import styled from 'styled-components';
-import { isLogin } from '../store/store';
-
+import { useState } from "react";
+import { useSetRecoilState } from "recoil";
+import styled from "styled-components";
+import { isLogin } from "../store/store";
+import { Button } from "./SignupModal";
+import "../fonts/fonts.css";
 const Canvas = styled.div`
   position: fixed;
   left: 0;
@@ -19,7 +20,7 @@ const Canvas = styled.div`
 
 const View = styled.div`
   /* display: flex; */
-  font-family: 'SUIT-Light';
+  /* font-family: "S-CoreDream-3Light"; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,12 +29,10 @@ const View = styled.div`
 
   left: calc(50vw - 320px / 2);
   top: calc(50vh - 384px / 2);
-  height: 384px;
+  height: 364px;
   width: 320px;
   background-color: white;
   border-radius: 16px;
-  box-shadow: -1px -1px 1px #ececec,
-    2px 2px 6px #b8b8b8;
   z-index: 999;
   opacity: 0;
   transition: all 0.5s;
@@ -51,7 +50,6 @@ const Wrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
-  margin-top: 30px;
   display: flex;
   flex-direction: column;
   /* flex: 1 0 auto; */
@@ -62,18 +60,17 @@ const InputWrapper = styled.div`
     text-align: left;
   }
   input {
-    font-family: 'SUIT-Light';
+    font-family: "S-CoreDream-3Light";
     text-align: center;
     font-size: 16px;
     width: 192px;
     height: 24px;
     margin: 16px;
     border: none;
-    border-bottom: 2.5px solid #e9e9e9;
-
+    border-bottom: 3px solid #e9e9e9;
     :focus {
       outline: none;
-      border-bottom-color: pink;
+      border-bottom-color: var(--main-color);
       transition: all 0.5s;
     }
   }
@@ -85,30 +82,7 @@ const ButtonWrapper = styled.div`
   /* flex: 1 0 auto; */
 `;
 
-const Button = styled.button`
-  font-family: 'OTWelcomeRA';
-  font-size: 15px;
-  /* font-weight: bold; */
-  width: 192px;
-  height: 33px;
-  margin-bottom: 8px;
-  border: none;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: pink;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: -1px -1px 1px #ececec,
-    1px 1px 3px #b8b8b8;
-  :hover {
-    opacity: 0.9;
-  }
-`;
-
 const SubWrapper = styled.div`
-  font-family: 'OTWelcomeRA';
   display: flex;
   margin: 8px;
   div {
@@ -134,37 +108,47 @@ type InputValue = {
 const LoginModal: React.FunctionComponent<IProps> = ({
   isLoginModalOn,
   loginModalHandler,
-  signupModalHandler
+  signupModalHandler,
 }) => {
   const [inputValue, setInputValue] = useState<InputValue>({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
-  const setIsLogin = useSetRecoilState(isLogin)
+  const setIsLogin = useSetRecoilState(isLogin);
 
   const loginHandler = () => {
-    setIsLogin(true)
-  }
+    setIsLogin(true);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    //엔터 누를시 로그인
+    if (e.key === "Enter") loginHandler();
+  };
 
   return (
     <>
       <Canvas
-        className={isLoginModalOn ? 'canvas show' : 'canvas'}
+        className={isLoginModalOn ? "canvas show" : "canvas"}
         onClick={() => {
-          loginModalHandler(1)
+          loginModalHandler(1);
         }}
       />
       <View
-        className={isLoginModalOn ? 'modal-view show' : 'modal-view'}
+        className={isLoginModalOn ? "modal-view show" : "modal-view"}
         onClick={(e) => e.preventDefault()}
       >
         <Wrapper>
           <div
             className="exit-wrapper"
-            style={{ fontSize: '15px', cursor: 'pointer' }}
+            style={{
+              marginLeft: "auto",
+              padding: "20px 30px 0px 0px",
+              fontSize: "20px",
+              cursor: "pointer",
+            }}
             onClick={() => {
-              loginModalHandler(1)
+              loginModalHandler(1);
             }}
           >
             &times;
@@ -174,27 +158,28 @@ const LoginModal: React.FunctionComponent<IProps> = ({
               type="email"
               placeholder="E-mail"
               onChange={(e) => {
-                setInputValue({...inputValue, email: e.target.value})
+                setInputValue({ ...inputValue, email: e.target.value });
               }}
             />
             <input
               type="password"
               placeholder="Password"
+              onKeyUp={handleKeyPress}
               onChange={(e) => {
-                setInputValue({...inputValue, password: e.target.value})
+                setInputValue({ ...inputValue, password: e.target.value });
               }}
             />
           </InputWrapper>
           <ButtonWrapper>
-            <Button onClick={loginHandler}>
-              로그인
-            </Button>
+            <Button onClick={loginHandler}>LOGIN</Button>
           </ButtonWrapper>
           <SubWrapper>
-            <Button onClick={() => {
-              signupModalHandler(0)
-            }}>
-              회원가입
+            <Button
+              onClick={() => {
+                signupModalHandler(0);
+              }}
+            >
+              SIGNUP
             </Button>
           </SubWrapper>
         </Wrapper>

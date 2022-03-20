@@ -1,0 +1,299 @@
+import React, { useState } from "react";
+import { useSetRecoilState } from "recoil";
+import styled from "styled-components";
+import { userSettingModal } from "../store/store";
+import { Button1 } from "./SignupModal";
+const Outer = styled.div`
+  font-family: "S-CoreDream-3Light";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+`;
+interface IImgProps {
+  src: string;
+}
+export const StyledFile = styled.div<IImgProps>`
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-image: url(${(props) => `'${props.src}'`});
+  background-color: gray;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+`;
+
+const Modal = styled.div`
+  width: 50vw;
+  padding: 3em;
+  border-radius: 1em;
+  background: white;
+  max-width: 400px;
+`;
+
+export const Filebox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  width: 150px;
+  height: 60px;
+  font-size: 14px;
+  justify-content: space-between;
+  > label {
+    &:hover {
+      background-color: var(--main-color);
+      color: white;
+      transition-duration: 0.5s;
+    }
+    text-align: center;
+    line-height: 22px;
+    padding: 4px;
+    color: #999;
+    background-color: #fdfdfd;
+    border: 1px solid #ebebeb;
+    border-radius: 0.25em;
+    height: 20px;
+    width: 50px;
+  }
+  > input[type="file"] {
+    //숨김
+    position: absolute;
+    width: 1px;
+
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  @media only screen and (max-width: 600px) {
+    margin-left: 0;
+  }
+`;
+
+const Set = styled.div`
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
+  &.bottomBtn {
+    @media only screen and (max-width: 600px) {
+      flex-direction: row;
+    }
+  }
+
+  > div {
+    font-size: 14px;
+  }
+  > .btn {
+    color: #474747;
+    font-size: 16px;
+    font-weight: bold;
+  }
+`;
+
+const Input = styled.input`
+  all: unset;
+  margin-left: auto;
+  font-family: "S-CoreDream-3Light";
+  text-align: center;
+  font-size: 16px;
+  width: 180px;
+  height: 24px;
+  margin-top: 5px;
+  border-bottom: 3px solid #e9e9e9;
+  :focus {
+    outline: none;
+    border-bottom-color: var(--main-color);
+    transition: all 0.5s;
+  }
+  @media only screen and (max-width: 600px) {
+    margin-left: 0;
+  }
+`;
+const Password = styled.div`
+  margin-left: auto;
+  margin-right: 30px;
+  @media only screen and (max-width: 600px) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+`;
+
+const WithdrawalDiv = styled.div`
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+function SettingModal() {
+  const setIsUserSettingModalOn = useSetRecoilState(userSettingModal);
+  const [file, setFile] = useState(""); //프로필사진
+  const [nickname, setNickname] = useState(""); //닉넴
+  const [password, setPassword] = useState(""); //기존 비번
+  const [newPassword, setNewPassword] = useState(""); //새비번
+  const [newCheckpw, setNewCheckpw] = useState(""); //새비번확인
+  const [isCheck, setIsCheck] = useState(true);
+  const [Withdrawal, setWithdrawal] = useState(false);
+
+  const onClickProfile = (e: React.ChangeEvent<HTMLInputElement> | any) => {
+    const objectURL = URL.createObjectURL(e.target.files[0]);
+    setFile(objectURL);
+  };
+
+  const onChangeValue = (
+    str: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    switch (str) {
+      case "nickname":
+        setNickname(e.target.value);
+        break;
+      case "password":
+        setPassword(e.target.value);
+        break;
+      case "Newpw":
+        setNewPassword(e.target.value);
+        break;
+      case "NewCheckpw":
+        if (newPassword === e.target.value) {
+          setIsCheck(true);
+        } else {
+          setIsCheck(false);
+        }
+
+        setNewCheckpw(e.target.value);
+    }
+  };
+
+  return (
+    <Outer onClick={() => setIsUserSettingModalOn(false)}>
+      <Modal onClick={(e) => e.stopPropagation()}>
+        <div
+          className="exit-wrapper"
+          style={{
+            marginLeft: "auto",
+            width: "10px",
+            margin: "-20px -20px -10px auto", //위 오 아래 왼
+            fontSize: "20px",
+            cursor: "pointer",
+          }}
+          onClick={() => setIsUserSettingModalOn(false)}
+        >
+          &times;
+        </div>
+        {Withdrawal ? (
+          <WithdrawalDiv>
+            <div>회원님의 모든 정보가 삭제됩니다.</div>
+            <div>정말 탈퇴 하시겠습니까?</div>
+            <div>탈퇴하시려면 회원탈퇴를 입력해주세요.</div>
+            <input placeholder="회원탈퇴"></input>
+            <Set>
+              <button>회원탈퇴</button>
+              <button
+                onClick={() => {
+                  setWithdrawal(false);
+                  setIsUserSettingModalOn(false);
+                }}
+              >
+                취소
+              </button>
+            </Set>
+          </WithdrawalDiv>
+        ) : (
+          <>
+            <Set>
+              <div style={{ marginBottom: "10px" }}>프로필 사진</div>
+              <Filebox>
+                <label htmlFor="fileUpload">업로드</label>
+                <input
+                  type="file"
+                  id="fileUpload"
+                  multiple={false} //파일 다중선택 가능
+                  onChange={onClickProfile}
+                />
+                {file === "" ? (
+                  <StyledFile src={""} />
+                ) : (
+                  <StyledFile src={file} />
+                )}
+              </Filebox>
+            </Set>
+            <Set>
+              <div>닉네임</div>
+              <Input
+                value={nickname}
+                onChange={(e) => onChangeValue("nickname", e)}
+              />
+            </Set>
+            <Set>
+              <div>기존 비밀번호</div>
+              <Input
+                value={password}
+                onChange={(e) => onChangeValue("password", e)}
+              />
+            </Set>
+            <Set>
+              <div>새 비밀번호</div>
+              <Input
+                value={newPassword}
+                onChange={(e) => onChangeValue("Newpw", e)}
+              />
+            </Set>
+            <Set>
+              <div>새 비밀번호 확인</div>
+              <Input
+                value={newCheckpw}
+                onChange={(e) => onChangeValue("NewCheckpw", e)}
+              />
+            </Set>
+            <Set>
+              <Password
+                style={
+                  isCheck
+                    ? { visibility: "hidden", marginTop: "-11px" }
+                    : {
+                        color: "red",
+                        fontSize: "13px",
+                        marginTop: "-10px",
+                      }
+                }
+              >
+                비밀번호가 다릅니다
+              </Password>
+            </Set>
+            <Set
+              className="bottomBtn"
+              style={{
+                justifyContent: "space-around",
+              }}
+            >
+              {/* TODO*/}
+              <Button1 className="btn">수정하기</Button1>
+              <Button1 className="btn" onClick={() => setWithdrawal(true)}>
+                회원탈퇴
+              </Button1>
+            </Set>
+          </>
+        )}
+      </Modal>
+    </Outer>
+  );
+}
+
+export default SettingModal;

@@ -9,7 +9,7 @@ const MainOuter = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  /* background-color:  */
+  background-color: #fcfcfc;
 `;
 
 const MainContainer = styled.div`
@@ -20,19 +20,21 @@ const MainContainer = styled.div`
   align-items: center;
   /* transition: all 0.5s; */
   @media only screen and (max-width: 1200px) {
+    transition-duration: 0.3s;
     width: 768px;
+    column-gap: 16px;
+    grid-template-columns: repeat(10, 1fr);
   }
-
   @media only screen and (max-width: 768px) {
     width: 500px;
+    column-gap: 16px;
+    grid-template-columns: repeat(6, 1fr);
   }
-
-  @media only screen and (max-width: 501px) {
+  @media only screen and (max-width: 500px) {
     width: 360px;
     column-gap: 16px;
     grid-template-columns: repeat(6, 1fr);
   }
-
   padding-bottom: 20px;
 `;
 
