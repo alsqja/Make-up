@@ -1,3 +1,6 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { defaultProfile } from "../Dummys/dummy";
 
@@ -67,10 +70,24 @@ const Btn = styled.div`
 
 export const Result = () => {
 
+  const [img, setImg] = useState(defaultProfile)
+  const location = useLocation().pathname.split("/")[2];
+  const uuid = location
+
+  useEffect(() => {
+    axios
+      .get(
+        `http://52.79.250.177:8080/result/${uuid}`
+      )
+      .then((res) => {
+        setImg(res.data.file)
+      })
+  }, [uuid])
+
   return (
     <Outer>
       <Container>
-        <ResultImg src={defaultProfile}></ResultImg>
+        <ResultImg src={img}></ResultImg>
         <BtnBox>
           <Btn>공유하기</Btn>
           <Btn>저장하기</Btn>

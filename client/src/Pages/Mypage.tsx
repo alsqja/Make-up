@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaCog } from "react-icons/fa";
 import { dummyUser, IUserInfo, dummyPosts, IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
-import { followerModal, followModal } from "../store/store";
 import SettingModal from "../Components/SettingModal";
-import { userSettingModal, followerModal, followModal } from "../store/store";
+import { userSettingModal, followerModal, followModal, isLogin } from "../store/store";
 import { FollowModal } from "../Components/FollowModal";
 import { FollowerModal } from "../Components/FollowerModal";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 const Outer = styled.div`
   padding-top: 48px;
@@ -103,9 +102,10 @@ const FollowBtn = styled.div`
   height: 30px;
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 10px;
   cursor: pointer;
   background-color: pink;
+  border-radius: 20px;
   &:hover {
     background-color: #dbdbdb;
   }
@@ -149,6 +149,8 @@ export const Mypage = () => {
     useRecoilState(followerModal);
   const [isUserSettingModalOn, setIsUserSettingModalOn] =
     useRecoilState(userSettingModal);
+  const setLogin = useSetRecoilState(isLogin)
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUserInfo(dummyUser.filter((user) => user.id === id)[0]);
@@ -163,6 +165,13 @@ export const Mypage = () => {
   //   setSettingModal(true);
   // };
 
+  const logoutHandler = () => {
+    window.localStorage.setItem('isLogin', 'false')
+    window.localStorage.setItem('accessToken', '')
+    setLogin(false)
+    navigate('/')
+  }
+
   return (
     <Outer>
       {isUserSettingModalOn ? <SettingModal /> : ""}
@@ -175,7 +184,7 @@ export const Mypage = () => {
             <NameBtnBox>
               <Name>{userInfo?.nickname}</Name>
               <FaCog
-                style={{ fontSize: "20px", cursor: "pointer" }}
+                style={{ fontSize: "20px", cursor: "pointer", marginRight:'10px' }}
                 className={userInfo?.id !== 0 ? "noshow" : "" /*TODO: userID*/}
                 onClick={() => setIsUserSettingModalOn(true)}
               />
@@ -184,6 +193,12 @@ export const Mypage = () => {
                 onClick={followHandler}
               >
                 {isFollowed ? "팔로우 취소" : "팔로우"}
+              </FollowBtn>
+              <FollowBtn
+                className={userInfo?.id !== 0 ? "noshow" : "" /*TODO: userID*/}
+                onClick={logoutHandler}
+              >
+                로그아웃
               </FollowBtn>
             </NameBtnBox>
             <FollowInfoBox>

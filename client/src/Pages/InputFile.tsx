@@ -1,5 +1,8 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { v4 } from "uuid";
 import { ImageUpload } from "../Components/ImageUpload";
 
 const Outer = styled.div`
@@ -95,22 +98,70 @@ const MiniLabel = styled.div`
 
 export const InputFile = () => {
 
+  const [uuid, setuuid] = useState('')
+  const [before, setBefore] = useState<File>()
+  const [after, setAfter] = useState<File>()
+
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setuuid(v4())
+  }, [])
+
   const makeupHandler = () => {
-    navigate('/result')
+    axios
+      .post(
+        'http://52.79.250.177:8080/geturl/makeup',
+        {
+          files: [
+            `${uuid}/source/source.png`,
+            `${uuid}/target/target.png`
+          ]
+        }
+      )
+      .then((res) => {
+        if (!before || !after) {
+          alert('사진을 넣어주세요')
+          return;
+        }
+        axios
+          .put(
+            `${res.data[0].path}`,
+            before,
+            {
+              headers: {
+                'Content-Type': before.type
+              }
+            }
+          )
+          .then(() => {
+            axios
+              .put(
+                `${res.data[1].path}`,
+                after,
+                {
+                  headers: {
+                    'Content-Type': after.type
+                  }
+                }
+              )
+              .then((res) => {
+                navigate(`/result/${uuid}`)
+              })
+          })
+      })
   }
 
   return (
     <Outer>
       <Container>
         <ImgBox>
-          <ImageUpload/>
+          <ImageUpload setFile={setBefore}/>
         </ImgBox>
         <MiniLabel>화장할 사진을 넣어주세요</MiniLabel>
         <Plus>+</Plus>
         <ImgBox>
-          <ImageUpload/>
+          <ImageUpload setFile={setAfter}/>
         </ImgBox>
         <MiniLabel>화장된 사진을 넣어주세요</MiniLabel>
         <BeforeMessage>화장할 사진을 넣어주세요</BeforeMessage>

@@ -45,7 +45,7 @@ function App() {
           <Route path="/mypage/:id" element={<Mypage />} />
           <Route path="/createpost" element={<CreatePost />} />
           <Route path="/makeup" element={<InputFile />} />
-          <Route path="/result" element={<Result />} />
+          <Route path="/result/:uuid" element={<Result />} />
         </Routes>
       </RecoilRoot>
     </Router>
