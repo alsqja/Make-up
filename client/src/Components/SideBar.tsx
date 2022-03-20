@@ -106,17 +106,15 @@ export const SideBar = () => {
         </UserInfo>
       </Link>
 
-      <Menu
-        onClick={() => {
-          setIsFollowerModalOn(true);
-        }}
-      >{`팔로워 ${follower}`}</Menu>
-      <Menu
-        onClick={() => {
-          setIsFollowModalOn(true);
-        }}
-      >{`팔로우 ${follow}`}</Menu>
-      <Menu>화장하러 가기</Menu>
+      <Menu onClick={() => {
+        setIsFollowerModalOn(true)
+      }}>{`팔로워 ${follower}`}</Menu>
+      <Menu onClick={() => {
+        setIsFollowModalOn(true)
+      }}>{`팔로우 ${follow}`}</Menu>
+      <Link to={'/makeup'}>
+        <Menu>화장하러 가기</Menu>
+      </Link>
       <Menu onClick={handlePost}>게시글 작성</Menu>
     </Container>
   );

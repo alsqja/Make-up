@@ -4,11 +4,13 @@ import styled from "styled-components";
 import { FaCog } from "react-icons/fa";
 import { dummyUser, IUserInfo, dummyPosts, IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
+import { followerModal, followModal } from "../store/store";
 import SettingModal from "../Components/SettingModal";
 import { userSettingModal, followerModal, followModal } from "../store/store";
 import { FollowModal } from "../Components/FollowModal";
 import { FollowerModal } from "../Components/FollowerModal";
 import { useRecoilState } from "recoil";
+
 const Outer = styled.div`
   padding-top: 48px;
   width: 100%;
@@ -136,6 +138,7 @@ const PostCardBox = styled.div`
 `;
 
 export const Mypage = () => {
+
   const location = useLocation().pathname.split("/")[2];
   const id = +location;
   const [userInfo, setUserInfo] = useState<IUserInfo>();
@@ -146,6 +149,7 @@ export const Mypage = () => {
     useRecoilState(followerModal);
   const [isUserSettingModalOn, setIsUserSettingModalOn] =
     useRecoilState(userSettingModal);
+
   useEffect(() => {
     setUserInfo(dummyUser.filter((user) => user.id === id)[0]);
     setPostList(dummyPosts.filter((post) => post.user.id === id));
