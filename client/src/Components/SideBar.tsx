@@ -4,9 +4,10 @@ import styled from "styled-components";
 import { dummyUser } from "../Dummys/dummy";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { followerModal, followModal } from "../store/store";
+import { followerModal, followModal, isLogin } from "../store/store";
 import { FollowModal } from "./FollowModal";
 import { FollowerModal } from "./FollowerModal";
+import axios from "axios";
 
 const Container = styled.div`
   transition-duration: 0.3s;
@@ -83,12 +84,26 @@ export const SideBar = () => {
   const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
   const [isFollowerModalOn, setIsFollowerModalOn] =
     useRecoilState(followerModal);
+  const [login, setLogin] = useRecoilState(isLogin)
 
   useEffect(() => {
-    setFollower(dummyUser[0].follower);
-    setFollow(dummyUser[0].following);
-    setUsername(dummyUser[0].nickname);
-    setProfile(dummyUser[0].profile);
+    const userId = window.localStorage.getItem('userId')
+    const accessToken = window.localStorage.getItem('accessToken')
+    if (!userId) {
+      return;
+    }
+    axios
+      .get(
+        `http://52.79.250.177:8080/user?id=${userId}&cursor=-1`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          }
+        }
+      )
+      .then((res) => {
+        console.log(res)
+      })
   }, []);
 
   const handlePost = () => {
@@ -99,23 +114,25 @@ export const SideBar = () => {
     <Container>
       {isFollowModalOn ? <FollowModal /> : ""}
       {isFollowerModalOn ? <FollowerModal /> : ""}
+      {login ? 
       <Link to={`/mypage/${dummyUser[0].id}`}>
         <UserInfo>
           <img className="photo" src={profile} alt="" />
           <div className="name">{username}</div>
         </UserInfo>
-      </Link>
-
+      </Link> : 
+      <div>게시판은 로그인 후 이용가능합니다.</div>}
+      
       <Menu onClick={() => {
         setIsFollowerModalOn(true)
-      }}>{`팔로워 ${follower}`}</Menu>
+      }} style={login ? {} : {display:'none'}}>{`팔로워 ${follower}`}</Menu>
       <Menu onClick={() => {
         setIsFollowModalOn(true)
-      }}>{`팔로우 ${follow}`}</Menu>
+      }} style={login ? {} : {display:'none'}}>{`팔로우 ${follow}`}</Menu>
       <Link to={'/makeup'}>
         <Menu>화장하러 가기</Menu>
       </Link>
-      <Menu onClick={handlePost}>게시글 작성</Menu>
+      <Menu onClick={handlePost} style={login ? {} : {display:'none'}}>게시글 작성</Menu>
     </Container>
   );
 };

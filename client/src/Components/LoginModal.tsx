@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { isLogin } from "../store/store";
 import { Button } from "./SignupModal";
 import "../fonts/fonts.css";
+import axios from "axios";
 const Canvas = styled.div`
   position: fixed;
   left: 0;
@@ -118,7 +119,26 @@ const LoginModal: React.FunctionComponent<IProps> = ({
   const setIsLogin = useSetRecoilState(isLogin);
 
   const loginHandler = () => {
-    setIsLogin(true);
+    axios
+      .post(
+        'http://52.79.250.177:8080/signin',
+        {
+          email: inputValue.email,
+          password: inputValue.password
+        }
+      )
+      .then((res) => {
+        window.localStorage.setItem('isLogin', 'true')
+        window.localStorage.setItem('accessToken', res.data.accessToken)
+        window.localStorage.setItem('userId', res.data.user.id)
+        setIsLogin(true)
+        loginModalHandler(1)
+        signupModalHandler(1)
+      })
+      .catch((err) => {
+        console.log(err)
+        alert('잘못된 아이디 혹은 비밀번호입니다.')
+      })
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

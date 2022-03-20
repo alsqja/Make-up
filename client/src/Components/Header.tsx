@@ -6,6 +6,7 @@ import { LogedHeader } from "./LogedHeader";
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
 import "../fonts/fonts.css";
+import { useEffect } from "react";
 const HeaderOuter = styled.div`
   position: fixed;
   top: 0;
@@ -124,6 +125,12 @@ export const Header = ({
   signupModalHandler,
 }: IProps) => {
   const [login, setLogin] = useRecoilState(isLogin);
+
+  useEffect(() => {
+    if (window.localStorage.getItem('isLogin') === 'true') {
+      setLogin(true)
+    }
+  }, [setLogin])
 
   if (login) {
     return <LogedHeader />;

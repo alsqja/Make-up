@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -33,7 +33,11 @@ const Preview = styled.img`
   padding: 0 10px;
 `;
 
-export const ImageUpload = () => {
+interface IProps {
+  setFile: Dispatch<SetStateAction<File | undefined>>;
+}
+
+export const ImageUpload = ({setFile}: IProps) => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [preview, setPreview] = useState('');
 
@@ -56,6 +60,7 @@ export const ImageUpload = () => {
     }
 
     setSelectedFile(e.target.files[0]);
+    setFile(e.target.files[0]);
   };
 
   return (

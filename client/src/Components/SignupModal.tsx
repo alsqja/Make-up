@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { defaultProfile } from "../Dummys/dummy";
 import { Filebox, StyledFile } from "./SettingModal";
+import { v4 } from "uuid";
+
 const Canvas = styled.div`
   position: fixed;
   left: 0;
@@ -144,6 +146,8 @@ const SignupModal: React.FunctionComponent<IProps> = ({
   const [checkPass, setCheckPass] = useState("");
   const [isCheck, setIsCheck] = useState(true);
   const [file, setFile] = useState(""); //프로필사진
+  const [profile, setProfile] = useState<File>()
+
   const checkPassHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checkValue = e.target.value;
     setCheckPass(checkValue);
@@ -157,23 +161,68 @@ const SignupModal: React.FunctionComponent<IProps> = ({
   const onClickProfile = (e: React.ChangeEvent<HTMLInputElement> | any) => {
     const objectURL = URL.createObjectURL(e.target.files[0]);
     setFile(objectURL);
+    setProfile(e.target.files[0])
   };
 
   const signupHandler = () => {
-    // axios
-    //   .post(
-    //     'http://52.79.250.177:8080/signup',
-    //     {
-    //       email,
-    //       nickname,
-    //       password,
-    //       profile: file
-    //     }
-    //   )
-    //   .then((res) => {
-    //     console.log(res)
-    //   })
-    //   .catch((err) => console.log(err.reponse))
+    if (!profile) {
+      axios
+        .post(
+          'http://52.79.250.177:8080/signup',
+          {
+            email,
+            nickname,
+            password,
+            profile: ''
+          }
+        )
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => console.log(err.reponse))
+      loginModalHandler(1)
+      signupModalHandler(1)
+      return;
+    }
+    const uuid = v4()
+    axios
+      .post(
+        'http://52.79.250.177:8080/geturl',
+        {
+          files: [
+            `${uuid}/${profile.name}`
+          ]
+        }
+      )
+      .then((res) => {
+        axios
+          .put(
+            `${res.data[0].path}`,
+            profile,
+            {
+              headers: {
+                'Content-Type': profile.type
+              }
+            }
+          )
+          .then(() => {
+            axios
+              .post(
+                'http://52.79.250.177:8080/signup',
+                {
+                  email,
+                  nickname,
+                  password,
+                  profile: `${uuid}/${profile.name}`
+                }
+              )
+              .then((res) => {
+                loginModalHandler(1)
+                signupModalHandler(1)
+              })
+              .catch((err) => console.log(err))
+          })
+      })
   };
 
   return (
@@ -218,7 +267,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
                 onChange={onClickProfile}
               />
               {file === "" ? (
-                <StyledFile src={""} style={{ flexGrow: "0" }} />
+                <StyledFile src={defaultProfile} style={{ flexGrow: "0" }} />
               ) : (
                 <StyledFile src={file} style={{ flexGrow: "0" }} />
               )}
