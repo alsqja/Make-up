@@ -45,6 +45,7 @@ const Menu = styled.div`
   padding: 10px 0 10px 10px;
   font-size: large;
   cursor: pointer;
+  color: black;
   border-bottom: 1px solid #dbdbdb;
   &:hover {
     background-color: #dbdbdb;
@@ -115,7 +116,9 @@ export const SideBar = () => {
       <Menu onClick={() => {
         setIsFollowModalOn(true)
       }}>{`팔로우 ${follow}`}</Menu>
-      <Menu>화장하러 가기</Menu>
+      <Link to={'/makeup'}>
+        <Menu>화장하러 가기</Menu>
+      </Link>
       <Menu onClick={handlePost}>게시글 작성</Menu>
     </Container>
   );

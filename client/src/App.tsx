@@ -7,6 +7,8 @@ import { Post } from "./Pages/Post";
 import { Mypage } from "./Pages/Mypage";
 import CreatePost from "./Pages/CreatePost";
 import { RecoilRoot } from 'recoil';
+import { InputFile } from "./Pages/InputFile";
+import { Result } from "./Pages/Result";
 
 function App() {
   const [isLoginModalOn, setIsLoginModalOn] = useState(false);
@@ -42,6 +44,8 @@ function App() {
           <Route path="/post/:id" element={<Post />} />
           <Route path="/mypage/:id" element={<Mypage />} />
           <Route path="/createpost" element={<CreatePost />} />
+          <Route path="/makeup" element={<InputFile />} />
+          <Route path="/result" element={<Result />} />
         </Routes>
       </RecoilRoot>
     </Router>

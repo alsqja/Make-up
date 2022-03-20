@@ -4,6 +4,10 @@ import styled from "styled-components";
 import { FaCog } from "react-icons/fa"
 import { dummyUser, IUserInfo, dummyPosts, IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
+import { useRecoilState } from "recoil";
+import { followerModal, followModal } from "../store/store";
+import { FollowModal } from "../Components/FollowModal";
+import { FollowerModal } from "../Components/FollowerModal";
 
 const Outer = styled.div`
   padding-top: 48px;
@@ -103,6 +107,7 @@ const FollowInfoBox = styled.div`
 const FollowInfo = styled.div`
   height: 30px;
   padding: 30px 15px;
+  cursor: pointer;
   @media only screen and (max-width: 501px) {
     padding: 30px 5px;
   }
@@ -122,6 +127,8 @@ export const Mypage = () => {
   const [userInfo, setUserInfo] = useState<IUserInfo>()
   const [isFollowed, setIsFollowed] = useState(false)
   const [postList, setPostList] = useState<IPost[]>()
+  const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal)
+  const [isFollowerModalOn, setIsFollowerModalOn] = useRecoilState(followerModal)
 
   useEffect(() => {
     setUserInfo(dummyUser.filter((user) => user.id === id)[0])
@@ -134,6 +141,8 @@ export const Mypage = () => {
 
   return (
     <Outer>
+      {isFollowModalOn ? <FollowModal/> : ''}
+      {isFollowerModalOn ? <FollowerModal/> : ''}
       <MyContainer>
         <UserBox>
           <img className="profile" src={userInfo?.profile} alt=''/>
@@ -146,9 +155,13 @@ export const Mypage = () => {
               }</FollowBtn>
             </NameBtnBox>
             <FollowInfoBox>
-              <FollowInfo>{`게시글 TODO`}</FollowInfo>
-              <FollowInfo>{`팔로워 ${userInfo?.follower}`}</FollowInfo>
-              <FollowInfo>{`팔로우 ${userInfo?.following}`}</FollowInfo>
+              <FollowInfo style={{cursor: 'auto'}}>{`게시글 TODO`}</FollowInfo>
+              <FollowInfo onClick={() => {
+                setIsFollowerModalOn(true)
+              }}>{`팔로워 ${userInfo?.follower}`}</FollowInfo>
+              <FollowInfo onClick={() => {
+                setIsFollowModalOn(true)
+              }}>{`팔로우 ${userInfo?.following}`}</FollowInfo>
             </FollowInfoBox>
           </UserInfoBox>
         </UserBox>
