@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const PostCardContainer = styled.div`
+  font-family: "SUIT-Light";
   grid-column: 4 / span 9;
   display: flex;
   border-radius: 10px;
@@ -142,9 +143,9 @@ const FileButtonBox = styled.div`
     margin-left: 20px;
     opacity: 0;
     cursor: pointer;
-    @media only screen and (max-width: 501px) {
+    /* @media only screen and (max-width: 501px) {
       opacity: 0.5;
-    }
+    } */
   }
   > .right_btn {
     filter: drop-shadow(1px 2px 5px #000000b5);
@@ -153,9 +154,9 @@ const FileButtonBox = styled.div`
     opacity: 0;
     margin-right: 20px;
     cursor: pointer;
-    @media only screen and (max-width: 501px) {
+    /* @media only screen and (max-width: 501px) {
       opacity: 0.5;
-    }
+    } */
   }
   &:hover {
     > .left_btn {

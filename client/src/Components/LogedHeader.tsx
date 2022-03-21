@@ -50,7 +50,7 @@ export const LogedHeader = () => {
       <Container>
         <Link to="/">
           <HeaderLogo
-            src={`${process.env.PUBLIC_URL}/headerLogo1.png`}
+            src={`${process.env.PUBLIC_URL}/headerLogo3.png`}
             alt="headerLogo"
           />
         </Link>
