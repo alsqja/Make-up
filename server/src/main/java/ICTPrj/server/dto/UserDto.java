@@ -15,13 +15,13 @@ public class UserDto {
     private String email;
     private String profile;
 
-    public static UserDto of(User user){
+    public static UserDto of(User user, String filePrefix){
         return UserDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .password(user.getPassword())
-                .profile(user.getProfile())
+                .profile(filePrefix + user.getProfile())
                 .build();
     }
 }
