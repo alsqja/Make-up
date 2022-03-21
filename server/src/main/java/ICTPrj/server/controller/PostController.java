@@ -42,6 +42,6 @@ public class PostController {
 
     @GetMapping("/getpost")
     public PostListDto getPostList(@RequestParam("id") Long userId, @RequestParam("cursor") Long cursor){
-        return postService.getPostList(userId, cursor);
+        return postService.getPostList(userId, cursor, 1);
     }
 }
