@@ -2,6 +2,7 @@ package ICTPrj.server.controller;
 
 
 import ICTPrj.server.dto.PostDto;
+import ICTPrj.server.dto.PostListDto;
 import ICTPrj.server.dto.PostPathDto;
 import ICTPrj.server.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -39,4 +40,8 @@ public class PostController {
         return postService.readPost(postId);
     }
 
+    @GetMapping("/getpost")
+    public PostListDto getPostList(@RequestParam("id") Long userId, @RequestParam("cursor") Long cursor){
+        return postService.getPostList(userId, cursor);
+    }
 }

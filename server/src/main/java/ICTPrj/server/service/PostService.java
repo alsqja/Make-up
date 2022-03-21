@@ -119,6 +119,33 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시글 입니다."));
         return PostDto.of(post, filePrefix);
     }
+
+    public PostListDto getPostList(Long userId, Long cursor){
+        List<Post> postList;
+        if(userId == -1){
+            if(cursor == -1){
+                postList = postRepository.findPosts();
+            }else{
+                postList = postRepository.findPostsByCursor(cursor);
+            }
+        }else{
+            if(cursor == -1){
+                postList = postRepository.findPostsByFollowing(userId);
+            }else{
+                postList = postRepository.findPostsByFollowingAndCursor(userId, cursor);
+            }
+        }
+
+        List<PostDto> posts = new ArrayList<>();
+        for(Post post : postList){
+            PostDto pt = PostDto.of(post, filePrefix);
+            posts.add(pt);
+        }
+
+        return PostListDto.builder()
+                .posts(posts)
+                .build();
+    }
 }
 
 
