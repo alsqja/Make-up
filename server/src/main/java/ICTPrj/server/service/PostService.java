@@ -120,19 +120,27 @@ public class PostService {
         return PostDto.of(post, filePrefix);
     }
 
-    public PostListDto getPostList(Long userId, Long cursor){
+    public PostListDto getPostList(Long userId, Long cursor, Integer flag){
         List<Post> postList;
-        if(userId == -1){
-            if(cursor == -1){
-                postList = postRepository.findPosts();
-            }else{
-                postList = postRepository.findPostsByCursor(cursor);
+        if(flag == 1){
+            if (userId == -1) {
+                if (cursor == -1) {
+                    postList = postRepository.findPosts();
+                } else {
+                    postList = postRepository.findPostsByCursor(cursor);
+                }
+            } else {
+                if (cursor == -1) {
+                    postList = postRepository.findPostsByFollowing(userId);
+                } else {
+                    postList = postRepository.findPostsByFollowingAndCursor(userId, cursor);
+                }
             }
         }else{
             if(cursor == -1){
-                postList = postRepository.findPostsByFollowing(userId);
+                postList = postRepository.findPostsById(userId);
             }else{
-                postList = postRepository.findPostsByFollowingAndCursor(userId, cursor);
+                postList = postRepository.findPostsByCursorAndId(userId, cursor);
             }
         }
 
@@ -145,6 +153,12 @@ public class PostService {
         return PostListDto.builder()
                 .posts(posts)
                 .build();
+    }
+
+    public long LengthOfPosts(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다."));
+        long length = postRepository.countByUser(user);
+        return length;
     }
 }
 
