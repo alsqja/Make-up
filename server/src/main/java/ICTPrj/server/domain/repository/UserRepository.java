@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
+
     @Query(value = "select * from User U inner join Follow F on U.id = F.following and F.follower = :followerId order by U.id desc Limit 15", nativeQuery = true)
     List<User> findFollowing(@Param("followerId") Long followerId);
     @Query(value = "select * from User U inner join Follow F on U.id = F.following and F.follower = :followerId and U.id < :cursorId order by U.id desc Limit 15", nativeQuery = true)
@@ -23,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select * from User U inner join Follow F on U.id = F.follower and F.following = :followingId and U.id < :cursorId order by U.id desc Limit 15", nativeQuery = true)
     List<User> findFollowerByCursor(@Param("followingId") Long followingId, @Param("cursorId") Long cursorId);
 
+    @Query(value = "select * from User where User.nickname like :query Limit 15", nativeQuery = true)
+    List<User> findUsersByNicknameLike(@Param(value = "query")  String query);
 }
