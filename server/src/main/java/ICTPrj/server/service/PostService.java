@@ -7,6 +7,7 @@ import ICTPrj.server.domain.repository.*;
 import ICTPrj.server.dto.*;
 import ICTPrj.server.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,9 @@ public class PostService {
     private final FileRepository fileRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
+
+    @Value("${cloud.aws.s3.fileprefix}")
+    private String filePrefix;
 
     private String getUserEmail(String userToken) {
         String userToken_ = userToken.substring(7);
@@ -68,7 +72,7 @@ public class PostService {
 
         post.setFiles(files);
 
-        return PostDto.of(postRepository.save(post)).getId();
+        return postRepository.save(post).getId();
     }
 
     public Long modifyPost(String userToken, Long postId, PostPathDto postPathDto) {
@@ -91,7 +95,7 @@ public class PostService {
         post.setContent(postPathDto.getContent());
         post.setFiles(files);
 
-        return PostDto.of(postRepository.save(post)).getId();
+        return postRepository.save(post).getId();
     }
 
     public void deletePost(String userToken, Long postId) {
@@ -109,6 +113,11 @@ public class PostService {
         commentRepository.deleteAll(post.getComments());
 
         postRepository.delete(post);
+    }
+
+    public PostDto readPost(Long postId){
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시글 입니다."));
+        return PostDto.of(post, filePrefix);
     }
 }
 
