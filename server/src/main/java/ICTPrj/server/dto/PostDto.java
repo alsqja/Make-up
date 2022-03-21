@@ -14,19 +14,35 @@ import java.util.List;
 public class PostDto {
     private Long id;
     private String content;
-    private Long userId;
-    private List<File> files;
-    private List<Comment> comments;
-    private List<Likes> likes;
+    private DefaultUserDto user;
+    private List<String> files;
+    private List<CommentDto> comments;
+    private List<LikeDto> likes;
 
-    public static PostDto of(Post post){
+    public static PostDto of(Post post, String filePrefix){
+        List<String> fileList = new ArrayList<>();
+        for(File file : post.getFiles()){
+            String fileUrl = file.getUrl();
+            fileList.add(fileUrl);
+        }
+
+        List<CommentDto> commentList = new ArrayList<>();
+        for(Comment comment : post.getComments()){
+            commentList.add(CommentDto.of(comment, filePrefix));
+        }
+
+        List<LikeDto> likeList = new ArrayList<>();
+        for(Likes like : post.getLikes()){
+            likeList.add(LikeDto.of(like));
+        }
+
         return PostDto.builder()
                 .id(post.getId())
                 .content(post.getContent())
-                .userId(post.getUser().getId())
-                .files(post.getFiles())
-                .comments(post.getComments())
-                .likes(post.getLikes())
+                .user(DefaultUserDto.of(post.getUser(), filePrefix))
+                .files(fileList)
+                .comments(commentList)
+                .likes(likeList)
                 .build();
     }
 }
