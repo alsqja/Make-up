@@ -45,7 +45,7 @@ public class CommentService {
 
         System.out.println("userToken = " + user.getEmail() + ", postId = " + post.getContent() + ", commentDto = " + comment.getContent() + ", " + comment.getPost().getContent());
 
-        return CommentDto.of(commentRepository.save(comment)).getId();
+        return commentRepository.save(comment).getId();
     }
 
     public Long modifyComment(String userToken, Long postId, Long commentId, CommentDto commentDto) {
@@ -69,7 +69,7 @@ public class CommentService {
                 .content(commentDto.getContent())
                 .build();
 
-        return CommentDto.of(commentRepository.save(comment)).getId();
+        return commentRepository.save(comment).getId();
     }
 
     public Long deleteComment(String userToken, Long postId, Long commentId) {
