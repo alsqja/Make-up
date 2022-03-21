@@ -6,6 +6,7 @@ import ICTPrj.server.domain.repository.FollowRepository;
 import ICTPrj.server.domain.repository.UserRepository;
 import ICTPrj.server.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
 
+    @Value("${cloud.aws.s3.fileprefix}")
+    private String filePrefix;
+
     private Long getCount(User user, int flag){
         if(flag == 1)
             return followRepository.countByFollowing(user);
@@ -33,7 +37,7 @@ public class FollowService {
                 .orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
         Long following = getCount(user, 0);
         Long follower = getCount(user, 1);
-        return UserWithFollowDto.of(user, following, follower);
+        return UserWithFollowDto.of(user, following, follower, filePrefix);
     }
 
     @Transactional
@@ -76,7 +80,7 @@ public class FollowService {
 
         List<DefaultUserDto> users = new ArrayList<DefaultUserDto>();
         for(User user : userList){
-            users.add(DefaultUserDto.of(user));
+            users.add(DefaultUserDto.of(user, filePrefix));
         }
         return FollowUserDto.builder()
                 .user(users)

@@ -4,6 +4,7 @@ import ICTPrj.server.domain.entity.User;
 import ICTPrj.server.domain.repository.UserRepository;
 import ICTPrj.server.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,9 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class SignUpService {
     private final UserRepository userRepository;
+
+    @Value("${cloud.aws.s3.fileprefix}")
+    private String filePrefix;
 
     public UserDto SignUp(UserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
@@ -27,6 +31,6 @@ public class SignUpService {
                 .profile(userDto.getProfile())
                 .build();
 
-        return UserDto.of(userRepository.save(user));
+        return UserDto.of(userRepository.save(user),filePrefix);
     }
 }

@@ -13,11 +13,11 @@ public class DefaultUserDto {
     private String nickname;
     private String profile;
 
-    public static DefaultUserDto of(User user){
+    public static DefaultUserDto of(User user, String filePrefix){
         return DefaultUserDto.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
-                .profile(user.getProfile())
+                .profile(filePrefix + user.getProfile())
                 .build();
     }
 }

@@ -16,12 +16,12 @@ public class UserWithFollowDto {
     private Long following;
     private Long follower;
 
-    public static UserWithFollowDto of(User user, Long following, Long follower){
+    public static UserWithFollowDto of(User user, Long following, Long follower, String filePrefix){
         return UserWithFollowDto.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
                 .email(user.getEmail())
-                .profile(user.getProfile())
+                .profile(filePrefix + user.getProfile())
                 .following(following)
                 .follower(follower)
                 .build();
