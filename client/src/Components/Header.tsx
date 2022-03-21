@@ -45,7 +45,7 @@ const Container = styled.div`
 `;
 
 export const HeaderLogo = styled.img`
-  width: 120px;
+  width: 100px;
   height: auto;
   margin-top: 10px;
 `;
@@ -127,10 +127,10 @@ export const Header = ({
   const [login, setLogin] = useRecoilState(isLogin);
 
   useEffect(() => {
-    if (window.localStorage.getItem('isLogin') === 'true') {
-      setLogin(true)
+    if (window.localStorage.getItem("isLogin") === "true") {
+      setLogin(true);
     }
-  }, [setLogin])
+  }, [setLogin]);
 
   if (login) {
     return <LogedHeader />;
@@ -160,7 +160,7 @@ export const Header = ({
         <Link to="/">
           {/* <Logo>LOGO</Logo> */}
           <HeaderLogo
-            src={`${process.env.PUBLIC_URL}/headerLogo1.png`}
+            src={`${process.env.PUBLIC_URL}/headerLogo3.png`}
             alt="headerLogo"
           />
         </Link>

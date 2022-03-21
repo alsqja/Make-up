@@ -140,7 +140,29 @@ const WithdrawalDiv = styled.div`
   justify-content: space-around;
   align-items: center;
 `;
-
+const WithdrawalInput = styled.input`
+  &:focus {
+    outline: none;
+    border-bottom: 3px solid #979797;
+  }
+  all: unset;
+  color: #da0000;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 3px solid #d3d3d3;
+`;
+const Btn = styled.button`
+  all: unset;
+  font-size: 14px;
+  margin-top: 10px;
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 0.3s;
+  background-image: linear-gradient(transparent 60%, var(--main-color) 40%);
+  :hover {
+    background-size: 100% 100%;
+  }
+`;
 function SettingModal() {
   const setIsUserSettingModalOn = useSetRecoilState(userSettingModal);
   const [file, setFile] = useState(""); //프로필사진
@@ -202,17 +224,23 @@ function SettingModal() {
             <div>회원님의 모든 정보가 삭제됩니다.</div>
             <div>정말 탈퇴 하시겠습니까?</div>
             <div>탈퇴하시려면 회원탈퇴를 입력해주세요.</div>
-            <input placeholder="회원탈퇴"></input>
-            <Set>
-              <button>회원탈퇴</button>
-              <button
+            <WithdrawalInput placeholder="회원탈퇴"></WithdrawalInput>
+            <Set
+              style={{
+                width: "50%",
+                display: "flex",
+                justifyContent: "space-around",
+              }}
+            >
+              <Btn>회원탈퇴</Btn>
+              <Btn
                 onClick={() => {
                   setWithdrawal(false);
                   setIsUserSettingModalOn(false);
                 }}
               >
                 취소
-              </button>
+              </Btn>
             </Set>
           </WithdrawalDiv>
         ) : (

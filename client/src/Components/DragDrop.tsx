@@ -33,6 +33,15 @@ export const StyledFile = styled.div<IImgProps>`
   align-items: center;
 `;
 
+const Label = styled.label`
+  width: 60%;
+  height: 100%;
+  background-color: #f3f3f3;
+  &:hover {
+    border: 2px solid var(--main-color);
+  }
+`;
+
 const BtnContain = styled.div`
   width: 20%;
   font-size: 50px;
@@ -90,8 +99,9 @@ const DragDrop = ({ files, setFiles, filePage, setFilePage }: IProps) => {
           },
         ];
       }
-      if (files.length >= 1) setFilePage(filePage + 1);
+
       setFiles(tempFiles);
+      if (files.length >= 1) setFilePage(files.length);
     },
     [files]
   );
@@ -175,12 +185,7 @@ const DragDrop = ({ files, setFiles, filePage, setFilePage }: IProps) => {
         onChange={onChangeFiles}
       />
 
-      <label
-        style={{
-          width: "60%",
-          height: "100%",
-          backgroundColor: "#f3f3f3",
-        }}
+      <Label
         className={isDragging ? "DragDrop-File-Dragging" : "DragDrop-File"} //드래그 중인지 아닌지 구별
         htmlFor="fileUpload"
         ref={dragRef}
@@ -200,7 +205,7 @@ const DragDrop = ({ files, setFiles, filePage, setFilePage }: IProps) => {
             클릭하여 사진 추가
           </div>
         )}
-      </label>
+      </Label>
       <BtnContain>
         {files.length <= 1 ? null : (
           <FaChevronRight

@@ -3,16 +3,22 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SideBar } from "../Components/SideBar";
 import { IPost, dummyPosts } from "../Dummys/dummy";
-import { FaChevronLeft, FaChevronRight, FaHeart, FaRegHeart } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaHeart,
+  FaRegHeart,
+} from "react-icons/fa";
 
 const PostOuter = styled.div`
+  font-family: "SUIT-Light";
   padding-top: 48px;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
+`;
 
 const Container = styled.div`
   width: 1200px;
@@ -33,7 +39,7 @@ const Container = styled.div`
     column-gap: 16px;
     grid-template-columns: repeat(6, 1fr);
   }
-`
+`;
 
 const PostContainer = styled.div`
   grid-column: 4 / span 9;
@@ -44,15 +50,19 @@ const PostContainer = styled.div`
   align-items: center;
   /* min-height: 400px; */
   margin-top: 20px;
-  border: 1px solid black;
+  border: 0.3px solid #c4c4c4;
   margin-bottom: 20px;
 
   /* cursor: pointer; */
+  @media only screen and (max-width: 768px) {
+    margin-left: 40px;
+  }
 
   @media only screen and (max-width: 500px) {
+    margin-left: 0;
     grid-column: span 6;
   }
-`
+`;
 
 const UserInfo = styled.div`
   display: flex;
@@ -64,7 +74,7 @@ const UserInfo = styled.div`
     margin-right: 30px;
     margin-left: 30px;
     border-radius: 100px;
-    border: 2px solid red;
+    /* border: 2px solid red; */
   }
   .name {
     font-weight: bolder;
@@ -80,7 +90,7 @@ const UserInfo = styled.div`
     margin-left: 750px;
     cursor: pointer;
   }
-`
+`;
 
 const Text = styled.div`
   width: 100%;
@@ -91,7 +101,7 @@ const Text = styled.div`
     background-color: #fff;
     margin: 0 30px;
   }
-`
+`;
 
 const LikeComment = styled.div`
   margin-top: 15px;
@@ -109,7 +119,7 @@ const LikeComment = styled.div`
     height: 20px;
     cursor: pointer;
   }
-`
+`;
 
 const CommentBox = styled.div`
   width: 100%;
@@ -138,9 +148,9 @@ const CommentBox = styled.div`
     height: 40px;
     margin-right: 15px;
     border-radius: 100px;
-    border: 2px solid red;
+    /* border: 2px solid red; */
   }
-`
+`;
 
 interface IImgProps {
   src: string;
@@ -149,15 +159,15 @@ interface IImgProps {
 const StyledFile = styled.div<IImgProps>`
   width: 100%;
   height: 500px;
-  background-color: black;
+  background-color: #f3f3f3;
+  border-top: 0.3px solid #c4c4c4;
   background-image: url(${(props) => `'${props.src}'`});
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  border: 1px solid black;
   display: flex;
   align-items: center;
-`
+`;
 
 const FileButtonBox = styled.div`
   width: 100%;
@@ -166,18 +176,26 @@ const FileButtonBox = styled.div`
   align-items: center;
   justify-content: space-between;
   > .left_btn {
+    filter: drop-shadow(1px 2px 5px #00000090);
     font-size: 50px;
-    color: #FFF;
+    color: #fff;
     margin-left: 20px;
     opacity: 0;
     cursor: pointer;
+    /* @media only screen and (max-width: 501px) {
+      opacity: 0.5;
+    } */
   }
   > .right_btn {
+    filter: drop-shadow(1px 2px 5px #000000b5);
     font-size: 50px;
-    color: #FFF;
+    color: #fff;
     opacity: 0;
     margin-right: 20px;
     cursor: pointer;
+    /* @media only screen and (max-width: 501px) {
+      opacity: 0.5;
+    } */
   }
   &:hover {
     > .left_btn {
@@ -187,23 +205,30 @@ const FileButtonBox = styled.div`
       opacity: 0.5;
     }
   }
-`
+`;
 
 const InputBox = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-`
+`;
 
 const CommentInput = styled.textarea`
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid var(--main-color);
+  }
+  font-family: "SUIT-Light";
   resize: none;
   border: none;
   border-bottom: 1px solid #dbdbdb;
   flex: 1;
-`
+  height: 30px;
+  line-height: 30px;
+`;
 
 const CommentBtn = styled.div`
-  color: blue;
+  color: #00417e;
   cursor: pointer;
   margin-right: 30px;
   height: 30px;
@@ -212,84 +237,100 @@ const CommentBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+  &:hover {
+    font-weight: bold;
+  }
+`;
 
 export const Post = () => {
-  const location = useLocation().pathname.split('/')[2]
-  const id = +location
+  const location = useLocation().pathname.split("/")[2];
+  const id = +location;
 
-  const [post, setPost] = useState<IPost>()
-  const [filePage, setFilePage] = useState(0)
+  const [post, setPost] = useState<IPost>();
+  const [filePage, setFilePage] = useState(0);
 
   useEffect(() => {
-    setPost(dummyPosts.filter((post) => post.id === id)[0])
-  }, [id])
+    setPost(dummyPosts.filter((post) => post.id === id)[0]);
+  }, [id]);
 
   if (!post) {
-    return <PostOuter>없음</PostOuter>
+    return <PostOuter>없음</PostOuter>;
   }
 
   return (
     <PostOuter>
       <Container>
-        <SideBar/>
+        <SideBar />
         <PostContainer>
-          <UserInfo onClick={(e) => {
-            e.stopPropagation();
-          }}>
-            <img className='photo' src={post.user.profile} alt='' />
-            <div className='name'>{post.user.nickname}</div>
+          <UserInfo
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <img className="photo" src={post.user.profile} alt="" />
+            <div className="name">{post.user.nickname}</div>
             {/* <FontAwesomeIcon onClick={() => {
               deleteContents(content.id)
             }} className='delete_button' icon={faTrashAlt} style={content.username === '김민범' ? '' : {display:'none'}}/> */}
           </UserInfo>
           <StyledFile src={post.files[filePage]}>
             <FileButtonBox>
-              <FaChevronLeft className="left_btn" onClick={(e) => {
-                e.stopPropagation()
-                if (!post.files[filePage - 1]) {
-                  return ;
+              <FaChevronLeft
+                className="left_btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!post.files[filePage - 1]) {
+                    return;
+                  }
+                  setFilePage(filePage - 1);
+                }}
+                style={filePage === 0 ? { opacity: "0" } : {}}
+              />
+              <FaChevronRight
+                className="right_btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!post.files[filePage + 1]) {
+                    return;
+                  }
+                  setFilePage(filePage + 1);
+                }}
+                style={
+                  filePage === post.files.length - 1 ? { opacity: "0" } : {}
                 }
-                setFilePage(filePage - 1)
-              }} style={
-                filePage === 0 ? {opacity: '0'} : {}
-              }/>
-              <FaChevronRight className="right_btn"  onClick={(e) => {
-                e.stopPropagation()
-                if (!post.files[filePage + 1]) {
-                  return ;
-                }
-                setFilePage(filePage + 1)
-              }} style={
-                filePage === post.files.length - 1 ? {opacity: '0'} : {}
-              }/>
+              />
             </FileButtonBox>
           </StyledFile>
           <Text>
-            <div className='text'>{post.content}</div>
+            <div className="text">{post.content}</div>
           </Text>
           <LikeComment>
-            {post.likes.filter((like) => like.userId === 0).length === 0 ? <FaRegHeart className="like_button"/> : <FaHeart className="like_button" style={{color: 'red'}}/>}
-            
+            {post.likes.filter((like) => like.userId === 0).length === 0 ? (
+              <FaRegHeart className="like_button" />
+            ) : (
+              <FaHeart className="like_button" style={{ color: "red" }} />
+            )}
           </LikeComment>
           <CommentBox>
-            <div className='likes_num'>{post.likes.length} 명이 좋아합니다.</div>
+            <div className="likes_num">
+              {post.likes.length} 명이 좋아합니다.
+            </div>
             {post.comments.map((comment) => {
-              return(
-                <div className='comments_info' key={comment.id}>
-                  <img className="photo" src={comment.user.profile} alt=''/>
-                  <div className='username'>{comment.user.nickname}</div>
-                  <div className='text'>{comment.content}</div>
+              return (
+                <div className="comments_info" key={comment.id}>
+                  <img className="photo" src={comment.user.profile} alt="" />
+                  <div className="username">{comment.user.nickname}</div>
+                  <div className="text">{comment.content}</div>
                 </div>
-              )
+              );
             })}
             <InputBox>
-              <CommentInput placeholder="댓글 달기..."/>
+              <CommentInput placeholder="댓글 달기..." />
               <CommentBtn>게시</CommentBtn>
             </InputBox>
           </CommentBox>
         </PostContainer>
       </Container>
     </PostOuter>
-  )
-}
+  );
+};

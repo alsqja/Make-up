@@ -5,7 +5,12 @@ import { FaCog } from "react-icons/fa";
 import { dummyUser, IUserInfo, dummyPosts, IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import SettingModal from "../Components/SettingModal";
-import { userSettingModal, followerModal, followModal, isLogin } from "../store/store";
+import {
+  userSettingModal,
+  followerModal,
+  followModal,
+  isLogin,
+} from "../store/store";
 import { FollowModal } from "../Components/FollowModal";
 import { FollowerModal } from "../Components/FollowerModal";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -99,15 +104,16 @@ const Name = styled.div`
 `;
 
 const FollowBtn = styled.div`
-  height: 30px;
+  height: 25px;
   display: flex;
   align-items: center;
   padding: 0 10px;
   cursor: pointer;
-  background-color: pink;
   border-radius: 20px;
+  font-size: 12px;
+  border: 1px solid #fff;
   &:hover {
-    background-color: #dbdbdb;
+    border: 1px solid var(--main-color);
   }
 `;
 
@@ -138,7 +144,6 @@ const PostCardBox = styled.div`
 `;
 
 export const Mypage = () => {
-
   const location = useLocation().pathname.split("/")[2];
   const id = +location;
   const [userInfo, setUserInfo] = useState<IUserInfo>();
@@ -149,7 +154,7 @@ export const Mypage = () => {
     useRecoilState(followerModal);
   const [isUserSettingModalOn, setIsUserSettingModalOn] =
     useRecoilState(userSettingModal);
-  const setLogin = useSetRecoilState(isLogin)
+  const setLogin = useSetRecoilState(isLogin);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -166,11 +171,11 @@ export const Mypage = () => {
   // };
 
   const logoutHandler = () => {
-    window.localStorage.setItem('isLogin', 'false')
-    window.localStorage.setItem('accessToken', '')
-    setLogin(false)
-    navigate('/')
-  }
+    window.localStorage.setItem("isLogin", "false");
+    window.localStorage.setItem("accessToken", "");
+    setLogin(false);
+    navigate("/");
+  };
 
   return (
     <Outer>
@@ -184,7 +189,11 @@ export const Mypage = () => {
             <NameBtnBox>
               <Name>{userInfo?.nickname}</Name>
               <FaCog
-                style={{ fontSize: "20px", cursor: "pointer", marginRight:'10px' }}
+                style={{
+                  fontSize: "20px",
+                  cursor: "pointer",
+                  marginRight: "10px",
+                }}
                 className={userInfo?.id !== 0 ? "noshow" : "" /*TODO: userID*/}
                 onClick={() => setIsUserSettingModalOn(true)}
               />

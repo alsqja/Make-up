@@ -84,26 +84,23 @@ export const SideBar = () => {
   const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
   const [isFollowerModalOn, setIsFollowerModalOn] =
     useRecoilState(followerModal);
-  const [login, setLogin] = useRecoilState(isLogin)
+  const [login, setLogin] = useRecoilState(isLogin);
 
   useEffect(() => {
-    const userId = window.localStorage.getItem('userId')
-    const accessToken = window.localStorage.getItem('accessToken')
+    const userId = window.localStorage.getItem("userId");
+    const accessToken = window.localStorage.getItem("accessToken");
     if (!userId) {
       return;
     }
     axios
-      .get(
-        `http://52.79.250.177:8080/user?id=${userId}&cursor=-1`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          }
-        }
-      )
-      .then((res) => {
-        console.log(res)
+      .get(`http://52.79.250.177:8080/user?id=${userId}&cursor=-1`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
+      .then((res) => {
+        console.log(res);
+      });
   }, []);
 
   const handlePost = () => {
@@ -114,25 +111,46 @@ export const SideBar = () => {
     <Container>
       {isFollowModalOn ? <FollowModal /> : ""}
       {isFollowerModalOn ? <FollowerModal /> : ""}
-      {login ? 
-      <Link to={`/mypage/${dummyUser[0].id}`}>
-        <UserInfo>
-          <img className="photo" src={profile} alt="" />
-          <div className="name">{username}</div>
-        </UserInfo>
-      </Link> : 
-      <div>게시판은 로그인 후 이용가능합니다.</div>}
-      
-      <Menu onClick={() => {
-        setIsFollowerModalOn(true)
-      }} style={login ? {} : {display:'none'}}>{`팔로워 ${follower}`}</Menu>
-      <Menu onClick={() => {
-        setIsFollowModalOn(true)
-      }} style={login ? {} : {display:'none'}}>{`팔로우 ${follow}`}</Menu>
-      <Link to={'/makeup'}>
-        <Menu>화장하러 가기</Menu>
+      {login ? (
+        <Link to={`/mypage/${dummyUser[0].id}`}>
+          <UserInfo>
+            <img className="photo" src={profile} alt="" />
+            <div className="name">{username}</div>
+          </UserInfo>
+        </Link>
+      ) : (
+        <div>게시판은 로그인 후 이용가능합니다.</div>
+      )}
+
+      <Menu
+        onClick={() => {
+          setIsFollowerModalOn(true);
+        }}
+        style={login ? {} : { display: "none" }}
+      >{`팔로워 ${follower}`}</Menu>
+      <Menu
+        onClick={() => {
+          setIsFollowModalOn(true);
+        }}
+        style={login ? {} : { display: "none" }}
+      >{`팔로우 ${follow}`}</Menu>
+      <Link to={"/makeup"}>
+        <Menu
+          style={
+            !login
+              ? {
+                  color: "#da73b2",
+                  fontFamily: "InfinitySans-RegularA1",
+                }
+              : { color: "black" }
+          }
+        >
+          화장하러 가기
+        </Menu>
       </Link>
-      <Menu onClick={handlePost} style={login ? {} : {display:'none'}}>게시글 작성</Menu>
+      <Menu onClick={handlePost} style={login ? {} : { display: "none" }}>
+        게시글 작성
+      </Menu>
     </Container>
   );
 };
