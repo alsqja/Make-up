@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class UserInfoDto {
     private UserWithFollowDto user;
-    private int count;
+    private long count;
     private List<PostDto> posts;
 }
