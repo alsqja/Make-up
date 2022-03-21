@@ -23,7 +23,7 @@ public class PostDto {
         List<String> fileList = new ArrayList<>();
         for(File file : post.getFiles()){
             String fileUrl = file.getUrl();
-            fileList.add(fileUrl);
+            fileList.add(filePrefix + fileUrl);
         }
 
         List<CommentDto> commentList = new ArrayList<>();
