@@ -34,4 +34,9 @@ public class PostController {
         throw new ResponseStatusException(HttpStatus.NO_CONTENT, "게시글 삭제 성공");
     }
 
+    @GetMapping("/post/{id}")
+    public PostDto getOnePost(@PathVariable(value = "id") Long postId){
+        return postService.readPost(postId);
+    }
+
 }
