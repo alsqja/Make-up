@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { defaultProfile } from "../Dummys/dummy";
+import { Loading } from "./Loading";
 
 const Outer = styled.div`
   padding-top: 48px;
@@ -81,15 +82,28 @@ const Btn = styled.div`
 `;
 
 export const Result = () => {
-  const [img, setImg] = useState(defaultProfile);
+
+  const [img, setImg] = useState(defaultProfile)
+  const [isLoading, setIsLoading] = useState(false)
   const location = useLocation().pathname.split("/")[2];
   const uuid = location;
 
   useEffect(() => {
-    axios.get(`http://52.79.250.177:8080/result/${uuid}`).then((res) => {
-      setImg(res.data.file);
-    });
-  }, [uuid]);
+
+    setIsLoading(true)
+    axios
+      .get(
+        `http://52.79.250.177:8080/result/${uuid}`
+      )
+      .then((res) => {
+        setImg(res.data.file)
+        setIsLoading(false)
+      })
+  }, [uuid])
+
+  if (isLoading) {
+    return <Loading/>
+  }
 
   return (
     <Outer>
