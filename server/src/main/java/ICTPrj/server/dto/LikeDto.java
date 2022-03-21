@@ -15,13 +15,12 @@ public class LikeDto {
     private Long commentId;
     private Boolean isPlus;
 
-    public static LikeDto of(Likes like, Boolean isPlus) {
+    public static LikeDto of(Likes like) {
         return LikeDto.builder()
                 .id(like.getId())
                 .userId(like.getUser().getId())
-                .postId(like.getPost().getId())
-                .commentId(like.getComment().getId())
-                .isPlus(isPlus)
+                .postId(like.getPost() == null? null : like.getPost().getId())
+                .commentId(like.getComment() == null ? null : like.getComment().getId())
                 .build();
     }
 }
