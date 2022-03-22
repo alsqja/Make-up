@@ -1,18 +1,16 @@
 package ICTPrj.server.service;
 
+import ICTPrj.server.domain.entity.Post;
 import ICTPrj.server.domain.entity.User;
+import ICTPrj.server.domain.repository.PostRepository;
 import ICTPrj.server.domain.repository.UserRepository;
+import ICTPrj.server.dto.PostDto;
 import ICTPrj.server.dto.SearchUsersDto;
-import ICTPrj.server.dto.UserDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -20,6 +18,10 @@ import java.util.List;
 @Transactional
 public class SearchService {
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
+
+    @Value("${cloud.aws.s3.fileprefix}")
+    private String filePrefix;
 
     public List<SearchUsersDto> searchUser(String query) {
         query = "%" + query + "%";
@@ -31,5 +33,17 @@ public class SearchService {
         }
 
         return searchUsersDto;
+    }
+
+    public List<PostDto> searchPost(String query) {
+        query = "%" + query + "%";
+        List<Post> posts = postRepository.findPostsByContentLike(query);
+        List<PostDto> searchPostDto = new ArrayList<PostDto>();
+
+        for(Post post: posts) {
+            searchPostDto.add(PostDto.of(post, filePrefix));
+        }
+
+        return searchPostDto;
     }
 }
