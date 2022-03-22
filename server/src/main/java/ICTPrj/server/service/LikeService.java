@@ -29,8 +29,8 @@ public class LikeService {
     private User getUser(String userToken) {
         String userToken_ = userToken.substring(7);
         String userEmail = tokenProvider.getUserEmailFromToken(userToken_);
-        System.out.println("userEmail = " + userEmail);
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
+        User user = userRepository
+                .findByEmail(userEmail).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "없는 사용자 입니다."));
 
         return user;
     }
@@ -39,17 +39,18 @@ public class LikeService {
         // 유저가 있는지
         User user = getUser(userToken);
 
-        System.out.println("userId = " + user.getId() + ", postId = " + likeDto.getPostId() + ", commentId = " + likeDto.getCommentId());
-
         // {post or comment}
         if(likeDto.getPostId() != null) {
             // {post or comment} 가 있는지
-            Post post = postRepository.findById(likeDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("없는 게시글 입니다."));
+            Post post = postRepository.findById(likeDto.getPostId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 게시글 입니다."));
 
             // isPlus 가 True 면 테이블에서 삭제
             if(likeDto.getIsPlus()) {
                 // 그러면 like 를 "{post or comment}, {userId}" 를 키로 찾을 수 있다.
-                Likes like = likeRepository.findByPostIdAndUserId(post.getId(), user.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized"));
+                Likes like = likeRepository.findByPostIdAndUserId(post.getId(), user.getId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized"));
+
                 likeRepository.delete(like);
             }
 
@@ -66,24 +67,22 @@ public class LikeService {
         }
 
         else {
-            Comment comment = commentRepository.findById(likeDto.getCommentId()).orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 댓글 입니다."));
+            Comment comment = commentRepository.findById(likeDto.getCommentId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 댓글 입니다."));
 
 
             if(likeDto.getIsPlus()) {
-                System.out.println("----------------- delete In --------------------");
-                Likes like = likeRepository.findByCommentIdAndUserId(comment.getId(), user.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized"));
-                System.out.println("----------------- delete --------------------");
+                Likes like = likeRepository.findByCommentIdAndUserId(comment.getId(), user.getId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized"));
                 likeRepository.delete(like);
             }
 
             else {
-                System.out.println("----------------- save In --------------------");
                 Likes like = Likes.builder()
                         .post(null)
                         .user(user)
                         .comment(comment)
                         .build();
-                System.out.println("----------------- save --------------------");
                 likeRepository.save(like);
             }
         }
