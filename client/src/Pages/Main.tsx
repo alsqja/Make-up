@@ -5,8 +5,8 @@ import { PostCard } from "../Components/PostCard";
 import { SideBar } from "../Components/SideBar";
 import FloatBtn from "../Components/FloatBtn";
 import axios from "axios";
-import { isLogin } from "../store/store";
-import { useRecoilState } from "recoil";
+import { following, isLogin } from "../store/store";
+import { useRecoilValue } from "recoil";
 const MainOuter = styled.div`
   padding-top: 48px;
   width: 100%;
@@ -45,11 +45,12 @@ export const Main = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [scrollTopBtnIsVisible, setScrollTopBtnIsVisible] = useState(false);
   const cursor = useRef(-1)
-  const [login, setLogin] = useRecoilState(isLogin)
+  const isFollowing = useRecoilValue(following)
+  const login = useRecoilValue(isLogin)
 
   useEffect(() => {
     let id = window.localStorage.getItem('userId')
-    if (!id) {
+    if (!id || !isFollowing) {
       id = '-1'
     }
     axios
@@ -59,7 +60,7 @@ export const Main = () => {
       .then((res) => {
         setPosts(res.data.posts)
       })
-  }, [login]);
+  }, [isFollowing, login]);
 
   useEffect(() => {
     const showTopBtnOnBottom = () => {

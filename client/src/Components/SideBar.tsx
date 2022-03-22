@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { followerModal, followModal, isLogin } from "../store/store";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { followerModal, following, followModal, isLogin } from "../store/store";
 import { FollowModal } from "./FollowModal";
 import { FollowerModal } from "./FollowerModal";
 import axios from "axios";
@@ -84,7 +84,8 @@ export const SideBar = () => {
   const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
   const [isFollowerModalOn, setIsFollowerModalOn] =
     useRecoilState(followerModal);
-  const [login, setLogin] = useRecoilState(isLogin);
+  const login = useRecoilValue(isLogin)
+  const setIsFollowing = useSetRecoilState(following)
 
   useEffect(() => {
     const userId = window.localStorage.getItem("userId");
@@ -104,8 +105,11 @@ export const SideBar = () => {
         setUsername(res.data.user.nickname)
         setProfile(res.data.user.profile)
         setUserId(res.data.user.id)
+        if (res.data.user.following !== 0) {
+          setIsFollowing(true)
+        }
       });
-  }, [login]);
+  }, [login, setIsFollowing]);
 
   const handlePost = () => {
     navigate("/createpost");
