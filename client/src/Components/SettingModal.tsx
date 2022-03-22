@@ -1,6 +1,9 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { v4 } from "uuid";
+import { defaultProfile, IUserInfo } from "../Dummys/dummy";
 import { userSettingModal } from "../store/store";
 import { Button1 } from "./SignupModal";
 const Outer = styled.div`
@@ -163,19 +166,27 @@ const Btn = styled.button`
     background-size: 100% 100%;
   }
 `;
-function SettingModal() {
+
+interface IProps {
+  userInfo: IUserInfo | undefined;
+}
+
+function SettingModal({ userInfo }: IProps) {
   const setIsUserSettingModalOn = useSetRecoilState(userSettingModal);
   const [file, setFile] = useState(""); //프로필사진
-  const [nickname, setNickname] = useState(""); //닉넴
+  const [nickname, setNickname] = useState(userInfo?.nickname); //닉넴
   const [password, setPassword] = useState(""); //기존 비번
   const [newPassword, setNewPassword] = useState(""); //새비번
   const [newCheckpw, setNewCheckpw] = useState(""); //새비번확인
   const [isCheck, setIsCheck] = useState(true);
   const [Withdrawal, setWithdrawal] = useState(false);
+  const [profile, setProfile] = useState<File>()
+  const [ghldnjsxkfxhl, setGhldnjsxkfxhl] = useState('')
 
   const onClickProfile = (e: React.ChangeEvent<HTMLInputElement> | any) => {
     const objectURL = URL.createObjectURL(e.target.files[0]);
     setFile(objectURL);
+    setProfile(e.target.files[0])
   };
 
   const onChangeValue = (
@@ -203,6 +214,101 @@ function SettingModal() {
     }
   };
 
+  const changeUserInfoHandler = () => {
+    const accessToken = window.localStorage.getItem('accessToken')
+    if (!profile) {
+      console.log(userInfo?.profile)
+      axios
+        .put(
+          `http://52.79.250.177:8080/user/me`,
+          {
+            nickname,
+            profile: userInfo?.profile.split('/')[3] + '/' + userInfo?.profile.split('/')[4],
+            oldPassword: password,
+            newPassword
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          }
+        )
+        .then((res) => {
+          alert('ok')
+          window.location.href = `/mypage/${userInfo?.id}`
+        })
+      return;
+    }
+    const uuid = v4()
+    axios
+      .post(
+        'http://52.79.250.177:8080/geturl',
+        {
+          files: [
+            `${uuid}/${profile.name}`
+          ]
+        }
+      )
+      .then((res) => {
+        axios
+          .put(
+            `${res.data[0].path}`,
+            profile,
+            {
+              headers: {
+                'Content-Type': profile.type
+              }
+            }
+          )
+          .then(() => {
+            console.log(`${uuid}/${profile.name}`)
+            axios
+              .put(
+                `http://52.79.250.177:8080/user/me`,
+                {
+                  nickname,
+                  profile: `${uuid}/${profile.name}`,
+                  oldPassword: password,
+                  newPassword
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`
+                  }
+                }
+              )
+              .then(() => {
+                window.location.href = `/mypage/${userInfo?.id}`
+                alert('ok')
+              })
+          })
+        })
+  }
+
+  const withdrawalHandler = () => {
+    if (ghldnjsxkfxhl !== '회원탈퇴') {
+      alert('정확히 입력해주세요')
+      return;
+    }
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .delete(
+        'http://52.79.250.177:8080/user/me',
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then(() => {
+        alert('회원탈퇴')
+        window.localStorage.setItem('accessToken', '')
+        window.localStorage.setItem('userId', '-1')
+        window.localStorage.setItem('isLogin', 'false')
+        window.location.href = '/'
+      })
+  }
+
   return (
     <Outer onClick={() => setIsUserSettingModalOn(false)}>
       <Modal onClick={(e) => e.stopPropagation()}>
@@ -224,7 +330,9 @@ function SettingModal() {
             <div>회원님의 모든 정보가 삭제됩니다.</div>
             <div>정말 탈퇴 하시겠습니까?</div>
             <div>탈퇴하시려면 회원탈퇴를 입력해주세요.</div>
-            <WithdrawalInput placeholder="회원탈퇴"></WithdrawalInput>
+            <WithdrawalInput placeholder="회원탈퇴" value={ghldnjsxkfxhl} onChange={(e) => {
+              setGhldnjsxkfxhl(e.target.value)
+            }}></WithdrawalInput>
             <Set
               style={{
                 width: "50%",
@@ -232,7 +340,7 @@ function SettingModal() {
                 justifyContent: "space-around",
               }}
             >
-              <Btn>회원탈퇴</Btn>
+              <Btn onClick={withdrawalHandler}>회원탈퇴</Btn>
               <Btn
                 onClick={() => {
                   setWithdrawal(false);
@@ -255,8 +363,8 @@ function SettingModal() {
                   multiple={false} //파일 다중선택 가능
                   onChange={onClickProfile}
                 />
-                {file === "" ? (
-                  <StyledFile src={""} />
+                {!!userInfo?.profile && file === "" ? (
+                  <StyledFile src={userInfo.profile} />
                 ) : (
                   <StyledFile src={file} />
                 )}
@@ -312,7 +420,7 @@ function SettingModal() {
               }}
             >
               {/* TODO*/}
-              <Button1 className="btn">수정하기</Button1>
+              <Button1 className="btn" onClick={changeUserInfoHandler}>수정하기</Button1>
               <Button1 className="btn" onClick={() => setWithdrawal(true)}>
                 회원탈퇴
               </Button1>

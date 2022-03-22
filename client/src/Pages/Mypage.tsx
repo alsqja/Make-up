@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaCog } from "react-icons/fa";
-import { IUserInfo, IPost } from "../Dummys/dummy";
+import { IUserInfo, IPost, defaultProfile } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import SettingModal from "../Components/SettingModal";
 import {
@@ -200,12 +200,12 @@ export const Mypage = () => {
 
   return (
     <Outer>
-      {isUserSettingModalOn ? <SettingModal /> : ""}
+      {isUserSettingModalOn ? <SettingModal userInfo={userInfo}/> : ""}
       {isFollowModalOn ? <FollowModal /> : ""}
       {isFollowerModalOn ? <FollowerModal /> : ""}
       <MyContainer>
         <UserBox>
-          <img className="profile" src={userInfo?.profile} alt="" />
+          <img className="profile" src={userInfo?.profile} alt='' />
           <UserInfoBox>
             <NameBtnBox>
               <Name>{userInfo?.nickname}</Name>

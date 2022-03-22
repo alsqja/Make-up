@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import DragDrop from "../Components/DragDrop";
-import { dummyUser, createPost } from "../Dummys/dummy";
 import { useNavigate } from "react-router-dom";
 import { FaTrashAlt } from "react-icons/fa";
+import axios from "axios";
+import { v4 } from "uuid";
 
 const Container = styled.div`
   font-family: "SUIT-Light";
@@ -78,23 +79,75 @@ function CreatePost() {
   const [files, setFiles] = useState<IFileTypes[]>([]); //파일 리스트
   const [filePage, setFilePage] = useState(0);
   const [contents, setcontents] = useState("");
+  const [inputFile, setInputFile] = useState<File[]>([])
   const navigate = useNavigate();
   const onChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setcontents(e.target.value);
   };
 
   const createPostFunc = () => {
-    const fileList = files.map((obj) => obj.url);
-    const obj = {
-      id: 10,
-      content: contents,
-      files: fileList,
-      user: dummyUser[0],
-      comments: [],
-      likes: [],
-    };
-    createPost(obj);
-    navigate("/");
+    const accessToken = window.localStorage.getItem('accessToken')
+    const copy = [...inputFile]
+    const uuids: string[] = []
+    axios
+      .post(
+        'http://52.79.250.177:8080/geturl',
+        {
+          files: copy.map((file) => {
+            const uuid = v4();
+            uuids.push(uuid)
+            return `${uuid}/${file.name}`
+          })
+        }
+      )
+      .then(async(res) => {
+        interface Iobj {
+          path: string
+        }
+        const dataHandler = async(data: Iobj[]) => {
+          data.forEach((obj: Iobj, idx: number) => {
+            // console.log(inputFile[idx].type)
+            axios
+              .put(
+                `${obj.path}`,
+                inputFile[idx],
+                {
+                  headers: {
+                    'Content-Type': inputFile[idx].type
+                  }
+                }
+              )
+              .then((res) => {
+                // console.log(res)
+              })
+          })
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const response = await dataHandler(res.data)
+        axios
+          .post(
+            'http://52.79.250.177:8080/post',
+            {
+              content: contents,
+              files: uuids.map((el: string, idx: number) => {
+                // console.log(`idx: ${idx} inputfile: ${inputFile[idx].name}`)
+                return `${el}/${inputFile[idx].name}`
+              })
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`
+              }
+            }
+          )
+          .then((res) => {
+            // console.log(res)
+            navigate('/')
+          })
+          .catch((err) => {
+            console.log(`err: ${err}`)
+          })
+      })
   };
 
   const DelBtn = () => {
@@ -102,6 +155,8 @@ function CreatePost() {
     fileList.forEach((el, index) => (el.id = index));
     if (filePage === files.length - 1) setFilePage(filePage - 1);
     setFiles(fileList);
+    const inputFileList = inputFile.filter((el, idx) => idx !== filePage)
+    setInputFile(inputFileList)
   };
 
   useEffect(() => {}, [files]);
@@ -123,6 +178,8 @@ function CreatePost() {
         setFiles={setFiles}
         filePage={filePage}
         setFilePage={setFilePage}
+        setInputFile={setInputFile}
+        inputFile={inputFile}
       />
       <div
         style={{

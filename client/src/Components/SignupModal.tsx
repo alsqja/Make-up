@@ -173,7 +173,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
             email,
             nickname,
             password,
-            profile: ''
+            profile: defaultProfile
           }
         )
         .then((res) => {
@@ -219,6 +219,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
               .then((res) => {
                 loginModalHandler(1)
                 signupModalHandler(1)
+                console.log(profile)
               })
               .catch((err) => console.log(err))
           })

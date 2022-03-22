@@ -71,9 +71,11 @@ interface IProps {
   setFiles: Dispatch<SetStateAction<IFileTypes[]>>;
   filePage: number;
   setFilePage: Dispatch<SetStateAction<number>>;
+  setInputFile: Dispatch<SetStateAction<File[]>>;
+  inputFile: File[]
 }
 
-const DragDrop = ({ files, setFiles, filePage, setFilePage }: IProps) => {
+const DragDrop = ({ files, setFiles, filePage, setFilePage, setInputFile, inputFile }: IProps) => {
   const [isDragging, setIsDragging] = useState<boolean>(false); //드래그
   const dragRef = useRef<HTMLLabelElement | null>(null); //드래그 이벤트 감지하는 ref 참조 변수(label 태그에 들어감)
   const fileId = useRef<number>(0); //선택한 파일들의 id
@@ -99,11 +101,11 @@ const DragDrop = ({ files, setFiles, filePage, setFilePage }: IProps) => {
           },
         ];
       }
-
+      setInputFile([...inputFile, ...e.target.files])
       setFiles(tempFiles);
       if (files.length >= 1) setFilePage(files.length);
     },
-    [files]
+    [files, inputFile, setFilePage, setFiles, setInputFile]
   );
 
   const handleDragIn = useCallback((e: DragEvent): void => {
