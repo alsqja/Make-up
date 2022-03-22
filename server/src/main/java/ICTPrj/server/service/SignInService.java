@@ -8,10 +8,12 @@ import ICTPrj.server.dto.TokenWithUserDto;
 import ICTPrj.server.dto.UserDto;
 import ICTPrj.server.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Service
@@ -22,7 +24,7 @@ public class SignInService {
 
     public TokenDto signIn(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."));
 
         userDto.setId(user.getId());
         if(!userDto.getPassword().equals(user.getPassword())){

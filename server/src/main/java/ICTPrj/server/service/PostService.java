@@ -116,7 +116,8 @@ public class PostService {
     }
 
     public PostDto readPost(Long postId){
-        Post post = postRepository.findById(postId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시글 입니다."));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시글 입니다."));
         return PostDto.of(post, filePrefix);
     }
 
@@ -130,6 +131,8 @@ public class PostService {
                     postList = postRepository.findPostsByCursor(cursor);
                 }
             } else {
+                userRepository.findById(userId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."));
                 if (cursor == -1) {
                     postList = postRepository.findPostsByFollowing(userId);
                 } else {
@@ -137,6 +140,8 @@ public class PostService {
                 }
             }
         }else{
+            userRepository.findById(userId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."));
             if(cursor == -1){
                 postList = postRepository.findPostsById(userId);
             }else{

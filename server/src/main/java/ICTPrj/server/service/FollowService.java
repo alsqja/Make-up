@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class FollowService {
 
     public UserWithFollowDto signin(String email){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized"));
         Long following = getCount(user, 0);
         Long follower = getCount(user, 1);
         return UserWithFollowDto.of(user, following, follower, filePrefix);
@@ -43,9 +45,9 @@ public class FollowService {
     @Transactional
     public IdDto doFollow(String email, FollowDto followDto){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."));
         User other = userRepository.findById(followDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."));
         Boolean flag = followDto.getIsPlus();
         if(flag){
             Follow follow = Follow.builder()
