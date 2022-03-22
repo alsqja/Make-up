@@ -26,6 +26,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findPostsById(@Param("userId") Long userId);
     @Query(value = "select * from Post where User_id = :userId and id < :cursorId order by id desc Limit 5", nativeQuery = true)
     List<Post> findPostsByCursorAndId(@Param("userId") Long userId, @Param("cursorId") Long cursorId);
-
-    long countByUser(User user);
 }

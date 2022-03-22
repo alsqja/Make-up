@@ -154,12 +154,6 @@ public class PostService {
                 .posts(posts)
                 .build();
     }
-
-    public long LengthOfPosts(Long userId){
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다."));
-        long length = postRepository.countByUser(user);
-        return length;
-    }
 }
 
 
