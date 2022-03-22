@@ -30,15 +30,19 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public UserInfoDto getUserInfo(@RequestParam(value = "id") Long userId, @RequestParam(value = "cursor") Long cursor) {
+    public UserInfoDto getUserInfo(@RequestHeader(value = "Authorization") String accessToken,
+                                   @RequestParam(value = "id") Long userId,
+                                   @RequestParam(value = "cursor") Long cursor) {
         UserPageDto userInfo = userService.getUserInfoById(userId);
         UserWithFollowDto userWithFollowDto = followService.signin(userInfo.getEmail());
         List<PostDto> postList = postService.getPostList(userId, cursor, 0).getPosts();
         long postsLength = userInfo.getCount();
+        boolean isFollow = userService.checkFollow(accessToken, userId);
         return UserInfoDto.builder()
                 .user(userWithFollowDto)
                 .count(postsLength)
                 .posts(postList)
+                .isFollow(isFollow)
                 .build();
     }
 }
