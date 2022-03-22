@@ -2,17 +2,20 @@ package ICTPrj.server.service;
 
 import ICTPrj.server.domain.repository.FileRepository;
 import ICTPrj.server.dto.MakeupDto;
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Date;
 
@@ -56,13 +59,19 @@ public class FileService {
     }
 
     public MakeupDto MakeUp(String uuid){
-        MakeupDto reqDto = MakeupDto.builder().file(uuid).build();
-        WebClient webClient = WebClient.create(flaskUrl);
-        String ret = webClient.post()
-                .uri("/makeup")
-                .body(Mono.just(reqDto), MakeupDto.class)
-                .retrieve()
-                .bodyToMono(String.class).block();
+        String ret;
+        try{
+            S3Object o = s3Client.getObject(bucketName, uuid + "/result/result.png");
+            ret = uuid + "/result/result.png";
+        }catch (AmazonServiceException e){
+            MakeupDto reqDto = MakeupDto.builder().file(uuid).build();
+            WebClient webClient = WebClient.create(flaskUrl);
+            ret = webClient.post()
+                    .uri("/makeup")
+                    .body(Mono.just(reqDto), MakeupDto.class)
+                    .retrieve()
+                    .bodyToMono(String.class).block();
+        }
         MakeupDto retDto = MakeupDto.builder().file(filePrefix + ret).build();
         return retDto;
     }
