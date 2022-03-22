@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import ShareModal from "../Components/ShareModal";
 import { defaultProfile } from "../Dummys/dummy";
 import { Loading } from "./Loading";
 
@@ -82,39 +83,39 @@ const Btn = styled.div`
 `;
 
 export const Result = () => {
-
-  const [img, setImg] = useState(defaultProfile)
-  const [isLoading, setIsLoading] = useState(false)
+  const [img, setImg] = useState(defaultProfile);
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation().pathname.split("/")[2];
   const uuid = location;
+  const [shareModal, setShareModal] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
+    axios.get(`http://52.79.250.177:8080/result/${uuid}`).then((res) => {
+      setImg(res.data.file);
+      setIsLoading(false);
+    });
+  }, [uuid]);
 
-    setIsLoading(true)
-    axios
-      .get(
-        `http://52.79.250.177:8080/result/${uuid}`
-      )
-      .then((res) => {
-        setImg(res.data.file)
-        setIsLoading(false)
-      })
-  }, [uuid])
+  // if (isLoading) {
+  //   return <Loading/>
+  // }
 
-  if (isLoading) {
-    return <Loading/>
-  }
+  const ShareOnClick = () => {
+    setShareModal(true);
+  };
 
   return (
     <Outer>
       <Container>
         <ResultImg src={img}></ResultImg>
         <BtnBox>
-          <Btn>공유하기</Btn>
+          <Btn onClick={ShareOnClick}>공유하기</Btn>
           <Btn>저장하기</Btn>
           <Btn>게시글 작성</Btn>
         </BtnBox>
       </Container>
+      {shareModal ? <ShareModal /> : ""}
     </Outer>
   );
 };
