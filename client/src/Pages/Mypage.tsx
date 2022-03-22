@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaCog } from "react-icons/fa";
-import { IUserInfo, IPost, defaultProfile } from "../Dummys/dummy";
+import { IUserInfo, IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import SettingModal from "../Components/SettingModal";
 import {
@@ -175,6 +175,7 @@ export const Mypage = () => {
         setPostList(res.data.posts)
         setCount(res.data.count)
         cursor.current = res.data.posts[res.data.posts.length - 1].id
+        setIsFollowed(res.data.follow)
       });
   }, [id]);
 
@@ -184,6 +185,23 @@ export const Mypage = () => {
 
   const followHandler = () => {
     setIsFollowed(!isFollowed);
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .post(
+        'http://52.79.250.177:8080/follow',
+        {
+          userId: id,
+          isPlus: !isFollowed
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then(() => {
+        window.location.href = `/mypage/${id}`
+      })
   };
 
   // const settingClick = () => {

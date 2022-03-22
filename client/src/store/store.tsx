@@ -19,3 +19,8 @@ export const userSettingModal = atom<boolean>({
   key: "userSettingModal",
   default: false,
 });
+
+export const following = atom<boolean>({
+  key: "following",
+  default: false
+})

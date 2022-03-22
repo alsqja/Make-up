@@ -152,6 +152,27 @@ export const FollowModal = () => {
       })
   }, []);
 
+  const followCanceler = (id: number) => {
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .post(
+        'http://52.79.250.177:8080/follow',
+        {
+          userId: id,
+          isPlus: false
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then(() => {
+        setIsFollowModalOn(true)
+        setUserList(userList.filter((el) => el.id !== id))
+      })
+  }
+
   return (
     <ModalBackdrop
       onClick={() => {
@@ -189,7 +210,9 @@ export const FollowModal = () => {
                     {user.nickname}
                   </div>
                 </div>
-                <div className="cancel_btn">팔로우 취소</div>
+                <div className="cancel_btn" onClick={() => {
+                  followCanceler(user.id)
+                }}>팔로우 취소</div>
               </ChildWrapper>
             );
           })}
