@@ -5,8 +5,10 @@ import ICTPrj.server.domain.repository.UserRepository;
 import ICTPrj.server.dto.*;
 import ICTPrj.server.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -18,14 +20,14 @@ public class UserService {
     private User getUser(String userToken) {
         String userToken_ = userToken.substring(7);
         String userEmail = tokenProvider.getUserEmailFromToken(userToken_);
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."));
         return user;
     }
 
     public IdDto updateUser(String accessToken, EditUserDto editUserDto){
         User user = getUser(accessToken);
         if(!user.getPassword().equals(editUserDto.getOldPassword())){
-            throw new IllegalArgumentException("비밀번호를 확인하세요.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "잘못된 비밀번호 입니다.");
         }
 
         user.setPassword(editUserDto.getNewPassword());
@@ -44,6 +46,6 @@ public class UserService {
     }
 
     public UserPageDto getUserInfoById(Long id){
-        return UserPageDto.of(userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다.")));
+        return UserPageDto.of(userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다.")));
     }
 }
