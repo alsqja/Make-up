@@ -190,7 +190,7 @@ export const PostCard = ({ post }: IProps) => {
         <img className="photo" src={post.user.profile} alt="" />
         <div className="name">{post.user.nickname}</div>
       </UserInfo>
-      <StyledFile
+      {post.files.length !== 0 && <StyledFile
         src={post.files[filePage]}
         onClick={() => {
           OpenPostHandler(post.id);
@@ -220,7 +220,7 @@ export const PostCard = ({ post }: IProps) => {
             style={filePage === post.files.length - 1 ? { opacity: "0" } : {}}
           />
         </FileButtonBox>
-      </StyledFile>
+      </StyledFile>}
       <Text>
         <div className="text">{post.content}</div>
       </Text>

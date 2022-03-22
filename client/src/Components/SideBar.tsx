@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { dummyUser } from "../Dummys/dummy";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { followerModal, followModal, isLogin } from "../store/store";
@@ -80,6 +79,7 @@ export const SideBar = () => {
   const [follow, setFollow] = useState(0);
   const [username, setUsername] = useState("");
   const [profile, setProfile] = useState("");
+  const [userId, setUserId] = useState(0)
   const navigate = useNavigate();
   const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
   const [isFollowerModalOn, setIsFollowerModalOn] =
@@ -99,7 +99,11 @@ export const SideBar = () => {
         },
       })
       .then((res) => {
-        console.log(res);
+        setFollower(res.data.user.follower)
+        setFollow(res.data.user.following)
+        setUsername(res.data.user.nickname)
+        setProfile(res.data.user.profile)
+        setUserId(res.data.user.id)
       });
   }, []);
 
@@ -112,7 +116,7 @@ export const SideBar = () => {
       {isFollowModalOn ? <FollowModal /> : ""}
       {isFollowerModalOn ? <FollowerModal /> : ""}
       {login ? (
-        <Link to={`/mypage/${dummyUser[0].id}`}>
+        <Link to={`/mypage/${userId}`}>
           <UserInfo>
             <img className="photo" src={profile} alt="" />
             <div className="name">{username}</div>

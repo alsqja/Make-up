@@ -9,6 +9,7 @@ import CreatePost from "./Pages/CreatePost";
 import { RecoilRoot } from 'recoil';
 import { InputFile } from "./Pages/InputFile";
 import { Result } from "./Pages/Result";
+import { Start } from "./Pages/Start";
 
 function App() {
   const [isLoginModalOn, setIsLoginModalOn] = useState(false);
@@ -40,6 +41,7 @@ function App() {
           signupModalHandler={signupModalHandler}
         />
         <Routes>
+          <Route path="/intro" element={<Start/>}/>
           <Route path="/*" element={<Main />} />
           <Route path="/post/:id" element={<Post />} />
           <Route path="/mypage/:id" element={<Mypage />} />
