@@ -13,4 +13,5 @@ public class UserInfoDto {
     private UserWithFollowDto user;
     private long count;
     private List<PostDto> posts;
+    private boolean isFollow;
 }
