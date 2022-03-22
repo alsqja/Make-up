@@ -105,7 +105,7 @@ export const SideBar = () => {
         setProfile(res.data.user.profile)
         setUserId(res.data.user.id)
       });
-  }, []);
+  }, [login]);
 
   const handlePost = () => {
     navigate("/createpost");
