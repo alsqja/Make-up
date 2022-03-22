@@ -16,7 +16,7 @@ import java.util.Date;
 @Component
 public class TokenProvider {
     private static final String BEARER_TYPE = "bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 30;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24;
 
     private final Key key;
 
