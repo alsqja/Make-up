@@ -1,6 +1,7 @@
 package ICTPrj.server.controller;
 
 import ICTPrj.server.domain.entity.User;
+import ICTPrj.server.dto.PostDto;
 import ICTPrj.server.dto.SearchUsersDto;
 import ICTPrj.server.dto.UserDto;
 import ICTPrj.server.service.SearchService;
@@ -17,8 +18,11 @@ public class SearchController {
 
     @GetMapping("/user/search")
     public List<SearchUsersDto> searchUser(@RequestParam(value = "query") String query) {
-        System.out.println("query = " + query);
         return searchService.searchUser(query);
+    }
 
+    @GetMapping("/post/search")
+    public List<PostDto> searchPost(@RequestParam(value = "query") String query) {
+        return searchService.searchPost(query);
     }
 }
