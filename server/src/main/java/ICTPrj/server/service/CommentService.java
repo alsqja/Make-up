@@ -27,38 +27,35 @@ public class CommentService {
     private User getUser(String userToken) {
         String userToken_ = userToken.substring(7);
         String userEmail = tokenProvider.getUserEmailFromToken(userToken_);
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
-
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "없는 사용자 입니다."));
         return user;
     }
 
     public Long writeComment(String userToken, Long postId, CommentDto commentDto) {
         User user = getUser(userToken);
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("없는 게시글 입니다."));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 게시글 입니다."));
 
         Comment comment = Comment.builder()
                                  .user(user)
                                  .post(post)
                                  .content(commentDto.getContent())
                                  .build();
-
-        System.out.println("userToken = " + user.getEmail() + ", postId = " + post.getContent() + ", commentDto = " + comment.getContent() + ", " + comment.getPost().getContent());
-
         return commentRepository.save(comment).getId();
     }
 
     public Long modifyComment(String userToken, Long postId, Long commentId, CommentDto commentDto) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 댓글 입니다."));
         User user = getUser(userToken);
-        Post post = postRepository.getById(postId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 게시글 입니다."));
 
         if(!comment.getPost().getId().equals(postId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다.");
         }
 
         if(!comment.getUser().getId().equals(user.getId())) {
-            System.out.println("get Id = " + user.getId() + ", find id = " + comment.getUser().getId());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
         }
 
@@ -73,16 +70,17 @@ public class CommentService {
     }
 
     public Long deleteComment(String userToken, Long postId, Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 댓글 입니다."));
         User user = getUser(userToken);
-        Post post = postRepository.getById(postId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 댓글 입니다."));;
 
         if(!comment.getPost().getId().equals(postId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다.");
         }
 
         if(!comment.getUser().getId().equals(user.getId())) {
-            System.out.println("get Id = " + user.getId() + ", find id = " + comment.getUser().getId());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
         }
 
