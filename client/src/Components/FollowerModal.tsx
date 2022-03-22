@@ -2,8 +2,10 @@ import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import { useSetRecoilState } from "recoil";
 import { followerModal } from "../store/store";
-import { dummyFollow, IPostUser } from "../Dummys/dummy";
-import { useEffect, useState } from "react";
+import { IPostUser } from "../Dummys/dummy";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ModalBackdrop = styled.div`
   font-family: "SUIT-Light";
@@ -126,9 +128,24 @@ const ChildWrapper = styled.div`
 export const FollowerModal = () => {
   const setIsFollowerModalOn = useSetRecoilState(followerModal);
   const [userList, setUserList] = useState<IPostUser[]>([]);
+  const cursor = useRef(-1)
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setUserList(dummyFollow.slice(0, 15));
+    const id = window.localStorage.getItem('userId')
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .get(
+        `http://52.79.250.177:8080/follower?id=${id}&cursor=${cursor.current}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then((res) => {
+        setUserList(res.data.user)
+      })
   }, []);
 
   return (
@@ -162,8 +179,10 @@ export const FollowerModal = () => {
               <ChildWrapper key={user.id}>
                 <div className="profile_box">
                   <img className="profile" src={user.profile} alt="" />
-                  <div className="username">
-                    <a href="">{user.nickname}</a>
+                  <div className="username" onClick={() => {
+                    navigate(`/mypage/${user.id}`)
+                  }}>
+                    {user.nickname}
                   </div>
                 </div>
               </ChildWrapper>

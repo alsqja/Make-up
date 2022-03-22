@@ -2,13 +2,14 @@ import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SideBar } from "../Components/SideBar";
-import { IPost, dummyPosts } from "../Dummys/dummy";
+import { IPostUser, IPostLike, IComment } from "../Dummys/dummy";
 import {
   FaChevronLeft,
   FaChevronRight,
   FaHeart,
   FaRegHeart,
 } from "react-icons/fa";
+import axios from "axios";
 
 const PostOuter = styled.div`
   font-family: "SUIT-Light";
@@ -246,16 +247,32 @@ export const Post = () => {
   const location = useLocation().pathname.split("/")[2];
   const id = +location;
 
-  const [post, setPost] = useState<IPost>();
   const [filePage, setFilePage] = useState(0);
+  const [user, setUser] = useState<IPostUser>()
+  const [files, setFiles] = useState<string[]>([])
+  const [content, setContent] = useState('')
+  const [likes, setLikes] = useState<IPostLike[]>([])
+  const [comments, setComments] = useState<IComment[]>([])
 
   useEffect(() => {
-    setPost(dummyPosts.filter((post) => post.id === id)[0]);
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .get(
+        `http://52.79.250.177:8080/post/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then((res) => {
+        setUser(res.data.user)
+        setFiles(res.data.files)
+        setContent(res.data.content)
+        setLikes(res.data.likes)
+        setComments(res.data.comments)
+      })
   }, [id]);
-
-  if (!post) {
-    return <PostOuter>없음</PostOuter>;
-  }
 
   return (
     <PostOuter>
@@ -267,19 +284,19 @@ export const Post = () => {
               e.stopPropagation();
             }}
           >
-            <img className="photo" src={post.user.profile} alt="" />
-            <div className="name">{post.user.nickname}</div>
+            <img className="photo" src={user?.profile} alt="" />
+            <div className="name">{user?.nickname}</div>
             {/* <FontAwesomeIcon onClick={() => {
               deleteContents(content.id)
             }} className='delete_button' icon={faTrashAlt} style={content.username === '김민범' ? '' : {display:'none'}}/> */}
           </UserInfo>
-          <StyledFile src={post.files[filePage]}>
+          {files.length !== 0 && <StyledFile src={files[filePage]}>
             <FileButtonBox>
               <FaChevronLeft
                 className="left_btn"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (!post.files[filePage - 1]) {
+                  if (!files[filePage - 1]) {
                     return;
                   }
                   setFilePage(filePage - 1);
@@ -290,22 +307,22 @@ export const Post = () => {
                 className="right_btn"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (!post.files[filePage + 1]) {
+                  if (!files[filePage + 1]) {
                     return;
                   }
                   setFilePage(filePage + 1);
                 }}
                 style={
-                  filePage === post.files.length - 1 ? { opacity: "0" } : {}
+                  filePage === files.length - 1 ? { opacity: "0" } : {}
                 }
               />
             </FileButtonBox>
-          </StyledFile>
+          </StyledFile>}
           <Text>
-            <div className="text">{post.content}</div>
+            <div className="text">{content}</div>
           </Text>
           <LikeComment>
-            {post.likes.filter((like) => like.userId === 0).length === 0 ? (
+            {likes.filter((like) => like.userId === 0).length === 0 ? (
               <FaRegHeart className="like_button" />
             ) : (
               <FaHeart className="like_button" style={{ color: "red" }} />
@@ -313,9 +330,9 @@ export const Post = () => {
           </LikeComment>
           <CommentBox>
             <div className="likes_num">
-              {post.likes.length} 명이 좋아합니다.
+              {likes.length} 명이 좋아합니다.
             </div>
-            {post.comments.map((comment) => {
+            {comments.map((comment) => {
               return (
                 <div className="comments_info" key={comment.id}>
                   <img className="photo" src={comment.user.profile} alt="" />

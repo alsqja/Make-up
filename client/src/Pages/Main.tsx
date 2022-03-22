@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { useEffect, useState, useCallback } from "react";
-import { dummyPosts, IPost } from "../Dummys/dummy";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import { SideBar } from "../Components/SideBar";
 import FloatBtn from "../Components/FloatBtn";
+import axios from "axios";
 const MainOuter = styled.div`
   padding-top: 48px;
   width: 100%;
@@ -41,9 +42,20 @@ const MainContainer = styled.div`
 export const Main = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [scrollTopBtnIsVisible, setScrollTopBtnIsVisible] = useState(false);
+  const cursor = useRef(-1)
 
   useEffect(() => {
-    setPosts(dummyPosts);
+    let id = window.localStorage.getItem('userId')
+    if (!id) {
+      id = '-1'
+    }
+    axios
+      .get(
+        `http://52.79.250.177:8080/getpost?id=${id}&cursor=${cursor.current}`
+      )
+      .then((res) => {
+        setPosts(res.data.posts)
+      })
   }, []);
 
   useEffect(() => {

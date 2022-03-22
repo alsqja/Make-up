@@ -4,7 +4,6 @@ import DragDrop from "../Components/DragDrop";
 import { dummyUser, createPost } from "../Dummys/dummy";
 import { useNavigate } from "react-router-dom";
 import { FaTrashAlt } from "react-icons/fa";
-import { hover } from "@testing-library/user-event/dist/hover";
 
 const Container = styled.div`
   font-family: "SUIT-Light";

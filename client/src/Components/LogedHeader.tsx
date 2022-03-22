@@ -42,7 +42,8 @@ export const LogedHeader = () => {
   const navigate = useNavigate();
 
   const userInfoHandler = () => {
-    navigate(`/mypage/0`);
+    const id = window.localStorage.getItem('userId')
+    navigate(`/mypage/${id}`);
   };
 
   return (

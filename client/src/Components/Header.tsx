@@ -158,7 +158,6 @@ export const Header = ({
       )}
       <Container>
         <Link to="/">
-          {/* <Logo>LOGO</Logo> */}
           <HeaderLogo
             src={`${process.env.PUBLIC_URL}/headerLogo3.png`}
             alt="headerLogo"

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaCog } from "react-icons/fa";
-import { dummyUser, IUserInfo, dummyPosts, IPost } from "../Dummys/dummy";
+import { IUserInfo, IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import SettingModal from "../Components/SettingModal";
 import {
@@ -14,6 +14,7 @@ import {
 import { FollowModal } from "../Components/FollowModal";
 import { FollowerModal } from "../Components/FollowerModal";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import axios from "axios";
 
 const Outer = styled.div`
   padding-top: 48px;
@@ -149,6 +150,7 @@ export const Mypage = () => {
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const [isFollowed, setIsFollowed] = useState(false);
   const [postList, setPostList] = useState<IPost[]>();
+  const [count, setCount] = useState(-1)
   const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
   const [isFollowerModalOn, setIsFollowerModalOn] =
     useRecoilState(followerModal);
@@ -156,11 +158,29 @@ export const Mypage = () => {
     useRecoilState(userSettingModal);
   const setLogin = useSetRecoilState(isLogin);
   const navigate = useNavigate();
+  const myId = window.localStorage.getItem('userId')
+
+  const cursor = useRef(-1)
 
   useEffect(() => {
-    setUserInfo(dummyUser.filter((user) => user.id === id)[0]);
-    setPostList(dummyPosts.filter((post) => post.user.id === id));
+    const accessToken = window.localStorage.getItem("accessToken");
+    axios
+      .get(`http://52.79.250.177:8080/user?id=${id}&cursor=${cursor.current}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((res) => {
+        setUserInfo(res.data.user)
+        setPostList(res.data.posts)
+        setCount(res.data.count)
+        cursor.current = res.data.posts[res.data.posts.length - 1].id
+      });
   }, [id]);
+
+  if (!myId) {
+    return <></>
+  }
 
   const followHandler = () => {
     setIsFollowed(!isFollowed);
@@ -173,6 +193,7 @@ export const Mypage = () => {
   const logoutHandler = () => {
     window.localStorage.setItem("isLogin", "false");
     window.localStorage.setItem("accessToken", "");
+    window.localStorage.setItem("userId", '-1')
     setLogin(false);
     navigate("/");
   };
@@ -194,17 +215,17 @@ export const Mypage = () => {
                   cursor: "pointer",
                   marginRight: "10px",
                 }}
-                className={userInfo?.id !== 0 ? "noshow" : "" /*TODO: userID*/}
+                className={userInfo?.id !== +myId ? "noshow" : "" /*TODO: userID*/}
                 onClick={() => setIsUserSettingModalOn(true)}
               />
               <FollowBtn
-                className={userInfo?.id === 0 ? "noshow" : ""}
+                className={userInfo?.id === +myId ? "noshow" : ""}
                 onClick={followHandler}
               >
                 {isFollowed ? "팔로우 취소" : "팔로우"}
               </FollowBtn>
               <FollowBtn
-                className={userInfo?.id !== 0 ? "noshow" : "" /*TODO: userID*/}
+                className={userInfo?.id !== +myId ? "noshow" : "" /*TODO: userID*/}
                 onClick={logoutHandler}
               >
                 로그아웃
@@ -213,7 +234,7 @@ export const Mypage = () => {
             <FollowInfoBox>
               <FollowInfo>
                 <div>게시글</div>
-                {`TODO`}
+                {count}
               </FollowInfo>
               <FollowInfo onClick={() => setIsFollowerModalOn(true)}>
                 <div>팔로워</div>
