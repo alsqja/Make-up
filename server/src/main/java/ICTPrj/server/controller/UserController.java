@@ -31,10 +31,10 @@ public class UserController {
 
     @GetMapping("/user")
     public UserInfoDto getUserInfo(@RequestParam(value = "id") Long userId, @RequestParam(value = "cursor") Long cursor) {
-        String userEmail = userService.getUserEmailById(userId);
-        UserWithFollowDto userWithFollowDto = followService.signin(userEmail);
+        UserPageDto userInfo = userService.getUserInfoById(userId);
+        UserWithFollowDto userWithFollowDto = followService.signin(userInfo.getEmail());
         List<PostDto> postList = postService.getPostList(userId, cursor, 0).getPosts();
-        long postsLength = postService.LengthOfPosts(userId);
+        long postsLength = userInfo.getCount();
         return UserInfoDto.builder()
                 .user(userWithFollowDto)
                 .count(postsLength)

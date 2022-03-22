@@ -2,10 +2,7 @@ package ICTPrj.server.service;
 
 import ICTPrj.server.domain.entity.User;
 import ICTPrj.server.domain.repository.UserRepository;
-import ICTPrj.server.dto.EditUserDto;
-import ICTPrj.server.dto.IdDto;
-import ICTPrj.server.dto.UserDto;
-import ICTPrj.server.dto.UserInfoDto;
+import ICTPrj.server.dto.*;
 import ICTPrj.server.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,9 +43,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public String getUserEmailById(Long id){
-        return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."))
-                .getEmail();
+    public UserPageDto getUserInfoById(Long id){
+        return UserPageDto.of(userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다.")));
     }
 }
