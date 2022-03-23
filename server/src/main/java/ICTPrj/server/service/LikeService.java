@@ -46,10 +46,10 @@ public class LikeService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 게시글 입니다."));
 
             // isPlus 가 True 면 테이블에서 삭제
-            if(likeDto.getIsPlus()) {
+            if(!likeDto.getIsPlus()) {
                 // 그러면 like 를 "{post or comment}, {userId}" 를 키로 찾을 수 있다.
                 Likes like = likeRepository.findByPostIdAndUserId(post.getId(), user.getId())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized"));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found"));
 
                 likeRepository.delete(like);
             }
@@ -71,9 +71,9 @@ public class LikeService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 댓글 입니다."));
 
 
-            if(likeDto.getIsPlus()) {
+            if(!likeDto.getIsPlus()) {
                 Likes like = likeRepository.findByCommentIdAndUserId(comment.getId(), user.getId())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized"));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found"));
                 likeRepository.delete(like);
             }
 
