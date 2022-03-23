@@ -4,6 +4,7 @@ import ICTPrj.server.domain.entity.Comment;
 import ICTPrj.server.domain.entity.Post;
 import ICTPrj.server.domain.entity.User;
 import ICTPrj.server.domain.repository.CommentRepository;
+import ICTPrj.server.domain.repository.LikeRepository;
 import ICTPrj.server.domain.repository.PostRepository;
 import ICTPrj.server.domain.repository.UserRepository;
 import ICTPrj.server.dto.CommentDto;
@@ -22,6 +23,7 @@ public class CommentService {
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final LikeRepository likeRepository;
 
 
     private User getUser(String userToken) {
@@ -84,6 +86,7 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
         }
 
+        likeRepository.deleteAll(comment.getLikes());
         commentRepository.delete(comment);
 
         return commentId;
