@@ -4,6 +4,7 @@ import ICTPrj.server.domain.entity.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Setter
@@ -19,6 +20,13 @@ public class PostDto {
     private List<CommentDto> comments;
     private List<LikeDto> likes;
 
+    public static int compareTo(int x, int y) {
+        if(x >= y) {
+            return -1;
+        }
+        return 1;
+    }
+
     public static PostDto of(Post post, String filePrefix){
         List<String> fileList = new ArrayList<>();
         for(File file : post.getFiles()){
@@ -30,6 +38,7 @@ public class PostDto {
         for(Comment comment : post.getComments()){
             commentList.add(CommentDto.of(comment, filePrefix));
         }
+        Collections.sort(commentList, (s1, s2) -> compareTo(s1.getLikes().size(), s2.getLikes().size()));
 
         List<LikeDto> likeList = new ArrayList<>();
         for(Likes like : post.getLikes()){
