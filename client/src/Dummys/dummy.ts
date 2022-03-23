@@ -314,3 +314,5 @@ export const dummyFollow: IPostUser[] = [
     profile: defaultProfile
   },
 ]
+
+export const serverUrl = 'http://52.79.250.177:8080/'
