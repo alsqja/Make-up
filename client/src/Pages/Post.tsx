@@ -9,6 +9,7 @@ import {
   FaHeart,
   FaRegHeart,
 } from "react-icons/fa";
+import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 import axios from "axios";
 
 const PostOuter = styled.div`
@@ -84,12 +85,19 @@ const UserInfo = styled.div`
     align-items: center;
     cursor: pointer;
   }
-  .delete_button {
-    width: 20px;
-    height: 20px;
-    margin-top: 10px;
-    margin-left: 750px;
+  .btnbox {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+  .btn {
+    font-size: 20px;
+    margin: 10px;
     cursor: pointer;
+    &:hover {
+      color: #dbdbdb;
+    }
   }
 `;
 
@@ -253,9 +261,11 @@ export const Post = () => {
   const [content, setContent] = useState('')
   const [likes, setLikes] = useState<IPostLike[]>([])
   const [comments, setComments] = useState<IComment[]>([])
+  const [isMine, setIsMine] = useState(false)
 
   useEffect(() => {
     const accessToken = window.localStorage.getItem('accessToken')
+    const myid = window.localStorage.getItem('userId')
     axios
       .get(
         `http://52.79.250.177:8080/post/${id}`,
@@ -266,6 +276,9 @@ export const Post = () => {
         }
       )
       .then((res) => {
+        if (myid === String(res.data.user.id)) {
+          setIsMine(true)
+        }
         setUser(res.data.user)
         setFiles(res.data.files)
         setContent(res.data.content)
@@ -274,21 +287,37 @@ export const Post = () => {
       })
   }, [id]);
 
+  const deletePostHandler = () => {
+    const myid = window.localStorage.getItem('userId')
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .delete(
+        `http://52.79.250.177:8080/post/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then(() => {
+        window.location.href = `/mypage/${myid}`
+      })
+  }
+
   return (
     <PostOuter>
       <Container>
         <SideBar />
         <PostContainer>
-          <UserInfo
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
+          <UserInfo>
             <img className="photo" src={user?.profile} alt="" />
             <div className="name">{user?.nickname}</div>
-            {/* <FontAwesomeIcon onClick={() => {
-              deleteContents(content.id)
-            }} className='delete_button' icon={faTrashAlt} style={content.username === '김민범' ? '' : {display:'none'}}/> */}
+            {isMine ? 
+            <div className="btnbox">
+              <AiOutlineEdit className="btn"/>
+              <AiOutlineDelete className="btn" onClick={deletePostHandler}/>
+            </div> : ''}
+            
           </UserInfo>
           {files.length !== 0 && <StyledFile src={files[filePage]}>
             <FileButtonBox>
