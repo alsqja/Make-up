@@ -166,11 +166,10 @@ export const Mypage = () => {
   const [isEnd, setIsEnd] = useState(false);
 
   useEffect(() => {
-    const id = window.localStorage.getItem("userId");
     setIsLoading(true);
     const accessToken = window.localStorage.getItem("accessToken");
     axios
-      .get(`http://52.79.250.177:8080/user?id=${id}&cursor=${cursor.current}`, {
+      .get(`http://52.79.250.177:8080/user?id=${id}&cursor=-1`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -180,15 +179,16 @@ export const Mypage = () => {
         setPostList(res.data.posts);
         setCount(res.data.count);
         setIsLoading(false);
-        cursor.current = res.data.posts[res.data.posts.length - 1].id;
+        if (res.data.posts.length !== 0) {
+          cursor.current = res.data.posts[res.data.posts.length - 1].id;
+        }
         setIsFollowed(res.data.follow);
       })
       .catch((err) => console.log(err));
   }, [id]);
 
   const handleScroll = useCallback((): void => {
-    const id = window.localStorage.getItem("userId");
-
+    const accessToken = window.localStorage.getItem('accessToken')
     const { innerHeight } = window;
     const { scrollHeight } = document.body;
     const { scrollTop } = document.documentElement;
@@ -201,7 +201,12 @@ export const Mypage = () => {
         setIsLoading(true);
         axios
           .get(
-            `http://52.79.250.177:8080/getpost?id=${id}&cursor=${cursor.current}`
+            `http://52.79.250.177:8080/user?id=${id}&cursor=${cursor.current}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`
+              }
+            }
           )
           .then((res) => {
             if (res.data.posts.length === 0) {
@@ -217,7 +222,7 @@ export const Mypage = () => {
           .catch((err) => console.log("err::", err));
       }
     }
-  }, [isEnd, postList]);
+  }, [id, isEnd, postList]);
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, true);
     return () => {
