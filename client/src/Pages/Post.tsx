@@ -154,7 +154,7 @@ const CommentBox = styled.div`
     margin-left: 30px;
   }
   .photo {
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     margin-right: 15px;
     border-radius: 100px;
@@ -193,6 +193,11 @@ const CommentBox = styled.div`
     z-index: -1;
   }
 `;
+
+const CommentContent = styled.div`
+  width: 80%;
+  white-space: pre-wrap;
+`
 
 interface IImgProps {
   src: string;
@@ -536,7 +541,7 @@ export const Post = () => {
                   <div className="comments_info">
                     <img className="photo" src={comment.user.profile} alt="" />
                     <div className="username">{comment.user.nickname}</div>
-                    <div className="text">{comment.content}</div>
+                    <CommentContent>{comment.content}</CommentContent>
                   </div>
                   {String(comment.user.id) === myid ? 
                     <div className="btn_box">
