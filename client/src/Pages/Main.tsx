@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useState, useCallback, useRef } from "react";
-import { IPost } from "../Dummys/dummy";
+import { IPost, serverUrl } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import { SideBar } from "../Components/SideBar";
 import FloatBtn from "../Components/FloatBtn";
@@ -53,15 +53,25 @@ export const Main = () => {
 
   useEffect(() => {
     let id = window.localStorage.getItem('userId')
-    if (!id || !isFollowing) {
-      id = '-1'
-    }
     setIsLoading(true);
     axios
       .get(
         `http://52.79.250.177:8080/getpost?id=${id}&cursor=-1`
       )
       .then((res) => {
+        
+        if (res.data.posts.length === 0) {
+          axios
+            .get(
+              `${serverUrl}getpost?id=-1&cursor=-1`
+            )
+            .then((res) => {
+              setPosts(res.data.posts);
+              setIsLoading(false);
+              cursor.current = res.data.posts[res.data.posts.length - 1].id;
+            })
+          return;
+        }
         setPosts(res.data.posts);
         setIsLoading(false);
         cursor.current = res.data.posts[res.data.posts.length - 1].id;

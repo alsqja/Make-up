@@ -99,6 +99,7 @@ const CommentBox = styled.div`
     margin-right: 15px;
     display: flex;
     align-items: center;
+    cursor: pointer;
   }
   .comments_button {
     font-size: smaller;
@@ -107,6 +108,7 @@ const CommentBox = styled.div`
   }
   .photo {
     width: 40px;
+    cursor: pointer;
     height: 40px;
     margin-right: 15px;
     border-radius: 100px;
@@ -252,7 +254,9 @@ export const PostCard = ({ post }: IProps) => {
           />
         </FileButtonBox>
       </StyledFile>}
-      <Text>
+      <Text onClick={() => {
+          OpenPostHandler(post.id);
+        }}>
         <div className="text">{post.content}</div>
       </Text>
       <LikeComment>
@@ -266,15 +270,23 @@ export const PostCard = ({ post }: IProps) => {
           }}/>
         )}
       </LikeComment>
-      <CommentBox>
+      <CommentBox onClick={() => {
+            OpenPostHandler(post.id);
+          }}>
         <div className="likes_num">{likeLength} 명이 좋아합니다.</div>
         <div className="comments_info">
           {post.comments.length === 0 ? (
             ""
           ) : (
-            <img className="photo" src={post.comments[0].user.profile} alt="" />
+            <img className="photo" src={post.comments[0].user.profile} alt="" onClick={(e) => {
+              e.stopPropagation()
+              navigate(`/mypage/${post.comments[0].user.id}`)
+            }}/>
           )}
-          <div className="username">
+          <div className="username" onClick={(e) => {
+            e.stopPropagation()
+            navigate(`/mypage/${post.comments[0].user.id}`)
+          }}>
             {post.comments.length === 0 ? null : post.comments[0].user.nickname}
           </div>
           <div className="text">
