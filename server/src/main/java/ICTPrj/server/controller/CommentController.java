@@ -3,7 +3,9 @@ package ICTPrj.server.controller;
 import ICTPrj.server.dto.CommentDto;
 import ICTPrj.server.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,10 +29,11 @@ public class CommentController {
     }
 
     @DeleteMapping("/post/{postId}/comment/{commentId}")
-    public Long deleteComment(@RequestHeader(value = "Authorization") String userToken,
+    public void deleteComment(@RequestHeader(value = "Authorization") String userToken,
                               @PathVariable(value = "postId") Long postId,
                               @PathVariable(value = "commentId") Long commentId) {
 
-        return commentService.deleteComment(userToken, postId, commentId);
+        commentService.deleteComment(userToken, postId, commentId);
+        throw new ResponseStatusException(HttpStatus.NO_CONTENT, "댓글 삭제 성공");
     }
 }
