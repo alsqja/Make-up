@@ -173,7 +173,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
             email,
             nickname,
             password,
-            profile: defaultProfile
+            profile: 'defaultProfile.jpeg'
           }
         )
         .then((res) => {

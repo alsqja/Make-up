@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useSetRecoilState } from "recoil";
 import { followerModal } from "../store/store";
 import { IPostUser } from "../Dummys/dummy";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -128,6 +128,7 @@ const ChildWrapper = styled.div`
 export const FollowerModal = () => {
   const setIsFollowerModalOn = useSetRecoilState(followerModal);
   const [userList, setUserList] = useState<IPostUser[]>([]);
+  const [isEnd, setIsEnd] = useState(false);
   const cursor = useRef(-1)
   const navigate = useNavigate();
 
@@ -136,7 +137,7 @@ export const FollowerModal = () => {
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .get(
-        `http://52.79.250.177:8080/follower?id=${id}&cursor=${cursor.current}`,
+        `http://52.79.250.177:8080/follower?id=${id}&cursor=-1`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`
@@ -145,8 +146,51 @@ export const FollowerModal = () => {
       )
       .then((res) => {
         setUserList(res.data.user)
+        cursor.current = res.data.user[res.data.user.length - 1].id;
       })
   }, []);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback((): void => {
+    const id = window.localStorage.getItem('userId')
+
+    const innerHeight = scrollRef.current?.clientHeight; // 브라우저 창 내용 크기 (스크롤 포함 x)
+    const scrollHeight = scrollRef.current?.scrollHeight; // 브라우저 총 내용 크기 (스크롤 포함)
+    const scrollTop = scrollRef.current?.scrollTop; // 현 스크롤바 위치
+
+    if (
+      scrollTop !== undefined &&
+      innerHeight !== undefined &&
+      scrollHeight !== undefined
+    ) {
+      if (Math.round(scrollTop + innerHeight) >= scrollHeight && !isEnd) {
+        const accessToken = localStorage.getItem('accessToken');
+        axios
+          .get(`http://52.79.250.177:8080/follower?id=${id}&cursor=${cursor.current}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+          .then((res) => {
+            if (res.data.user.length === 0) {
+              setIsEnd(true);
+              return;
+            }
+            setUserList([...userList, ...res.data.user])
+            cursor.current = res.data.user[res.data.user.length - 1].id;
+          });
+      }
+    }
+  }, [isEnd, userList]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, true);
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+    };
+  }, [handleScroll]);
+
 
   return (
     <ModalBackdrop
@@ -173,7 +217,7 @@ export const FollowerModal = () => {
           </div>
           <div className="name"> 팔로워 </div>
         </TitleBox>
-        <ScrollWrapper>
+        <ScrollWrapper ref={scrollRef}>
           {userList.map((user) => {
             return (
               <ChildWrapper key={user.id}>
