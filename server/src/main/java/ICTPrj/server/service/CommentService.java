@@ -71,7 +71,7 @@ public class CommentService {
         return commentRepository.save(comment).getId();
     }
 
-    public Long deleteComment(String userToken, Long postId, Long commentId) {
+    public void deleteComment(String userToken, Long postId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "없는 댓글 입니다."));
         User user = getUser(userToken);
@@ -86,9 +86,7 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
         }
 
-        likeRepository.deleteAll(comment.getLikes());
+//        likeRepository.deleteAll(comment.getLikes());
         commentRepository.delete(comment);
-
-        return commentId;
     }
 }
