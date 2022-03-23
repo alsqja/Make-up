@@ -72,8 +72,8 @@ public class CommentTest {
     @DisplayName("댓글 삭제 테스트")
     public void deleteCommentTest() {
         String userToken = getAccessToken();
-        Long postId = 1L;
-        Long commentId = 5L;
+        Long postId = 48L;
+        Long commentId = 7L;
 
         commentService.deleteComment(userToken, postId, commentId);
     }
