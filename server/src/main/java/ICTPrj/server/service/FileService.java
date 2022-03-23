@@ -9,12 +9,19 @@ import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
 
+import javax.net.ssl.SSLException;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Date;
@@ -65,7 +72,18 @@ public class FileService {
             ret = uuid + "/result/result.png";
         }catch (AmazonServiceException e){
             MakeupDto reqDto = MakeupDto.builder().file(uuid).build();
-            WebClient webClient = WebClient.create(flaskUrl);
+            HttpClient httpClient = HttpClient.create().secure(t -> {
+                try {
+                    t.sslContext(SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build());
+                } catch (SSLException er){
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근할 수 없습니다.");
+                }
+            });
+
+            WebClient webClient = WebClient.builder()
+                    .baseUrl(flaskUrl)
+                    .clientConnector(new ReactorClientHttpConnector(httpClient))
+                    .build();
             ret = webClient.post()
                     .uri("/makeup")
                     .body(Mono.just(reqDto), MakeupDto.class)
