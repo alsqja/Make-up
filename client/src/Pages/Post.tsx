@@ -9,7 +9,7 @@ import {
   FaHeart,
   FaRegHeart,
 } from "react-icons/fa";
-import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import { AiOutlineDelete } from 'react-icons/ai';
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "../store/store";
@@ -190,6 +190,7 @@ const CommentBox = styled.div`
     justify-content: center;
     align-items: center;
     margin-right: 10px;
+    z-index: -1;
   }
 `;
 
@@ -453,6 +454,22 @@ export const Post = () => {
       })
   }
 
+  const commentDeleteHandler = (commentId: number) => {
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .delete(
+        `${serverUrl}post/${id}/comment/${commentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then(() => {
+        setComments(comments.filter((comment) => comment.id !== commentId))
+      })
+  }
+
   return (
     <PostOuter>
       <Container>
@@ -463,7 +480,6 @@ export const Post = () => {
             <div className="name">{user?.nickname}</div>
             {isMine ? 
             <div className="btnbox">
-              <AiOutlineEdit className="btn"/>
               <AiOutlineDelete className="btn" onClick={deletePostHandler}/>
             </div> : ''}
             
@@ -534,8 +550,9 @@ export const Post = () => {
                         }}/>
                       )}
                       <div className="like_count">{comment.likes.length}</div>
-                      <AiOutlineEdit className="btn"/>
-                      <AiOutlineDelete className="btn"/>
+                      <AiOutlineDelete className="btn" onClick={() => {
+                        commentDeleteHandler(comment.id)
+                      }}/>
                     </div> : 
                     <div className="btn_box">
                       {comment.likes.filter((like) => String(like.userId) === myid).length === 0 ? (

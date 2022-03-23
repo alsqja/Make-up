@@ -129,7 +129,11 @@ const ChildWrapper = styled.div`
   }
 `;
 
-export const FollowModal = () => {
+interface IProps {
+  id: number;
+}
+
+export const FollowModal = ({id}: IProps) => {
   const setIsFollowModalOn = useSetRecoilState(followModal);
   const [userList, setUserList] = useState<IPostUser[]>([]);
   const [isEnd, setIsEnd] = useState(false);
@@ -137,7 +141,6 @@ export const FollowModal = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const id = window.localStorage.getItem('userId')
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .get(
@@ -152,12 +155,11 @@ export const FollowModal = () => {
         setUserList(res.data.user)
         cursor.current = res.data.user[res.data.user.length - 1].id;
       })
-  }, []);
+  }, [id]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback((): void => {
-    const id = window.localStorage.getItem('userId')
 
     const innerHeight = scrollRef.current?.clientHeight; // 브라우저 창 내용 크기 (스크롤 포함 x)
     const scrollHeight = scrollRef.current?.scrollHeight; // 브라우저 총 내용 크기 (스크롤 포함)
@@ -186,7 +188,7 @@ export const FollowModal = () => {
           });
       }
     }
-  }, [isEnd, userList]);
+  }, [id, isEnd, userList]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, true);

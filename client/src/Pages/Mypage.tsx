@@ -288,8 +288,8 @@ export const Mypage = () => {
   return (
     <Outer>
       {isUserSettingModalOn ? <SettingModal userInfo={userInfo} /> : ""}
-      {isFollowModalOn ? <FollowModal /> : ""}
-      {isFollowerModalOn ? <FollowerModal /> : ""}
+      {isFollowModalOn ? <FollowModal id={id}/> : ""}
+      {isFollowerModalOn ? <FollowerModal id={id}/> : ""}
       <MyContainer>
         <UserBox>
           <img className="profile" src={userInfo?.profile} alt="" />
