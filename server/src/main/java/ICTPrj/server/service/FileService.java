@@ -72,19 +72,18 @@ public class FileService {
         try{
             S3Object o = s3Client.getObject(bucketName, uuid + "/result/result.png");
             ret = uuid + "/result/result.png";
-        }catch (AmazonServiceException e){
+        }catch (AmazonServiceException e) {
             MakeupDto reqDto = MakeupDto.builder().file(uuid).build();
-            HttpClient httpClient = HttpClient.create().secure(t -> {
-                try {
-                    t.sslContext(SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build());
-                } catch (SSLException er){
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근할 수 없습니다.");
-                }
-            });
-
+//            HttpClient httpClient = HttpClient.create().secure(t -> {
+//                try {
+//                    t.sslContext(SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build());
+//                } catch (SSLException er){
+//                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근할 수 없습니다.");
+//                }
+//            });
             WebClient webClient = WebClient.builder()
                     .baseUrl(flaskUrl)
-                    .clientConnector(new ReactorClientHttpConnector(httpClient))
+//                    .clientConnector(new ReactorClientHttpConnector(httpClient))
                     .build();
             ret = webClient.post()
                     .uri("/makeup")
