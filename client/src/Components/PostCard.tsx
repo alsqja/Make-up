@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { IPost } from "../Dummys/dummy";
+import { IPost, serverUrl } from "../Dummys/dummy";
 import {
   FaChevronRight,
   FaChevronLeft,
@@ -8,6 +8,7 @@ import {
   FaHeart,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PostCardContainer = styled.div`
   font-family: "SUIT-Light";
@@ -62,7 +63,6 @@ const Text = styled.div`
   border-bottom: 1px solid #dbdbdb;
   padding: 20px 0;
   .text {
-    background-color: #fff;
     margin: 0 30px;
   }
 `;
@@ -175,10 +175,41 @@ interface IProps {
 export const PostCard = ({ post }: IProps) => {
   const [filePage, setFilePage] = useState(0);
   const navigate = useNavigate();
+  const myId = window.localStorage.getItem('userId')
+  const [isLike, setIsLike] = useState(post.likes.filter((el) => String(el.userId) === myId).length > 0)
+  const [likeLength, setLikeLength] = useState(post.likes.length)
 
   const OpenPostHandler = (id: number) => {
     navigate(`/post/${id}`);
   };
+
+  const likeHandler = (isPlus: boolean) => {
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .post(
+        `${serverUrl}likes`,
+        {
+          postId: post.id,
+          commentId: null,
+          isPlus: isPlus
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then(() => {
+        setIsLike(isPlus)
+        if (isPlus) {
+          setLikeLength(likeLength + 1)
+        }
+        else {
+          setLikeLength(likeLength - 1)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
 
   return (
     <PostCardContainer>
@@ -225,14 +256,18 @@ export const PostCard = ({ post }: IProps) => {
         <div className="text">{post.content}</div>
       </Text>
       <LikeComment>
-        {post.likes.filter((like) => like.userId === 0).length === 0 ? (
-          <FaRegHeart className="like_button" />
+        {!isLike ? (
+          <FaRegHeart className="like_button" onClick={() => {
+            likeHandler(true)
+          }}/>
         ) : (
-          <FaHeart className="like_button" style={{ color: "red" }} />
+          <FaHeart className="like_button" style={{ color: "red" }} onClick={() => {
+            likeHandler(false)
+          }}/>
         )}
       </LikeComment>
       <CommentBox>
-        <div className="likes_num">{post.likes.length} 명이 좋아합니다.</div>
+        <div className="likes_num">{likeLength} 명이 좋아합니다.</div>
         <div className="comments_info">
           {post.comments.length === 0 ? (
             ""

@@ -59,7 +59,7 @@ export const Main = () => {
     setIsLoading(true);
     axios
       .get(
-        `http://52.79.250.177:8080/getpost?id=${id}&cursor=${cursor.current}`
+        `http://52.79.250.177:8080/getpost?id=${id}&cursor=-1`
       )
       .then((res) => {
         setPosts(res.data.posts);

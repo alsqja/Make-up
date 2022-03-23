@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SideBar } from "../Components/SideBar";
-import { IPostUser, IPostLike, IComment } from "../Dummys/dummy";
+import { IPostUser, IPostLike, IComment, serverUrl } from "../Dummys/dummy";
 import {
   FaChevronLeft,
   FaChevronRight,
@@ -11,6 +11,8 @@ import {
 } from "react-icons/fa";
 import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "../store/store";
 
 const PostOuter = styled.div`
   font-family: "SUIT-Light";
@@ -107,7 +109,6 @@ const Text = styled.div`
   border-bottom: 1px solid #dbdbdb;
   padding: 20px 0;
   .text {
-    background-color: #fff;
     margin: 0 30px;
   }
 `;
@@ -254,7 +255,7 @@ const CommentBtn = styled.div`
 export const Post = () => {
   const location = useLocation().pathname.split("/")[2];
   const id = +location;
-
+  const myid = window.localStorage.getItem('userId')
   const [filePage, setFilePage] = useState(0);
   const [user, setUser] = useState<IPostUser>()
   const [files, setFiles] = useState<string[]>([])
@@ -262,10 +263,11 @@ export const Post = () => {
   const [likes, setLikes] = useState<IPostLike[]>([])
   const [comments, setComments] = useState<IComment[]>([])
   const [isMine, setIsMine] = useState(false)
+  const [commentValue, setCommentValue] = useState('')
+  const login = useRecoilValue(isLogin)
 
   useEffect(() => {
     const accessToken = window.localStorage.getItem('accessToken')
-    const myid = window.localStorage.getItem('userId')
     axios
       .get(
         `http://52.79.250.177:8080/post/${id}`,
@@ -285,7 +287,7 @@ export const Post = () => {
         setLikes(res.data.likes)
         setComments(res.data.comments)
       })
-  }, [id]);
+  }, [id, myid]);
 
   const deletePostHandler = () => {
     const myid = window.localStorage.getItem('userId')
@@ -302,6 +304,78 @@ export const Post = () => {
       .then(() => {
         window.location.href = `/mypage/${myid}`
       })
+  }
+
+  const commentHandler = () => {
+    if (!login) {
+      alert('로그인 후 이용가능합니다.')
+      return;
+    }
+    if (commentValue.length === 0) {
+      alert('댓글을 입력해주세요')
+      return;
+    }
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .post(
+        `${serverUrl}post/${id}/comment`,
+        {
+          content: commentValue
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then(() => {
+        axios
+          .get(
+            `${serverUrl}user?id=${myid}&cursor=-1`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`
+              }
+            }
+          )
+          .then((res) => {
+            setComments([{
+              id: -1, 
+              content: commentValue,
+              user: res.data.user,
+              likes: []
+            }, ...comments])
+            setCommentValue('')
+          })
+      })
+  }
+
+  const postLikeHandler = (isPlus: boolean) => {
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .post(
+        `${serverUrl}likes`,
+        {
+          postId: id,
+          commentId: null,
+          isPlus: isPlus
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then(() => {
+        if (!myid) return;
+        if (isPlus) {
+          setLikes([...likes, {id: -1, userId: +myid}])
+        }
+        else {
+          setLikes(likes.filter((el) => el.userId !== +myid))
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   return (
@@ -351,10 +425,14 @@ export const Post = () => {
             <div className="text">{content}</div>
           </Text>
           <LikeComment>
-            {likes.filter((like) => like.userId === 0).length === 0 ? (
-              <FaRegHeart className="like_button" />
+            {likes.filter((like) => String(like.userId) === myid).length === 0 ? (
+              <FaRegHeart className="like_button" onClick={() => {
+                postLikeHandler(true)
+              }}/>
             ) : (
-              <FaHeart className="like_button" style={{ color: "red" }} />
+              <FaHeart className="like_button" style={{ color: "red" }} onClick={() => {
+                postLikeHandler(false)
+              }}/>
             )}
           </LikeComment>
           <CommentBox>
@@ -371,8 +449,10 @@ export const Post = () => {
               );
             })}
             <InputBox>
-              <CommentInput placeholder="댓글 달기..." />
-              <CommentBtn>게시</CommentBtn>
+              <CommentInput placeholder="댓글 달기..." value={commentValue} onChange={(e) => {
+                setCommentValue(e.target.value)
+              }}/>
+              <CommentBtn onClick={commentHandler}>게시</CommentBtn>
             </InputBox>
           </CommentBox>
         </PostContainer>
