@@ -117,8 +117,8 @@ export const SideBar = () => {
 
   return (
     <Container>
-      {isFollowModalOn ? <FollowModal /> : ""}
-      {isFollowerModalOn ? <FollowerModal /> : ""}
+      {isFollowModalOn ? <FollowModal id={userId}/> : ""}
+      {isFollowerModalOn ? <FollowerModal id={userId}/> : ""}
       {login ? (
         <Link to={`/mypage/${userId}`}>
           <UserInfo>
