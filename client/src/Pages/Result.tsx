@@ -5,6 +5,7 @@ import styled from "styled-components";
 import ShareModal from "../Components/ShareModal";
 import { defaultProfile } from "../Dummys/dummy";
 import { Loading } from "./Loading";
+import { saveAs } from "file-saver";
 
 const Outer = styled.div`
   padding-top: 48px;
@@ -46,7 +47,7 @@ interface IImgProps {
 
 const ResultImg = styled.div<IImgProps>`
   grid-column: 2 / span 10;
-  height: 550px;
+  height: 500px;
   background-image: url(${(props) => `'${props.src}'`});
   background-color: #eeeeee;
   background-position: center;
@@ -97,12 +98,19 @@ export const Result = () => {
     });
   }, [uuid]);
 
-  // if (isLoading) {
-  //   return <Loading/>
-  // }
+  if (isLoading) {
+    return <Loading />;
+  }
 
   const ShareOnClick = () => {
     setShareModal(true);
+  };
+
+  const downloadImage = () => {
+    // console.log(img);
+    // let blob = fetch(img).then((r) => r.blob());
+    // console.log(blob);
+    saveAs(img, "result");
   };
 
   return (
@@ -111,7 +119,7 @@ export const Result = () => {
         <ResultImg src={img}></ResultImg>
         <BtnBox>
           <Btn onClick={ShareOnClick}>공유하기</Btn>
-          <Btn>저장하기</Btn>
+          <Btn onClick={downloadImage}>저장하기</Btn>
           <Btn>게시글 작성</Btn>
         </BtnBox>
       </Container>
