@@ -365,7 +365,7 @@ export const Post = () => {
           }
         }
       )
-      .then(() => {
+      .then((data) => {
         axios
           .get(
             `${serverUrl}user?id=${myid}&cursor=-1`,
@@ -377,7 +377,7 @@ export const Post = () => {
           )
           .then((res) => {
             setComments([{
-              id: -1, 
+              id: data.data, 
               content: commentValue,
               user: res.data.user,
               likes: []
