@@ -1,16 +1,16 @@
 package ICTPrj.server;
 
-import ICTPrj.server.dto.PostDto;
-import ICTPrj.server.dto.PostListDto;
-import ICTPrj.server.dto.TokenDto;
-import ICTPrj.server.dto.UserDto;
+import ICTPrj.server.dto.*;
 import ICTPrj.server.service.PostService;
 import ICTPrj.server.service.SignInService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,8 +22,6 @@ public class PostTest {
 
     @Autowired
     private SignInService signInService;
-
-    private GetUserTokenForTest getUserTokenForTest;
 
     protected String getAccessToken() {
         UserDto userDto = UserDto.builder()
@@ -71,7 +69,7 @@ public class PostTest {
         UserDto userDto = UserDto.builder()
                 .email("user@naver.com")
                 .password("123").build();
-        String userToken = getUserTokenForTest.getAccessToken();
+        String userToken = getAccessToken();
 
         Long postId = 8L;
 
@@ -81,7 +79,60 @@ public class PostTest {
         // Then
     }
 
+    @Test
+    @DisplayName("게시글 수정 테스트")
+    public void modifyPostTest() {
+        // Given
+        UserDto userDto = UserDto.builder()
+                .email("user@naver.com")
+                .password("123").build();
+        String userToken = getAccessToken();
+
+        Long postId = 8L;
+
+        ArrayList<FilePathDto> files = new ArrayList<>();
+        FilePathDto file = FilePathDto.builder()
+                .path("test")
+                .build();
+        files.add(file);
+
+        PostPathDto postPathDto = PostPathDto.builder()
+                .content("test")
+                .files(files)
+                .build();
 
 
+        // When
+        Long modifiedPostId = postService.modifyPost(userToken, postId, postPathDto);
 
+        // Then
+        assertEquals(postService.readPost(modifiedPostId).getId(), postId);
+    }
+
+    @Test
+    @DisplayName("게시글 작성 테스트")
+    public void writePostTest() {
+        // Given
+        UserDto userDto = UserDto.builder()
+                .email("user@naver.com")
+                .password("123").build();
+        String userToken = getAccessToken();
+
+
+        ArrayList<FilePathDto> files = new ArrayList<>();
+        FilePathDto file = FilePathDto.builder()
+                .path("test")
+                .build();
+        files.add(file);
+
+        PostPathDto postPathDto = PostPathDto.builder()
+                .content("test")
+                .files(files)
+                .build();
+
+        // When
+        Long newPostId = postService.writePost(userToken, postPathDto);
+
+        // Then
+    }
 }
