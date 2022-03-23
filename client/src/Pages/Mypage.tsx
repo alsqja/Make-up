@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaCog } from "react-icons/fa";
@@ -15,7 +15,8 @@ import { FollowModal } from "../Components/FollowModal";
 import { FollowerModal } from "../Components/FollowerModal";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import axios from "axios";
-
+import FloatBtn from "../Components/FloatBtn";
+import Loading from "../Components/Loading";
 const Outer = styled.div`
   padding-top: 48px;
   width: 100%;
@@ -149,20 +150,24 @@ export const Mypage = () => {
   const id = +location;
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const [isFollowed, setIsFollowed] = useState(false);
-  const [postList, setPostList] = useState<IPost[]>();
-  const [count, setCount] = useState(-1)
+  const [postList, setPostList] = useState<IPost[]>([]);
+  const [count, setCount] = useState(-1);
   const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
   const [isFollowerModalOn, setIsFollowerModalOn] =
     useRecoilState(followerModal);
+  const [scrollTopBtnIsVisible, setScrollTopBtnIsVisible] = useState(false);
   const [isUserSettingModalOn, setIsUserSettingModalOn] =
     useRecoilState(userSettingModal);
   const setLogin = useSetRecoilState(isLogin);
   const navigate = useNavigate();
-  const myId = window.localStorage.getItem('userId')
-
-  const cursor = useRef(-1)
+  const myId = window.localStorage.getItem("userId");
+  const [isLoading, setIsLoading] = useState(false);
+  const cursor = useRef(-1);
+  const [isEnd, setIsEnd] = useState(false);
 
   useEffect(() => {
+    const id = window.localStorage.getItem("userId");
+    setIsLoading(true);
     const accessToken = window.localStorage.getItem("accessToken");
     axios
       .get(`http://52.79.250.177:8080/user?id=${id}&cursor=${cursor.current}`, {
@@ -171,37 +176,96 @@ export const Mypage = () => {
         },
       })
       .then((res) => {
-        setUserInfo(res.data.user)
-        setPostList(res.data.posts)
-        setCount(res.data.count)
-        cursor.current = res.data.posts[res.data.posts.length - 1].id
-        setIsFollowed(res.data.follow)
-      });
+        setUserInfo(res.data.user);
+        setPostList(res.data.posts);
+        setCount(res.data.count);
+        setIsLoading(false);
+        cursor.current = res.data.posts[res.data.posts.length - 1].id;
+        setIsFollowed(res.data.follow);
+      })
+      .catch((err) => console.log(err));
   }, [id]);
 
+  const handleScroll = useCallback((): void => {
+    const id = window.localStorage.getItem("userId");
+
+    const { innerHeight } = window;
+    const { scrollHeight } = document.body;
+    const { scrollTop } = document.documentElement;
+    if (
+      scrollTop !== undefined &&
+      innerHeight !== undefined &&
+      scrollHeight !== undefined
+    ) {
+      if (Math.round(scrollTop + innerHeight) >= scrollHeight && !isEnd) {
+        setIsLoading(true);
+        axios
+          .get(
+            `http://52.79.250.177:8080/getpost?id=${id}&cursor=${cursor.current}`
+          )
+          .then((res) => {
+            if (res.data.posts.length === 0) {
+              setIsLoading(false);
+              setIsEnd(true);
+              return;
+            }
+            setPostList([...postList, ...res.data.posts]);
+
+            setIsLoading(false);
+            cursor.current = res.data.posts[res.data.posts.length - 1].id;
+          })
+          .catch((err) => console.log("err::", err));
+      }
+    }
+  }, [isEnd, postList]);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, true);
+    return () => {
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [handleScroll]);
+
+  useEffect(() => {
+    const showTopBtnOnBottom = () => {
+      if (window.pageYOffset > 500) {
+        setScrollTopBtnIsVisible(true);
+      } else {
+        setScrollTopBtnIsVisible(false);
+      }
+    };
+    window.addEventListener("scroll", showTopBtnOnBottom);
+    return () => {
+      window.removeEventListener("scroll", showTopBtnOnBottom);
+    };
+  }, [handleScroll]);
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   if (!myId) {
-    return <></>
+    return <></>;
   }
 
   const followHandler = () => {
     setIsFollowed(!isFollowed);
-    const accessToken = window.localStorage.getItem('accessToken')
+    const accessToken = window.localStorage.getItem("accessToken");
     axios
       .post(
-        'http://52.79.250.177:8080/follow',
+        "http://52.79.250.177:8080/follow",
         {
           userId: id,
-          isPlus: !isFollowed
+          isPlus: !isFollowed,
         },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       )
       .then(() => {
-        window.location.href = `/mypage/${id}`
-      })
+        window.location.href = `/mypage/${id}`;
+      });
   };
 
   // const settingClick = () => {
@@ -211,19 +275,19 @@ export const Mypage = () => {
   const logoutHandler = () => {
     window.localStorage.setItem("isLogin", "false");
     window.localStorage.setItem("accessToken", "");
-    window.localStorage.setItem("userId", '-1')
+    window.localStorage.setItem("userId", "-1");
     setLogin(false);
     navigate("/");
   };
 
   return (
     <Outer>
-      {isUserSettingModalOn ? <SettingModal userInfo={userInfo}/> : ""}
+      {isUserSettingModalOn ? <SettingModal userInfo={userInfo} /> : ""}
       {isFollowModalOn ? <FollowModal /> : ""}
       {isFollowerModalOn ? <FollowerModal /> : ""}
       <MyContainer>
         <UserBox>
-          <img className="profile" src={userInfo?.profile} alt='' />
+          <img className="profile" src={userInfo?.profile} alt="" />
           <UserInfoBox>
             <NameBtnBox>
               <Name>{userInfo?.nickname}</Name>
@@ -233,7 +297,9 @@ export const Mypage = () => {
                   cursor: "pointer",
                   marginRight: "10px",
                 }}
-                className={userInfo?.id !== +myId ? "noshow" : "" /*TODO: userID*/}
+                className={
+                  userInfo?.id !== +myId ? "noshow" : "" /*TODO: userID*/
+                }
                 onClick={() => setIsUserSettingModalOn(true)}
               />
               <FollowBtn
@@ -243,7 +309,9 @@ export const Mypage = () => {
                 {isFollowed ? "팔로우 취소" : "팔로우"}
               </FollowBtn>
               <FollowBtn
-                className={userInfo?.id !== +myId ? "noshow" : "" /*TODO: userID*/}
+                className={
+                  userInfo?.id !== +myId ? "noshow" : "" /*TODO: userID*/
+                }
                 onClick={logoutHandler}
               >
                 로그아웃
@@ -270,7 +338,13 @@ export const Mypage = () => {
             return <PostCard key={post.id} post={post} />;
           })}
         </PostCardBox>
+        {isLoading && <Loading />}
       </MyContainer>
+      {scrollTopBtnIsVisible && (
+        <div onClick={scrollToTop}>
+          <FloatBtn />
+        </div>
+      )}
     </Outer>
   );
 };
