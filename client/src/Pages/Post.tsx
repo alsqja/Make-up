@@ -160,6 +160,37 @@ const CommentBox = styled.div`
     border-radius: 100px;
     /* border: 2px solid red; */
   }
+  .box {
+    margin-left: 0;
+  }
+  .btn_box {
+    display: flex;
+    justify-content: left;
+    margin-left: 30px;
+  }
+  .btn {
+    font-size: 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    &:hover {
+      color: #dbdbdb;
+    }
+  }
+  .like_button {
+    cursor: pointer;
+    margin-right: 5px;
+    &:hover {
+      color: #dbdbdb;
+    }
+  }
+  .like_count {
+    position: relative;
+    top: -2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+  }
 `;
 
 interface IImgProps {
@@ -378,6 +409,50 @@ export const Post = () => {
       .catch((err) => console.log(err))
   }
 
+  const commentLikeHandler = (id: number, isPlus: boolean) => {
+    const accessToken = window.localStorage.getItem('accessToken')
+    axios
+      .post(
+        `${serverUrl}likes`,
+        {
+          postId: null,
+          commentId: id,
+          isPlus: isPlus
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      .then(() => {
+        if (isPlus) {
+          const copy = comments.map((comment: IComment) => {
+            if (!myid) {
+              return comment
+            }
+            if (comment.id === id) {
+              return {...comment, likes: [...comment.likes, {id: -1, userId: +myid}]}
+            }
+            return comment
+          })
+          setComments(copy)
+        }
+        else {
+          const copy = comments.map((comment) => {
+            if (!myid) {
+              return comment
+            }
+            if (comment.id === id) {
+              return {...comment, likes: comment.likes.filter((like) => String(like.userId) !== myid)}
+            }
+            return comment
+          })
+          setComments(copy)
+        }
+      })
+  }
+
   return (
     <PostOuter>
       <Container>
@@ -441,10 +516,41 @@ export const Post = () => {
             </div>
             {comments.map((comment) => {
               return (
-                <div className="comments_info" key={comment.id}>
-                  <img className="photo" src={comment.user.profile} alt="" />
-                  <div className="username">{comment.user.nickname}</div>
-                  <div className="text">{comment.content}</div>
+                <div className="box" key={comment.id}>
+                  <div className="comments_info">
+                    <img className="photo" src={comment.user.profile} alt="" />
+                    <div className="username">{comment.user.nickname}</div>
+                    <div className="text">{comment.content}</div>
+                  </div>
+                  {String(comment.user.id) === myid ? 
+                    <div className="btn_box">
+                      {comment.likes.filter((like) => String(like.userId) === myid).length === 0 ? (
+                        <FaRegHeart className="like_button" onClick={() => {
+                          commentLikeHandler(comment.id, true)
+                        }}/>
+                      ) : (
+                        <FaHeart className="like_button" style={{color: 'red'}} onClick={() => {
+                          commentLikeHandler(comment.id, false)
+                        }}/>
+                      )}
+                      <div className="like_count">{comment.likes.length}</div>
+                      <AiOutlineEdit className="btn"/>
+                      <AiOutlineDelete className="btn"/>
+                    </div> : 
+                    <div className="btn_box">
+                      {comment.likes.filter((like) => String(like.userId) === myid).length === 0 ? (
+                        <FaRegHeart className="like_button" onClick={() => {
+                          commentLikeHandler(comment.id, true)
+                        }}/>
+                      ) : (
+                        <FaHeart className="like_button" style={{color: 'red'}} onClick={() => {
+                          commentLikeHandler(comment.id, false)
+                        }}/>
+                      )}
+                      <div className="like_count">{comment.likes.length}</div>
+                    </div>
+                  }
+                  
                 </div>
               );
             })}
