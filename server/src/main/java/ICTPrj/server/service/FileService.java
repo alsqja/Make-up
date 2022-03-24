@@ -98,7 +98,7 @@ public class FileService {
                 if (er.getMessage().startsWith("400")) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미지에 얼굴이 없습니다.");
                 }
-                
+
                 else {
                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Blocked by CORS policy");
                 }

@@ -25,9 +25,10 @@ public class SearchTest {
     public void searchUserTest() {
         // Given
         String query = "user";
+        Long cursorId = -1L;
 
         // When
-        List<SearchUsersDto> searchedUser = searchService.searchUser(query);
+        List<SearchUsersDto> searchedUser = searchService.searchUser(query, cursorId);
 
         // Then
         boolean falg = false;
@@ -45,9 +46,9 @@ public class SearchTest {
     public void searchPostTest() {
         // Given
         String query = "search";
-
+        Long cursorId = 5L;
         // When
-        List<PostDto> postDtos = searchService.searchPost(query);
+        List<PostDto> postDtos = searchService.searchPost(query, cursorId);
 
 
         // Then

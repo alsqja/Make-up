@@ -23,21 +23,37 @@ public class SearchService {
     @Value("${cloud.aws.s3.fileprefix}")
     private String filePrefix;
 
-    public List<SearchUsersDto> searchUser(String query) {
+    public List<SearchUsersDto> searchUser(String query, Long cursorId) {
         query = "%" + query + "%";
-        List<User> users = userRepository.findUsersByNicknameLike(query);
+
+        List<User> users = new ArrayList<>();
+
+        if(cursorId == -1) {
+            users = userRepository.findUsersByNicknameLike(query);
+        }
+        else {
+            users = userRepository.findUsersByNicknameLikeCursor(query, cursorId);
+        }
         List<SearchUsersDto> searchUsersDto = new ArrayList<SearchUsersDto>();
 
         for(User user: users) {
-            searchUsersDto.add(SearchUsersDto.of(user));
+            searchUsersDto.add(SearchUsersDto.of(user, filePrefix));
         }
 
         return searchUsersDto;
     }
 
-    public List<PostDto> searchPost(String query) {
+    public List<PostDto> searchPost(String query, Long cursorId) {
         query = "%" + query + "%";
-        List<Post> posts = postRepository.findPostsByContentLike(query);
+        List<Post> posts = new ArrayList<>();
+
+        if(cursorId == -1) {
+            posts = postRepository.findPostsByContentLike(query);
+        }
+        else {
+            posts = postRepository.findPostsByContentLikeCursor(query, cursorId);
+        }
+
         List<PostDto> searchPostDto = new ArrayList<PostDto>();
 
         for(Post post: posts) {
