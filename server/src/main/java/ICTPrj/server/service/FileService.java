@@ -94,7 +94,13 @@ public class FileService {
             }
 
             catch(Exception er) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미지에 얼굴이 없습니다.");
+                if (er.getMessage().startsWith("400")) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미지에 얼굴이 없습니다.");
+                }
+                
+                else {
+                   throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Blocked by CORS policy");
+                }
             }
         }
         MakeupDto retDto = MakeupDto.builder().file(filePrefix + ret).build();
