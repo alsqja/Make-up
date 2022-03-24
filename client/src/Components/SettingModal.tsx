@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { v4 } from "uuid";
-import { defaultProfile, IUserInfo } from "../Dummys/dummy";
+import { IUserInfo } from "../Dummys/dummy";
 import { userSettingModal } from "../store/store";
 import { Button1 } from "./SignupModal";
 const Outer = styled.div`
@@ -217,13 +217,23 @@ function SettingModal({ userInfo }: IProps) {
   const changeUserInfoHandler = () => {
     const accessToken = window.localStorage.getItem('accessToken')
     if (!profile) {
-      console.log(userInfo?.profile)
+      const profileMaker = (url: string | undefined) => {
+        if (!url) {
+          return 'defaultProfile.jpeg'
+        }
+        if (url.split('/').length > 4) {
+          return url.split('/')[3] + '/' + url.split('/')[4]
+        }
+        else {
+          return url.split('/')[3]
+        }
+      }
       axios
         .put(
           `http://52.79.250.177:8080/user/me`,
           {
             nickname,
-            profile: userInfo?.profile.split('/')[3] + '/' + userInfo?.profile.split('/')[4],
+            profile: profileMaker(userInfo?.profile),
             oldPassword: password,
             newPassword
           },
@@ -261,7 +271,7 @@ function SettingModal({ userInfo }: IProps) {
             }
           )
           .then(() => {
-            console.log(`${uuid}/${profile.name}`)
+            // console.log(`${uuid}/${profile.name}`)
             axios
               .put(
                 `http://52.79.250.177:8080/user/me`,

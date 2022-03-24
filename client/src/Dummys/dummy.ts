@@ -155,7 +155,7 @@ export const dummyPosts: IPost[] = [
   },
 ]
 
-export const defaultProfile = 'https://cdn.discordapp.com/attachments/951798551543951380/955705773307080764/defaultProfile.jpeg'
+export const defaultProfile = 'defaultProfile.jpeg'
 
 export const dummyFollow: IPostUser[] = [
   {

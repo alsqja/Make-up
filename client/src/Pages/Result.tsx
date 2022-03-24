@@ -5,7 +5,6 @@ import styled from "styled-components";
 import ShareModal from "../Components/ShareModal";
 import { defaultProfile } from "../Dummys/dummy";
 import { Loading } from "./Loading";
-import { saveAs } from "file-saver";
 
 const Outer = styled.div`
   padding-top: 48px;
@@ -131,47 +130,6 @@ export const Result = () => {
       });
   };
 
-  // const downloadImage = () => {
-  //   fetch(img, {
-  //     mode: "no-cors",
-  //     headers: {
-  //       "Access-Control-Allow-Origin ":
-  //         "https://bboshap.s3.ap-northeast-2.amazonaws.com",
-  //     },
-  //   }).then((res) => saveAs(img, "result.png"));
-  // .then((res) => res.blob())
-  // .then((blob) => {
-  //   console.log(blob);
-  //   saveAs(img, "result.png");
-  // });
-  // let blob = new Blob([img], { type: "image/*" });
-  // saveAs(img, "result.png");
-  // console.log("asdf");
-  //};
-  // function dl() {
-  //   var a = document.createElement("a");
-  //   a.setAttribute("href", img);
-  //   a.setAttribute("download", "result.png");
-  //   document.body.appendChild(a);
-  //   a.onclick = function () {
-  //     setTimeout(function () {
-  //       document.body.removeChild(a);
-  //     }, 100);
-  //   };
-  //   a.click();
-  // }
-
-  const downloadFile = () => {
-    const blob = new Blob([img], { type: "image/*" });
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = href;
-    link.download = "result.png";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-  //http://localhost:3000/result/38108b9e-e761-4fe3-b2f6-ba720f412554
   return (
     <Outer>
       <Container>
@@ -182,7 +140,7 @@ export const Result = () => {
           <Btn>게시글 작성</Btn>
         </BtnBox>
       </Container>
-      {shareModal ? <ShareModal /> : ""}
+      {shareModal ? <ShareModal setShareModal={setShareModal}/> : ""}
     </Outer>
   );
 };
