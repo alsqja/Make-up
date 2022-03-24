@@ -17,12 +17,14 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/user/search")
-    public List<SearchUsersDto> searchUser(@RequestParam(value = "query") String query) {
-        return searchService.searchUser(query);
+    public List<SearchUsersDto> searchUser(@RequestParam(value = "query") String query,
+                                           @RequestParam(value = "cursor") Long cursor) {
+        return searchService.searchUser(query, cursor);
     }
 
     @GetMapping("/post/search")
-    public List<PostDto> searchPost(@RequestParam(value = "query") String query) {
-        return searchService.searchPost(query);
+    public List<PostDto> searchPost(@RequestParam(value = "query") String query,
+                                    @RequestParam(value = "cursor") Long cursor) {
+        return searchService.searchPost(query, cursor);
     }
 }

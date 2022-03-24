@@ -27,6 +27,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "select * from Post where User_id = :userId and id < :cursorId order by id desc Limit 5", nativeQuery = true)
     List<Post> findPostsByCursorAndId(@Param("userId") Long userId, @Param("cursorId") Long cursorId);
 
-    @Query(value = "select * from Post where Post.content like :query Limit 5", nativeQuery = true)
+    @Query(value = "select * from Post where Post.content like :query order by Post.id desc Limit 5", nativeQuery = true)
     List<Post> findPostsByContentLike(@Param(value = "query")  String query);
+
+    @Query(value = "select * from Post where Post.content like :query and Post.id < :cursorId order by Post.id desc Limit 5", nativeQuery = true)
+    List<Post> findPostsByContentLikeCursor(@Param(value = "query")  String query, @Param("cursorId") Long cursorId);
 }
