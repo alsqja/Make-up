@@ -37,7 +37,7 @@ public class SearchService {
         List<SearchUsersDto> searchUsersDto = new ArrayList<SearchUsersDto>();
 
         for(User user: users) {
-            searchUsersDto.add(SearchUsersDto.of(user));
+            searchUsersDto.add(SearchUsersDto.of(user, filePrefix));
         }
 
         return searchUsersDto;
