@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Contents from "./Search-Contents";
 import User from "./Search-User";
 const MainOuter = styled.div`
+  font-family: "InfinitySans-RegularA1";
   padding-top: 48px;
   width: 100%;
   display: flex;
@@ -44,6 +45,7 @@ const Container = styled.div`
   width: 1200px;
   flex-direction: column;
   transition-duration: 0.3s;
+  color: #505050;
   @media only screen and (max-width: 1200px) {
     width: 768px;
   }
@@ -52,6 +54,19 @@ const Container = styled.div`
   }
   @media only screen and (max-width: 500px) {
     width: 360px;
+  }
+`;
+
+const Menu = styled.div`
+  transition: 0.5s;
+  margin-top: 10px;
+  border-radius: 40px;
+  padding: 6px;
+  &.click {
+    border: 2px solid var(--main-color);
+  }
+  &.unclick {
+    border: 2px solid white;
   }
 `;
 
@@ -68,40 +83,20 @@ function Search() {
         <SideBar />
         <Container>
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <div
-              className={contents === 0 ? "contents" : ""}
+            <Menu
+              className={contents === 0 ? "click" : "unclick"}
               onClick={handleClick(0)}
-              style={
-                contents === 0
-                  ? {
-                      padding: "10px",
-                      marginTop: "10px",
-                      marginLeft: "auto",
-                      borderRadius: "20px",
-                      border: "1px solid var(--main-color)",
-                    }
-                  : { marginTop: "10px", padding: "10px", marginLeft: "auto" }
-              }
+              style={{ marginLeft: "auto" }}
             >
               내용 검색
-            </div>
-            <div
-              className={contents === 1 ? "contents" : ""}
+            </Menu>
+            <Menu
+              className={contents === 1 ? "click" : "unclick"}
               onClick={handleClick(1)}
-              style={
-                contents === 1
-                  ? {
-                      marginTop: "10px",
-                      padding: "10px",
-                      marginLeft: "20px",
-                      borderRadius: "20px",
-                      border: "1px solid var(--main-color)",
-                    }
-                  : { marginTop: "10px", padding: "10px", marginLeft: "20px" }
-              }
+              style={{ marginLeft: "20px" }}
             >
               유저 검색
-            </div>
+            </Menu>
           </div>
           <div>{menu[contents]}</div>
         </Container>
