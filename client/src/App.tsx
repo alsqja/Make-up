@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
 import { Main } from "./Pages/Main";
@@ -10,10 +10,15 @@ import { RecoilRoot } from 'recoil';
 import { InputFile } from "./Pages/InputFile";
 import { Result } from "./Pages/Result";
 import { Start } from "./Pages/Start";
+import { kakaoInit } from "./Dummys/initialize";
 
 function App() {
   const [isLoginModalOn, setIsLoginModalOn] = useState(false);
   const [isSignupModalOn, setIsSignupModalOn] = useState(false);
+
+  useEffect(() => {
+    kakaoInit();
+  }, [])
 
   const loginModalHandler = (modalState: number) => {
     if (modalState === 0) {

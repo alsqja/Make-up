@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
+import { dummyUser } from "../Dummys/dummy";
 
 const Outer = styled.div`
   position: fixed;
@@ -22,67 +23,38 @@ const Modal = styled.div`
   justify-content: space-around;
   align-items: center;
 `;
-declare global {
-  interface Window {
-    Kakao: any;
-  }
+
+interface IProps {
+  setShareModal: Dispatch<SetStateAction<boolean>>;
 }
-const { Kakao } = window;
 
-function ShareModal() {
-  //  Kakao.Link.sendDefault({objectType:"text",
-  // text:"test~~~~~~~~~",
-  // link:{
-  //     mobileWebUrl:"",
-  //     webUrl:""
-  // }})
-  //   useEffect(() => {
-  //     const script = document.createElement('script')
-  //     script.src = 'https://developers.kakao.com/sdk/js/kakao.js'
-  //     script.async = true
+function ShareModal({setShareModal}: IProps) {
+  const location = window.location.href
 
-  //     document.body.appendChild(script)
+  const { Kakao } = window;
 
-  //     return () => {
-  //       document.body.removeChild(script)
-  //     }
-  //   }, [])
-
-  useEffect(() => {
-    window.Kakao.init("16fad417e918bf309d5f5c23ca6c6e18");
-    console.log(window.Kakao.isInitialized());
-  }, []);
-
-  //   useEffect(() => {
-  //     sendKakaoMessage()
-  //   }, [])
-  const sendKakaoMessage = () => {
-    // if (window.Kakao) {
-    //   const kakao = window.Kakao;
-
-    //   // 중복 initialization 방지
-    //   if (!kakao.isInitialized()) {
-    //     // 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
-    //     kakao.init("087e960d163b882e07023e0a3689d86f");
-    //   }
-
+  const handleKakao = () => {
     Kakao.Link.sendDefault({
       objectType: "feed",
       content: {
-        title: "title입니다",
-        description: "descriptioin",
-        imageUrl: "메인 이미지 주소",
+        title: "[뽀 #me]",
+        description: "내가 좋아하는 연예인의 화장을 내 얼굴에 적용해보세요!",
+        imageUrl: dummyUser[0].profile,
         link: {
-          webUrl: "공유할 웹 링크 주소",
-          mobileWebUrl: "공유할 웹 링크 주소",
+          webUrl: location,
+          mobileWebUrl: location,
         },
       },
     });
-  };
+  }
 
   return (
-    <Outer>
-      <Modal>
+    <Outer onClick={() => {
+      setShareModal(false)
+    }}>
+      <Modal onClick={(e) => {
+        e.stopPropagation();
+      }}>
         공유하기
         <div
           style={{
@@ -90,7 +62,9 @@ function ShareModal() {
             flexDirection: "column",
             alignItems: "center",
           }}
-          onClick={sendKakaoMessage}
+          onClick={() => {
+            handleKakao()
+          }}
         >
           <img
             src={`${process.env.PUBLIC_URL}/kakao.png`}

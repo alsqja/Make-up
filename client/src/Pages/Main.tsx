@@ -49,7 +49,7 @@ export const Main = () => {
   const cursor = useRef(-1);
   const [isEnd, setIsEnd] = useState(false);
   const login = useRecoilValue(isLogin)
-  const isDefaultId = useRef(false)
+  const [isDefaultId, setIsDefaultId] = useState(false)
 
   useEffect(() => {
     let id = window.localStorage.getItem('userId')
@@ -61,7 +61,7 @@ export const Main = () => {
       .then((res) => {
         
         if (res.data.posts.length === 0) {
-          isDefaultId.current = true
+          setIsDefaultId(true)
           axios
             .get(
               `${serverUrl}getpost?id=-1&cursor=-1`
@@ -74,6 +74,7 @@ export const Main = () => {
           return;
         }
         setPosts(res.data.posts);
+        setIsDefaultId(false)
         setIsLoading(false);
         cursor.current = res.data.posts[res.data.posts.length - 1].id;
       })
@@ -114,7 +115,7 @@ export const Main = () => {
           .catch((err) => console.log("err::", err));
       }
     }
-  }, [isEnd, posts]);
+  }, [isDefaultId, isEnd, posts]);
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, true);
     return () => {
