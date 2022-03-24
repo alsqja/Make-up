@@ -6,7 +6,7 @@ import { SideBar } from "../Components/SideBar";
 import FloatBtn from "../Components/FloatBtn";
 import axios from "axios";
 import Loading from "../Components/Loading";
-import { following, isLogin } from "../store/store";
+import { isLogin } from "../store/store";
 import { useRecoilValue } from "recoil";
 const MainOuter = styled.div`
   padding-top: 48px;
@@ -48,8 +48,8 @@ export const Main = () => {
   const [isLoading, setIsLoading] = useState(false);
   const cursor = useRef(-1);
   const [isEnd, setIsEnd] = useState(false);
-  const isFollowing = useRecoilValue(following)
   const login = useRecoilValue(isLogin)
+  const [isDefaultId, setIsDefaultId] = useState(false)
 
   useEffect(() => {
     let id = window.localStorage.getItem('userId')
@@ -61,6 +61,7 @@ export const Main = () => {
       .then((res) => {
         
         if (res.data.posts.length === 0) {
+          setIsDefaultId(true)
           axios
             .get(
               `${serverUrl}getpost?id=-1&cursor=-1`
@@ -73,15 +74,16 @@ export const Main = () => {
           return;
         }
         setPosts(res.data.posts);
+        setIsDefaultId(false)
         setIsLoading(false);
         cursor.current = res.data.posts[res.data.posts.length - 1].id;
       })
       .catch((err) => console.log("err:", err));
-  }, [isFollowing, login]);
+  }, [login]);
 
   const handleScroll = useCallback((): void => {
     let id = window.localStorage.getItem('userId')
-    if (!id || !isFollowing) {
+    if (isDefaultId) {
       id = '-1'
     }
 
@@ -113,7 +115,7 @@ export const Main = () => {
           .catch((err) => console.log("err::", err));
       }
     }
-  }, [isEnd, isFollowing, posts]);
+  }, [isDefaultId, isEnd, posts]);
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, true);
     return () => {
