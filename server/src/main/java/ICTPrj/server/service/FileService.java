@@ -84,11 +84,18 @@ public class FileService {
                     .baseUrl(flaskUrl)
                     .clientConnector(new ReactorClientHttpConnector(httpClient))
                     .build();
-            ret = webClient.post()
-                    .uri("/makeup")
-                    .body(Mono.just(reqDto), MakeupDto.class)
-                    .retrieve()
-                    .bodyToMono(String.class).block();
+
+            try {
+                ret = webClient.post()
+                        .uri("/makeup")
+                        .body(Mono.just(reqDto), MakeupDto.class)
+                        .retrieve()
+                        .bodyToMono(String.class).block();
+            }
+
+            catch(Exception er) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미지에 얼굴이 없습니다.");
+            }
         }
         MakeupDto retDto = MakeupDto.builder().file(filePrefix + ret).build();
         return retDto;

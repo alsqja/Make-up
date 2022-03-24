@@ -17,7 +17,7 @@ public class FileController {
     private final FileService fileService;
 
     @GetMapping("/result/{uuid}")
-    public MakeupDto MakeUp(@PathVariable("uuid") String uuid){
+    public MakeupDto MakeUp(@PathVariable("uuid") String uuid) {
         return fileService.MakeUp(uuid);
     }
 
@@ -28,7 +28,7 @@ public class FileController {
 
     // 이거 없어도 될 거 같은데
     @PostMapping("/geturl")
-    public ArrayList<FilePathDto> PreSignedUrlForPost(@RequestBody FileDto fileDto){
+    public ArrayList<FilePathDto> PreSignedUrlForPost(@RequestBody FileDto fileDto) {
         return getFilePaths(fileDto);
     }
 
