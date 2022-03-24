@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { serverUrl } from "../Dummys/dummy";
 import { HeaderLogo, Search, Btn, ButtonBox } from "./Header";
 const HeaderOuter = styled.div`
   position: fixed;
@@ -38,11 +39,16 @@ const Container = styled.div`
   }
 `;
 
-export const LogedHeader = () => {
+interface IProps {
+  setQuery: (str: string) => void;
+  query: string;
+}
+
+export const LogedHeader = ({ setQuery, query }: IProps) => {
   const navigate = useNavigate();
 
   const userInfoHandler = () => {
-    const id = window.localStorage.getItem('userId')
+    const id = window.localStorage.getItem("userId");
     navigate(`/mypage/${id}`);
   };
 
@@ -55,7 +61,25 @@ export const LogedHeader = () => {
             alt="headerLogo"
           />
         </Link>
-        <Search type={"text"} />
+        <Search
+          type={"text"}
+          onChange={(e) => {
+            setQuery(e.target.value);
+          }}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              // Search 함수
+              if (query === "") {
+                return;
+              }
+
+              navigate(`/post/search/${query}`, {
+                state: query,
+              });
+              // setIsMiniOpen(false);
+            }
+          }}
+        />
         <ButtonBox>
           <Btn onClick={userInfoHandler}>username</Btn>
         </ButtonBox>

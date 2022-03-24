@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { isLogin } from "../store/store";
@@ -116,6 +116,8 @@ interface IProps {
   loginModalHandler: (modalState: number) => void;
   isSignupModalOn: boolean;
   signupModalHandler: (modalState: number) => void;
+  query: string;
+  setQuery: (str: string) => void; //Dispatch<SetStateAction<string>>;
 }
 
 export const Header = ({
@@ -123,8 +125,11 @@ export const Header = ({
   loginModalHandler,
   isSignupModalOn,
   signupModalHandler,
+  query,
+  setQuery,
 }: IProps) => {
   const [login, setLogin] = useRecoilState(isLogin);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (window.localStorage.getItem("isLogin") === "true") {
@@ -133,7 +138,7 @@ export const Header = ({
   }, [setLogin]);
 
   if (login) {
-    return <LogedHeader />;
+    return <LogedHeader query={query} setQuery={setQuery} />;
   }
 
   return (
@@ -163,7 +168,25 @@ export const Header = ({
             alt="headerLogo"
           />
         </Link>
-        <Search type={"text"} />
+        <Search
+          type={"text"}
+          onChange={(e) => {
+            setQuery(e.target.value);
+          }}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              // Search 함수
+              if (query === "") {
+                return;
+              }
+
+              navigate(`/post/search/${query}`, {
+                state: query,
+              });
+              // setIsMiniOpen(false);
+            }
+          }}
+        />
         <ButtonBox>
           <Btn
             onClick={() => {
