@@ -107,22 +107,47 @@ export const Result = () => {
   };
 
   const downloadImage = () => {
+    console.log(img);
     fetch(img, {
-      mode: "no-cors",
-      headers: {
-        "Access-Control-Allow-Origin ":
-          "https://bboshap.s3.ap-northeast-2.amazonaws.com",
-      },
-    }).then((res) => saveAs(img, "result.png"));
-    // .then((res) => res.blob())
-    // .then((blob) => {
-    //   console.log(blob);
-    //   saveAs(img, "result.png");
-    // });
-    // let blob = new Blob([img], { type: "image/*" });
-    // saveAs(img, "result.png");
-    // console.log("asdf");
+      method: "GET",
+    })
+      .then((res) => {
+        return res.blob();
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${uuid}.png`;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout((_) => {
+          window.URL.revokeObjectURL(url);
+        }, 60000);
+        a.remove();
+      })
+      .catch((err) => {
+        console.error("err: ", err);
+      });
   };
+
+  // const downloadImage = () => {
+  //   fetch(img, {
+  //     mode: "no-cors",
+  //     headers: {
+  //       "Access-Control-Allow-Origin ":
+  //         "https://bboshap.s3.ap-northeast-2.amazonaws.com",
+  //     },
+  //   }).then((res) => saveAs(img, "result.png"));
+  // .then((res) => res.blob())
+  // .then((blob) => {
+  //   console.log(blob);
+  //   saveAs(img, "result.png");
+  // });
+  // let blob = new Blob([img], { type: "image/*" });
+  // saveAs(img, "result.png");
+  // console.log("asdf");
+  //};
   // function dl() {
   //   var a = document.createElement("a");
   //   a.setAttribute("href", img);
