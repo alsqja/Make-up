@@ -1,13 +1,11 @@
 import { useLocation } from "react-router-dom";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { IPost } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import { SideBar } from "../Components/SideBar";
 import FloatBtn from "../Components/FloatBtn";
 import axios from "axios";
 import Loading from "../Components/Loading";
-import { following } from "../store/store";
-import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 
 const MainOuter = styled.div`
@@ -50,32 +48,30 @@ function Contents() {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [scrollTopBtnIsVisible, setScrollTopBtnIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const cursor = useRef(-1);
+  const [cursor, setCursor] = useState(-1)
   const [isEnd, setIsEnd] = useState(false);
-  const isFollowing = useRecoilValue(following);
 
   useEffect(() => {
+    setCursor(-1)
+    setPosts([])
     setIsLoading(true);
     axios
       .get(`http://52.79.250.177:8080/post/search?query=${query}&cursor=-1`)
       .then((res) => {
         if (res.data.length === 0) {
           setIsLoading(false);
+          setPosts(res.data);
           setIsEnd(true);
           return;
         }
         setPosts(res.data);
         setIsLoading(false);
-        cursor.current = res.data[res.data.length - 1].id;
+        setCursor(res.data[res.data.length - 1].id)
       })
       .catch((err) => console.log("err:", err));
-  }, [isEnd, query]);
+  }, [query]);
 
   const handleScroll = useCallback((): void => {
-    let id = window.localStorage.getItem("userId");
-    if (!id || !isFollowing) {
-      id = "-1";
-    }
 
     const { innerHeight } = window;
     const { scrollHeight } = document.body;
@@ -89,7 +85,7 @@ function Contents() {
         setIsLoading(true);
         axios
           .get(
-            `http://52.79.250.177:8080/post/search?query=${query}&cursor=${cursor.current}`
+            `http://52.79.250.177:8080/post/search?query=${query}&cursor=${cursor}`
           )
           .then((res) => {
             if (res.data.length === 0) {
@@ -100,12 +96,12 @@ function Contents() {
             setPosts([...posts, ...res.data]);
 
             setIsLoading(false);
-            cursor.current = res.data[res.data.length - 1].id;
+            setCursor(res.data[res.data.length - 1].id)
           })
           .catch((err) => console.log("err::", err));
       }
     }
-  }, [isEnd, query]);
+  }, [cursor, isEnd, posts, query]);
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, true);
     return () => {

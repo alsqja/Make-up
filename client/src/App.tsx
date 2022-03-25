@@ -56,8 +56,7 @@ useEffect(() => {
           <Route path="/createpost" element={<CreatePost />} />
           <Route path="/makeup" element={<InputFile />} />
           <Route path="/result/:uuid" element={<Result />} />
-          <Route path="post/search/:query" element={<Search />} />
-          <Route path="user/search/:query" element={<Search />} />
+          <Route path="search/:query" element={<Search />} />
         </Routes>
       </RecoilRoot>
     </Router>

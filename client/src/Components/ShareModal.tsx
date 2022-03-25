@@ -38,7 +38,7 @@ function ShareModal({setShareModal}: IProps) {
       objectType: "feed",
       content: {
         title: "[뽀 #me]",
-        description: "내가 좋아하는 연예인의 화장을 내 얼굴에 적용해보세요!",
+        description: "내가 좋아하는 연예인의 화장을 내 얼굴에 적용하고 친구들에게 자랑하세요!",
         imageUrl: dummyUser[0].profile,
         link: {
           webUrl: location,
