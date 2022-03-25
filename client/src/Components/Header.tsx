@@ -180,7 +180,7 @@ export const Header = ({
                 return;
               }
 
-              navigate(`/post/search/${query}`, {
+              navigate(`/search/${query}`, {
                 state: query,
               });
               // setIsMiniOpen(false);

@@ -9,6 +9,8 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "../store/store";
 
 const PostCardContainer = styled.div`
   font-family: "SUIT-Light";
@@ -180,8 +182,13 @@ export const PostCard = ({ post }: IProps) => {
   const myId = window.localStorage.getItem('userId')
   const [isLike, setIsLike] = useState(post.likes.filter((el) => String(el.userId) === myId).length > 0)
   const [likeLength, setLikeLength] = useState(post.likes.length)
+  const login = useRecoilValue(isLogin)
 
   const OpenPostHandler = (id: number) => {
+    if (!login) {
+      alert('로그인 후 이용가능합니다')
+      return;
+    }
     navigate(`/post/${id}`);
   };
 
@@ -217,6 +224,10 @@ export const PostCard = ({ post }: IProps) => {
     <PostCardContainer>
       <UserInfo
         onClick={() => {
+          if (!login) {
+            alert('로그인 후 이용가능합니다')
+            return;
+          }
           navigate(`/mypage/${post.user.id}`);
         }}
       >
@@ -262,10 +273,18 @@ export const PostCard = ({ post }: IProps) => {
       <LikeComment>
         {!isLike ? (
           <FaRegHeart className="like_button" onClick={() => {
+            if (!login) {
+              alert('로그인 후 이용가능합니다')
+              return;
+            }
             likeHandler(true)
           }}/>
         ) : (
           <FaHeart className="like_button" style={{ color: "red" }} onClick={() => {
+            if (!login) {
+              alert('로그인 후 이용가능합니다')
+              return;
+            }
             likeHandler(false)
           }}/>
         )}
@@ -285,6 +304,10 @@ export const PostCard = ({ post }: IProps) => {
           )}
           <div className="username" onClick={(e) => {
             e.stopPropagation()
+            if (!login) {
+              alert('로그인 후 이용가능합니다.')
+              return;
+            }
             navigate(`/mypage/${post.comments[0].user.id}`)
           }}>
             {post.comments.length === 0 ? null : post.comments[0].user.nickname}
