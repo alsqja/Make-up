@@ -57,7 +57,7 @@ function Contents() {
     setIsEnd(false)
     setIsLoading(true);
     axios
-      .get(`https://52.79.250.177:8080/post/search?query=${query}&cursor=-1`)
+      .get(`https://www.bbo-sharp.com/api/post/search?query=${query}&cursor=-1`)
       .then((res) => {
         if (res.data.length === 0) {
           setIsLoading(false);
@@ -86,7 +86,7 @@ function Contents() {
         setIsLoading(true);
         axios
           .get(
-            `https://52.79.250.177:8080/post/search?query=${query}&cursor=${cursor}`
+            `https://www.bbo-sharp.com/api/post/search?query=${query}&cursor=${cursor}`
           )
           .then((res) => {
             if (res.data.length === 0) {

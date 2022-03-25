@@ -138,7 +138,7 @@ export const InputFile = () => {
 
   const makeupHandler = () => {
     axios
-      .post("https://52.79.250.177:8080/geturl/makeup", {
+      .post("https://www.bbo-sharp.com/api/geturl/makeup", {
         files: [`${uuid}/source/source.png`, `${uuid}/target/target.png`],
       })
       .then((res) => {

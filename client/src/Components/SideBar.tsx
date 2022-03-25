@@ -95,7 +95,7 @@ export const SideBar = () => {
       return;
     }
     axios
-      .get(`https://52.79.250.177:8080/user?id=${userId}&cursor=-1`, {
+      .get(`https://www.bbo-sharp.com/api/user?id=${userId}&cursor=-1`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -169,7 +169,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
       axios
 
         .post(
-          'https://52.79.250.177:8080/signup',
+          'https://www.bbo-sharp.com/api/signup',
           {
             email,
             nickname,
@@ -190,7 +190,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
     axios
 
       .post(
-        'https://52.79.250.177:8080/geturl',
+        'https://www.bbo-sharp.com/api/geturl',
         {
           files: [
             `${uuid}/${profile.name}`
@@ -209,7 +209,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
             axios
 
               .post(
-                'https://52.79.250.177:8080/signup',
+                'https://www.bbo-sharp.com/api/signup',
                 {
                   email,
                   nickname,

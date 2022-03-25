@@ -229,7 +229,7 @@ function SettingModal({ userInfo }: IProps) {
       };
       axios
         .put(
-          `https://52.79.250.177:8080/user/me`,
+          `https://www.bbo-sharp.com/api/user/me`,
           {
             nickname,
             profile: profileMaker(userInfo?.profile),
@@ -250,7 +250,7 @@ function SettingModal({ userInfo }: IProps) {
     }
     const uuid = v4();
     axios
-      .post("https://52.79.250.177:8080/geturl", {
+      .post("https://www.bbo-sharp.com/api/geturl", {
         files: [`${uuid}/${profile.name}`],
       })
       .then((res) => {
@@ -264,7 +264,7 @@ function SettingModal({ userInfo }: IProps) {
             // console.log(`${uuid}/${profile.name}`)
             axios
               .put(
-                `https://52.79.250.177:8080/user/me`,
+                `https://www.bbo-sharp.com/api/user/me`,
                 {
                   nickname,
                   profile: `${uuid}/${profile.name}`,
@@ -292,7 +292,7 @@ function SettingModal({ userInfo }: IProps) {
     }
     const accessToken = window.localStorage.getItem("accessToken");
     axios
-      .delete("https://52.79.250.177:8080/user/me", {
+      .delete("https://www.bbo-sharp.com/api/user/me", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
