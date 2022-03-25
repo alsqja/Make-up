@@ -25,6 +25,7 @@ const Container = styled.div`
   @media only screen and (max-width: 768px) {
     grid-column: span 1;
     width: 150px;
+    display: none;
   }
 
   @media only screen and (max-width: 500px) {
@@ -79,13 +80,13 @@ export const SideBar = () => {
   const [follow, setFollow] = useState(0);
   const [username, setUsername] = useState("");
   const [profile, setProfile] = useState("");
-  const [userId, setUserId] = useState(0)
+  const [userId, setUserId] = useState(0);
   const navigate = useNavigate();
   const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
   const [isFollowerModalOn, setIsFollowerModalOn] =
     useRecoilState(followerModal);
-  const login = useRecoilValue(isLogin)
-  const setIsFollowing = useSetRecoilState(following)
+  const login = useRecoilValue(isLogin);
+  const setIsFollowing = useSetRecoilState(following);
 
   useEffect(() => {
     const userId = window.localStorage.getItem("userId");
@@ -100,13 +101,13 @@ export const SideBar = () => {
         },
       })
       .then((res) => {
-        setFollower(res.data.user.follower)
-        setFollow(res.data.user.following)
-        setUsername(res.data.user.nickname)
-        setProfile(res.data.user.profile)
-        setUserId(res.data.user.id)
+        setFollower(res.data.user.follower);
+        setFollow(res.data.user.following);
+        setUsername(res.data.user.nickname);
+        setProfile(res.data.user.profile);
+        setUserId(res.data.user.id);
         if (res.data.user.following !== 0) {
-          setIsFollowing(true)
+          setIsFollowing(true);
         }
       });
   }, [login, setIsFollowing]);
@@ -114,11 +115,14 @@ export const SideBar = () => {
   const handlePost = () => {
     navigate("/createpost");
   };
+  const handleMakeup = () => {
+    navigate("/makeup");
+  };
 
   return (
     <Container>
-      {isFollowModalOn ? <FollowModal id={userId}/> : ""}
-      {isFollowerModalOn ? <FollowerModal id={userId}/> : ""}
+      {isFollowModalOn ? <FollowModal id={userId} /> : ""}
+      {isFollowerModalOn ? <FollowerModal id={userId} /> : ""}
       {login ? (
         <Link to={`/mypage/${userId}`}>
           <UserInfo>
@@ -142,20 +146,14 @@ export const SideBar = () => {
         }}
         style={login ? {} : { display: "none" }}
       >{`팔로우 ${follow}`}</Menu>
-      <Link to={"/makeup"}>
-        <Menu
-          style={
-            !login
-              ? {
-                  color: "#da73b2",
-                  fontFamily: "InfinitySans-RegularA1",
-                }
-              : { color: "black" }
-          }
-        >
-          화장하러 가기
-        </Menu>
-      </Link>
+
+      <Menu
+        onClick={handleMakeup}
+        style={login ? {} : { color: "var(--main-color)" }}
+      >
+        화장하러 가기
+      </Menu>
+
       <Menu onClick={handlePost} style={login ? {} : { display: "none" }}>
         게시글 작성
       </Menu>

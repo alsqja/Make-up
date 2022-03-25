@@ -22,5 +22,10 @@ export const userSettingModal = atom<boolean>({
 
 export const following = atom<boolean>({
   key: "following",
-  default: false
-})
+  default: false,
+});
+
+export const hamberger = atom<boolean>({
+  key: "hamberger",
+  default: false,
+});
