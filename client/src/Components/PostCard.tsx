@@ -25,7 +25,8 @@ const PostCardContainer = styled.div`
   border: 0.3px solid #c4c4c4;
   /* cursor: pointer; */
   @media only screen and (max-width: 768px) {
-    grid-column: 4 / span 9;
+    /* grid-column: 4 / span 9; */
+    grid-column: span 6;
   }
   @media only screen and (max-width: 501px) {
     grid-column: span 6;
@@ -180,14 +181,16 @@ export const PostCard = ({ post }: IProps) => {
   const [filePage, setFilePage] = useState(0);
   const navigate = useNavigate();
 
-  const myId = window.localStorage.getItem('userId')
-  const [isLike, setIsLike] = useState(post.likes.filter((el) => String(el.userId) === myId).length > 0)
-  const [likeLength, setLikeLength] = useState(post.likes.length)
-  const login = useRecoilValue(isLogin)
+  const myId = window.localStorage.getItem("userId");
+  const [isLike, setIsLike] = useState(
+    post.likes.filter((el) => String(el.userId) === myId).length > 0
+  );
+  const [likeLength, setLikeLength] = useState(post.likes.length);
+  const login = useRecoilValue(isLogin);
 
   const OpenPostHandler = (id: number) => {
     if (!login) {
-      alert('로그인 후 이용가능합니다')
+      alert("로그인 후 이용가능합니다");
       return;
     }
     navigate(`/post/${id}`);
@@ -225,7 +228,7 @@ export const PostCard = ({ post }: IProps) => {
       <UserInfo
         onClick={() => {
           if (!login) {
-            alert('로그인 후 이용가능합니다')
+            alert("로그인 후 이용가능합니다");
             return;
           }
           navigate(`/mypage/${post.user.id}`);
@@ -276,23 +279,28 @@ export const PostCard = ({ post }: IProps) => {
       </Text>
       <LikeComment>
         {!isLike ? (
-
-          <FaRegHeart className="like_button" onClick={() => {
-            if (!login) {
-              alert('로그인 후 이용가능합니다')
-              return;
-            }
-            likeHandler(true)
-          }}/>
+          <FaRegHeart
+            className="like_button"
+            onClick={() => {
+              if (!login) {
+                alert("로그인 후 이용가능합니다");
+                return;
+              }
+              likeHandler(true);
+            }}
+          />
         ) : (
-          <FaHeart className="like_button" style={{ color: "red" }} onClick={() => {
-            if (!login) {
-              alert('로그인 후 이용가능합니다')
-              return;
-            }
-            likeHandler(false)
-          }}/>
-
+          <FaHeart
+            className="like_button"
+            style={{ color: "red" }}
+            onClick={() => {
+              if (!login) {
+                alert("로그인 후 이용가능합니다");
+                return;
+              }
+              likeHandler(false);
+            }}
+          />
         )}
       </LikeComment>
       <CommentBox
@@ -316,15 +324,17 @@ export const PostCard = ({ post }: IProps) => {
             />
           )}
 
-          <div className="username" onClick={(e) => {
-            e.stopPropagation()
-            if (!login) {
-              alert('로그인 후 이용가능합니다.')
-              return;
-            }
-            navigate(`/mypage/${post.comments[0].user.id}`)
-          }}>
-
+          <div
+            className="username"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!login) {
+                alert("로그인 후 이용가능합니다.");
+                return;
+              }
+              navigate(`/mypage/${post.comments[0].user.id}`);
+            }}
+          >
             {post.comments.length === 0 ? null : post.comments[0].user.nickname}
           </div>
           <div className="text">

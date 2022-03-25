@@ -1,12 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { isLogin } from "../store/store";
+import { isLogin, hamberger } from "../store/store";
 import { LogedHeader } from "./LogedHeader";
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
 import "../fonts/fonts.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import HambergerSideBar from "./HambergerSideBar";
+
 const HeaderOuter = styled.div`
   position: fixed;
   top: 0;
@@ -87,9 +89,7 @@ export const ButtonBox = styled.div`
   margin-top: 5px;
   @media only screen and (max-width: 768px) {
     grid-column: 6 / span 7;
-  }
-  @media only screen and (max-width: 501px) {
-    grid-column: 4 / span 7;
+    justify-content: flex-end;
   }
 `;
 
@@ -100,7 +100,6 @@ export const Btn = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background-color: gray; */
   flex-shrink: 0;
   flex: 1;
   margin: 0 10px;
@@ -108,6 +107,47 @@ export const Btn = styled.div`
   &:hover {
     color: #f2949c;
     font-weight: bold;
+  }
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const HambergerContainer = styled.div<{
+  hamberger: boolean;
+}>`
+  display: none;
+  > input[id="trigger"] {
+    display: none;
+  }
+  > label[for="trigger"] {
+    width: 20px;
+    height: 15px;
+    display: block;
+    position: relative;
+    > span {
+      position: absolute;
+      height: 2px;
+      width: 100%;
+      cursor: pointer;
+      background-color: #333333;
+      transition: 0.3s;
+    }
+    > span:nth-child(1) {
+      top: 0;
+      ${({ hamberger }) => hamberger && "transform: rotate(45deg); top:50%"};
+    }
+    > span:nth-child(2) {
+      top: 50%;
+      ${({ hamberger }) => hamberger && "opacity: 0"};
+    }
+    > span:nth-child(3) {
+      top: 100%;
+      ${({ hamberger }) => hamberger && "transform: rotate(-45deg); top:50%"};
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    display: block;
   }
 `;
 
@@ -130,7 +170,7 @@ export const Header = ({
 }: IProps) => {
   const [login, setLogin] = useRecoilState(isLogin);
   const navigate = useNavigate();
-
+  const [Hamberger, setHamberger] = useRecoilState(hamberger);
   useEffect(() => {
     if (window.localStorage.getItem("isLogin") === "true") {
       setLogin(true);
@@ -138,73 +178,102 @@ export const Header = ({
   }, [setLogin]);
 
   if (login) {
-    return <LogedHeader query={query} setQuery={setQuery} />;
+    return (
+      <LogedHeader
+        signupModalHandler={signupModalHandler}
+        loginModalHandler={loginModalHandler}
+        query={query}
+        setQuery={setQuery}
+      />
+    );
   }
 
   return (
-    <HeaderOuter>
-      {isLoginModalOn ? (
-        !isSignupModalOn ? (
-          <LoginModal
-            isLoginModalOn={isLoginModalOn}
-            loginModalHandler={loginModalHandler}
-            signupModalHandler={signupModalHandler}
-          />
+    <>
+      <HeaderOuter>
+        {isLoginModalOn ? (
+          !isSignupModalOn ? (
+            <LoginModal
+              isLoginModalOn={isLoginModalOn}
+              loginModalHandler={loginModalHandler}
+              signupModalHandler={signupModalHandler}
+            />
+          ) : (
+            <SignupModal
+              isSignupModalOn={isLoginModalOn}
+              loginModalHandler={loginModalHandler}
+              signupModalHandler={signupModalHandler}
+              isLoginModalOn={isLoginModalOn}
+            />
+          )
         ) : (
-          <SignupModal
-            isSignupModalOn={isLoginModalOn}
-            loginModalHandler={loginModalHandler}
-            signupModalHandler={signupModalHandler}
-            isLoginModalOn={isLoginModalOn}
-          />
-        )
-      ) : (
-        ""
-      )}
-      <Container>
-        <Link to="/">
-          <HeaderLogo
-            src={`${process.env.PUBLIC_URL}/headerLogo3.png`}
-            alt="headerLogo"
-          />
-        </Link>
-        <Search
-          type={"text"}
-          onChange={(e) => {
-            setQuery(e.target.value);
-          }}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
-              // Search 함수
-              if (query === "") {
-                return;
-              }
+          ""
+        )}
+        <Container>
+          <Link to="/">
+            <HeaderLogo
+              src={`${process.env.PUBLIC_URL}/headerLogo3.png`}
+              alt="headerLogo"
+            />
+          </Link>
+          <Search
+            type={"text"}
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                // Search 함수
+                if (query === "") {
+                  return;
+                }
 
-              navigate(`/search/${query}`, {
-                state: query,
-              });
-              // setIsMiniOpen(false);
-            }
-          }}
+                navigate(`/search/${query}`, {
+                  state: query,
+                });
+                // setIsMiniOpen(false);
+              }
+            }}
+          />
+          <ButtonBox>
+            <Btn
+              onClick={() => {
+                loginModalHandler(0);
+              }}
+            >
+              LOGIN
+            </Btn>
+            <Btn
+              onClick={() => {
+                loginModalHandler(0);
+                signupModalHandler(0);
+              }}
+            >
+              SIGNUP
+            </Btn>
+            <HambergerContainer hamberger={Hamberger}>
+              <input
+                type="chechbox"
+                id="trigger"
+                onClick={() => setHamberger(!Hamberger)}
+              />
+              <label htmlFor="trigger">
+                <span />
+                <span />
+                <span />
+              </label>
+            </HambergerContainer>
+          </ButtonBox>
+        </Container>
+      </HeaderOuter>
+      {Hamberger && (
+        <HambergerSideBar
+          signupModalHandler={signupModalHandler}
+          loginModalHandler={loginModalHandler}
+          query={query}
+          setQuery={setQuery}
         />
-        <ButtonBox>
-          <Btn
-            onClick={() => {
-              loginModalHandler(0);
-            }}
-          >
-            LOGIN
-          </Btn>
-          <Btn
-            onClick={() => {
-              loginModalHandler(0);
-              signupModalHandler(0);
-            }}
-          >
-            SIGNUP
-          </Btn>
-        </ButtonBox>
-      </Container>
-    </HeaderOuter>
+      )}
+    </>
   );
 };

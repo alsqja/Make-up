@@ -146,7 +146,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
   const [checkPass, setCheckPass] = useState("");
   const [isCheck, setIsCheck] = useState(true);
   const [file, setFile] = useState(""); //프로필사진
-  const [profile, setProfile] = useState<File>()
+  const [profile, setProfile] = useState<File>();
 
   const checkPassHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checkValue = e.target.value;
@@ -161,69 +161,54 @@ const SignupModal: React.FunctionComponent<IProps> = ({
   const onClickProfile = (e: React.ChangeEvent<HTMLInputElement> | any) => {
     const objectURL = URL.createObjectURL(e.target.files[0]);
     setFile(objectURL);
-    setProfile(e.target.files[0])
+    setProfile(e.target.files[0]);
   };
 
   const signupHandler = () => {
     if (!profile) {
       axios
-        .post(
-          'http://52.79.250.177:8080/signup',
-          {
-            email,
-            nickname,
-            password,
-            profile: 'defaultProfile.jpeg'
-          }
-        )
-        .then((res) => {
-          console.log(res)
+        .post("http://52.79.250.177:8080/signup", {
+          email,
+          nickname,
+          password,
+          profile: "defaultProfile.jpeg",
         })
-        .catch((err) => console.log(err.reponse))
-      loginModalHandler(1)
-      signupModalHandler(1)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err.reponse));
+      loginModalHandler(1);
+      signupModalHandler(1);
       return;
     }
-    const uuid = v4()
+    const uuid = v4();
     axios
-      .post(
-        'http://52.79.250.177:8080/geturl',
-        {
-          files: [
-            `${uuid}/${profile.name}`
-          ]
-        }
-      )
+      .post("http://52.79.250.177:8080/geturl", {
+        files: [`${uuid}/${profile.name}`],
+      })
       .then((res) => {
         axios
-          .put(
-            `${res.data[0].path}`,
-            profile,
-            {
-              headers: {
-                'Content-Type': profile.type
-              }
-            }
-          )
+          .put(`${res.data[0].path}`, profile, {
+            headers: {
+              "Content-Type": profile.type,
+            },
+          })
           .then(() => {
             axios
-              .post(
-                'http://52.79.250.177:8080/signup',
-                {
-                  email,
-                  nickname,
-                  password,
-                  profile: `${uuid}/${profile.name}`
-                }
-              )
-              .then((res) => {
-                loginModalHandler(1)
-                signupModalHandler(1)
-                console.log(profile)
+              .post("http://52.79.250.177:8080/signup", {
+                email,
+                nickname,
+                password,
+                profile: `${uuid}/${profile.name}`,
               })
-              .catch((err) => console.log(err))
-          })
-      })
+              .then((res) => {
+                loginModalHandler(1);
+                signupModalHandler(1);
+                console.log(profile);
+              })
+              .catch((err) => console.log(err));
+          });
+      });
   };
 
   return (
