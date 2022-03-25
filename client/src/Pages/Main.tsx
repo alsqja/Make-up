@@ -52,7 +52,7 @@ export const Main = () => {
   const [isDefaultId, setIsDefaultId] = useState(false);
 
   useEffect(() => {
-    let id = window.localStorage.getItem("userId");
+    let id = window.localStorage.getItem("userId") || '-1';
     setIsLoading(true);
     axios
       .get(`http://52.79.250.177:8080/getpost?id=${id}&cursor=-1`)
@@ -75,7 +75,7 @@ export const Main = () => {
   }, [login]);
 
   const handleScroll = useCallback((): void => {
-    let id = window.localStorage.getItem("userId");
+    let id = window.localStorage.getItem("userId") || -1;
     if (isDefaultId) {
       id = "-1";
     }
