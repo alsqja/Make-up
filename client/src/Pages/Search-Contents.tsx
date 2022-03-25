@@ -54,6 +54,7 @@ function Contents() {
   useEffect(() => {
     setCursor(-1)
     setPosts([])
+    setIsEnd(false)
     setIsLoading(true);
     axios
       .get(`http://52.79.250.177:8080/post/search?query=${query}&cursor=-1`)
