@@ -88,6 +88,7 @@ function User() {
 
   useEffect(() => {
     setCursor(-1)
+    setIsEnd(false)
     setUserList([])
     setIsLoading(true);
     axios
