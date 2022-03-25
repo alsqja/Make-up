@@ -14,7 +14,7 @@ const Container = styled.div`
   right: 0;
   left: 0;
   padding-top: 48px;
-  background-color: #fcfcfc;
+  /* background-color: #fcfcfc; */
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -79,75 +79,68 @@ function CreatePost() {
   const [files, setFiles] = useState<IFileTypes[]>([]); //파일 리스트
   const [filePage, setFilePage] = useState(0);
   const [contents, setcontents] = useState("");
-  const [inputFile, setInputFile] = useState<File[]>([])
+  const [inputFile, setInputFile] = useState<File[]>([]);
   const navigate = useNavigate();
   const onChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setcontents(e.target.value);
   };
 
   const createPostFunc = () => {
-    const accessToken = window.localStorage.getItem('accessToken')
-    const copy = [...inputFile]
-    const uuids: string[] = []
+    const accessToken = window.localStorage.getItem("accessToken");
+    const copy = [...inputFile];
+    const uuids: string[] = [];
     axios
-      .post(
-        'http://52.79.250.177:8080/geturl',
-        {
-          files: copy.map((file) => {
-            const uuid = v4();
-            uuids.push(uuid)
-            return `${uuid}/${file.name}`
-          })
-        }
-      )
-      .then(async(res) => {
+      .post("http://52.79.250.177:8080/geturl", {
+        files: copy.map((file) => {
+          const uuid = v4();
+          uuids.push(uuid);
+          return `${uuid}/${file.name}`;
+        }),
+      })
+      .then(async (res) => {
         interface Iobj {
-          path: string
+          path: string;
         }
-        const dataHandler = async(data: Iobj[]) => {
+        const dataHandler = async (data: Iobj[]) => {
           data.forEach((obj: Iobj, idx: number) => {
             // console.log(inputFile[idx].type)
             axios
-              .put(
-                `${obj.path}`,
-                inputFile[idx],
-                {
-                  headers: {
-                    'Content-Type': inputFile[idx].type
-                  }
-                }
-              )
+              .put(`${obj.path}`, inputFile[idx], {
+                headers: {
+                  "Content-Type": inputFile[idx].type,
+                },
+              })
               .then((res) => {
                 // console.log(res)
-              })
-          })
-        }
+              });
+          });
+        };
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const response = await dataHandler(res.data)
+        const response = await dataHandler(res.data);
         axios
           .post(
-            'http://52.79.250.177:8080/post',
+            "http://52.79.250.177:8080/post",
             {
               content: contents,
               files: uuids.map((el: string, idx: number) => {
                 // console.log(`idx: ${idx} inputfile: ${inputFile[idx].name}`)
-                return `${el}/${inputFile[idx].name}`
-              })
+                return `${el}/${inputFile[idx].name}`;
+              }),
             },
             {
               headers: {
-                Authorization: `Bearer ${accessToken}`
-              }
+                Authorization: `Bearer ${accessToken}`,
+              },
             }
           )
           .then((res) => {
             // console.log(res)
-            navigate('/')
+            navigate("/");
           })
           .catch((err) => {
-            console.log(`err: ${err}`)
-          })
-      })
+            console.log(`err: ${err}`);
+          });
+      });
   };
 
   const DelBtn = () => {
@@ -155,8 +148,8 @@ function CreatePost() {
     fileList.forEach((el, index) => (el.id = index));
     if (filePage === files.length - 1) setFilePage(filePage - 1);
     setFiles(fileList);
-    const inputFileList = inputFile.filter((el, idx) => idx !== filePage)
-    setInputFile(inputFileList)
+    const inputFileList = inputFile.filter((el, idx) => idx !== filePage);
+    setInputFile(inputFileList);
   };
 
   useEffect(() => {}, [files]);

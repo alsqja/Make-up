@@ -19,24 +19,23 @@ const Outer = styled.div`
     align-items: center;
     font-size: 100px;
   }
-`
+`;
 
 const First = styled.div`
   background-color: red;
-`
+`;
 
 const Second = styled.div`
   background-color: blue;
-`
+`;
 
 const Third = styled.div`
   background-color: yellow;
-`
+`;
 
 const DIVIDER_HEIGHT = 5;
 
 export const Start = () => {
-
   const outerDivRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -117,7 +116,7 @@ export const Start = () => {
     outerDivRefCurrent.addEventListener("wheel", wheelHandler);
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      console.log('herererere')
+      console.log("herererere");
       outerDivRefCurrent.removeEventListener("wheel", wheelHandler);
     };
   }, []);
@@ -128,5 +127,5 @@ export const Start = () => {
       <Second>2</Second>
       <Third>3</Third>
     </Outer>
-  )
-}
+  );
+};

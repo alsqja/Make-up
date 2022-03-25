@@ -13,7 +13,7 @@ const MainOuter = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: #fcfcfc;
+  /* background-color: #fcfcfc; */
 `;
 
 const MainContainer = styled.div`
@@ -48,33 +48,26 @@ export const Main = () => {
   const [isLoading, setIsLoading] = useState(false);
   const cursor = useRef(-1);
   const [isEnd, setIsEnd] = useState(false);
-  const login = useRecoilValue(isLogin)
-  const [isDefaultId, setIsDefaultId] = useState(false)
+  const login = useRecoilValue(isLogin);
+  const [isDefaultId, setIsDefaultId] = useState(false);
 
   useEffect(() => {
-    let id = window.localStorage.getItem('userId')
+    let id = window.localStorage.getItem("userId");
     setIsLoading(true);
     axios
-      .get(
-        `http://52.79.250.177:8080/getpost?id=${id}&cursor=-1`
-      )
+      .get(`http://52.79.250.177:8080/getpost?id=${id}&cursor=-1`)
       .then((res) => {
-        
         if (res.data.posts.length === 0) {
-          setIsDefaultId(true)
-          axios
-            .get(
-              `${serverUrl}getpost?id=-1&cursor=-1`
-            )
-            .then((res) => {
-              setPosts(res.data.posts);
-              setIsLoading(false);
-              cursor.current = res.data.posts[res.data.posts.length - 1].id;
-            })
+          setIsDefaultId(true);
+          axios.get(`${serverUrl}getpost?id=-1&cursor=-1`).then((res) => {
+            setPosts(res.data.posts);
+            setIsLoading(false);
+            cursor.current = res.data.posts[res.data.posts.length - 1].id;
+          });
           return;
         }
         setPosts(res.data.posts);
-        setIsDefaultId(false)
+        setIsDefaultId(false);
         setIsLoading(false);
         cursor.current = res.data.posts[res.data.posts.length - 1].id;
       })
@@ -82,9 +75,9 @@ export const Main = () => {
   }, [login]);
 
   const handleScroll = useCallback((): void => {
-    let id = window.localStorage.getItem('userId')
+    let id = window.localStorage.getItem("userId");
     if (isDefaultId) {
-      id = '-1'
+      id = "-1";
     }
 
     const { innerHeight } = window;

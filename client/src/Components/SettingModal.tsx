@@ -180,13 +180,13 @@ function SettingModal({ userInfo }: IProps) {
   const [newCheckpw, setNewCheckpw] = useState(""); //새비번확인
   const [isCheck, setIsCheck] = useState(true);
   const [Withdrawal, setWithdrawal] = useState(false);
-  const [profile, setProfile] = useState<File>()
-  const [ghldnjsxkfxhl, setGhldnjsxkfxhl] = useState('')
+  const [profile, setProfile] = useState<File>();
+  const [ghldnjsxkfxhl, setGhldnjsxkfxhl] = useState("");
 
   const onClickProfile = (e: React.ChangeEvent<HTMLInputElement> | any) => {
     const objectURL = URL.createObjectURL(e.target.files[0]);
     setFile(objectURL);
-    setProfile(e.target.files[0])
+    setProfile(e.target.files[0]);
   };
 
   const onChangeValue = (
@@ -215,19 +215,18 @@ function SettingModal({ userInfo }: IProps) {
   };
 
   const changeUserInfoHandler = () => {
-    const accessToken = window.localStorage.getItem('accessToken')
+    const accessToken = window.localStorage.getItem("accessToken");
     if (!profile) {
       const profileMaker = (url: string | undefined) => {
         if (!url) {
-          return 'defaultProfile.jpeg'
+          return "defaultProfile.jpeg";
         }
-        if (url.split('/').length > 4) {
-          return url.split('/')[3] + '/' + url.split('/')[4]
+        if (url.split("/").length > 4) {
+          return url.split("/")[3] + "/" + url.split("/")[4];
+        } else {
+          return url.split("/")[3];
         }
-        else {
-          return url.split('/')[3]
-        }
-      }
+      };
       axios
         .put(
           `http://52.79.250.177:8080/user/me`,
@@ -235,41 +234,32 @@ function SettingModal({ userInfo }: IProps) {
             nickname,
             profile: profileMaker(userInfo?.profile),
             oldPassword: password,
-            newPassword
+            newPassword,
           },
           {
             headers: {
-              Authorization: `Bearer ${accessToken}`
-            }
+              Authorization: `Bearer ${accessToken}`,
+            },
           }
         )
         .then((res) => {
-          alert('ok')
-          window.location.href = `/mypage/${userInfo?.id}`
-        })
+          alert("ok");
+          window.location.href = `/mypage/${userInfo?.id}`;
+        });
       return;
     }
-    const uuid = v4()
+    const uuid = v4();
     axios
-      .post(
-        'http://52.79.250.177:8080/geturl',
-        {
-          files: [
-            `${uuid}/${profile.name}`
-          ]
-        }
-      )
+      .post("http://52.79.250.177:8080/geturl", {
+        files: [`${uuid}/${profile.name}`],
+      })
       .then((res) => {
         axios
-          .put(
-            `${res.data[0].path}`,
-            profile,
-            {
-              headers: {
-                'Content-Type': profile.type
-              }
-            }
-          )
+          .put(`${res.data[0].path}`, profile, {
+            headers: {
+              "Content-Type": profile.type,
+            },
+          })
           .then(() => {
             // console.log(`${uuid}/${profile.name}`)
             axios
@@ -279,45 +269,42 @@ function SettingModal({ userInfo }: IProps) {
                   nickname,
                   profile: `${uuid}/${profile.name}`,
                   oldPassword: password,
-                  newPassword
+                  newPassword,
                 },
                 {
                   headers: {
-                    Authorization: `Bearer ${accessToken}`
-                  }
+                    Authorization: `Bearer ${accessToken}`,
+                  },
                 }
               )
               .then(() => {
-                window.location.href = `/mypage/${userInfo?.id}`
-                alert('ok')
-              })
-          })
-        })
-  }
+                window.location.href = `/mypage/${userInfo?.id}`;
+                alert("ok");
+              });
+          });
+      });
+  };
 
   const withdrawalHandler = () => {
-    if (ghldnjsxkfxhl !== '회원탈퇴') {
-      alert('정확히 입력해주세요')
+    if (ghldnjsxkfxhl !== "회원탈퇴") {
+      alert("정확히 입력해주세요");
       return;
     }
-    const accessToken = window.localStorage.getItem('accessToken')
+    const accessToken = window.localStorage.getItem("accessToken");
     axios
-      .delete(
-        'http://52.79.250.177:8080/user/me',
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
-      )
-      .then(() => {
-        alert('회원탈퇴')
-        window.localStorage.setItem('accessToken', '')
-        window.localStorage.setItem('userId', '-1')
-        window.localStorage.setItem('isLogin', 'false')
-        window.location.href = '/'
+      .delete("http://52.79.250.177:8080/user/me", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
-  }
+      .then(() => {
+        alert("회원탈퇴");
+        window.localStorage.setItem("accessToken", "");
+        window.localStorage.setItem("userId", "-1");
+        window.localStorage.setItem("isLogin", "false");
+        window.location.href = "/";
+      });
+  };
 
   return (
     <Outer onClick={() => setIsUserSettingModalOn(false)}>
@@ -340,9 +327,13 @@ function SettingModal({ userInfo }: IProps) {
             <div>회원님의 모든 정보가 삭제됩니다.</div>
             <div>정말 탈퇴 하시겠습니까?</div>
             <div>탈퇴하시려면 회원탈퇴를 입력해주세요.</div>
-            <WithdrawalInput placeholder="회원탈퇴" value={ghldnjsxkfxhl} onChange={(e) => {
-              setGhldnjsxkfxhl(e.target.value)
-            }}></WithdrawalInput>
+            <WithdrawalInput
+              placeholder="회원탈퇴"
+              value={ghldnjsxkfxhl}
+              onChange={(e) => {
+                setGhldnjsxkfxhl(e.target.value);
+              }}
+            ></WithdrawalInput>
             <Set
               style={{
                 width: "50%",
@@ -430,7 +421,9 @@ function SettingModal({ userInfo }: IProps) {
               }}
             >
               {/* TODO*/}
-              <Button1 className="btn" onClick={changeUserInfoHandler}>수정하기</Button1>
+              <Button1 className="btn" onClick={changeUserInfoHandler}>
+                수정하기
+              </Button1>
               <Button1 className="btn" onClick={() => setWithdrawal(true)}>
                 회원탈퇴
               </Button1>

@@ -124,7 +124,7 @@ interface IImgProps {
 const StyledFile = styled.div<IImgProps>`
   width: 100%;
   height: 500px;
-  background-color: #f3f3f3;
+  /* background-color: #f3f3f3; */
   border-top: 0.3px solid #c4c4c4;
   background-image: url(${(props) => `'${props.src}'`});
   background-position: center;
@@ -179,6 +179,7 @@ interface IProps {
 export const PostCard = ({ post }: IProps) => {
   const [filePage, setFilePage] = useState(0);
   const navigate = useNavigate();
+
   const myId = window.localStorage.getItem('userId')
   const [isLike, setIsLike] = useState(post.likes.filter((el) => String(el.userId) === myId).length > 0)
   const [likeLength, setLikeLength] = useState(post.likes.length)
@@ -193,32 +194,31 @@ export const PostCard = ({ post }: IProps) => {
   };
 
   const likeHandler = (isPlus: boolean) => {
-    const accessToken = window.localStorage.getItem('accessToken')
+    const accessToken = window.localStorage.getItem("accessToken");
     axios
       .post(
         `${serverUrl}likes`,
         {
           postId: post.id,
           commentId: null,
-          isPlus: isPlus
+          isPlus: isPlus,
         },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       )
       .then(() => {
-        setIsLike(isPlus)
+        setIsLike(isPlus);
         if (isPlus) {
-          setLikeLength(likeLength + 1)
-        }
-        else {
-          setLikeLength(likeLength - 1)
+          setLikeLength(likeLength + 1);
+        } else {
+          setLikeLength(likeLength - 1);
         }
       })
-      .catch((err) => console.log(err))
-  }
+      .catch((err) => console.log(err));
+  };
 
   return (
     <PostCardContainer>
@@ -234,44 +234,49 @@ export const PostCard = ({ post }: IProps) => {
         <img className="photo" src={post.user.profile} alt="" />
         <div className="name">{post.user.nickname}</div>
       </UserInfo>
-      {post.files.length !== 0 && <StyledFile
-        src={post.files[filePage]}
+      {post.files.length !== 0 && (
+        <StyledFile
+          src={post.files[filePage]}
+          onClick={() => {
+            OpenPostHandler(post.id);
+          }}
+        >
+          <FileButtonBox>
+            <FaChevronLeft
+              className="left_btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!post.files[filePage - 1]) {
+                  return;
+                }
+                setFilePage(filePage - 1);
+              }}
+              style={filePage === 0 ? { opacity: "0" } : {}}
+            />
+            <FaChevronRight
+              className="right_btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!post.files[filePage + 1]) {
+                  return;
+                }
+                setFilePage(filePage + 1);
+              }}
+              style={filePage === post.files.length - 1 ? { opacity: "0" } : {}}
+            />
+          </FileButtonBox>
+        </StyledFile>
+      )}
+      <Text
         onClick={() => {
           OpenPostHandler(post.id);
         }}
       >
-        <FileButtonBox>
-          <FaChevronLeft
-            className="left_btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!post.files[filePage - 1]) {
-                return;
-              }
-              setFilePage(filePage - 1);
-            }}
-            style={filePage === 0 ? { opacity: "0" } : {}}
-          />
-          <FaChevronRight
-            className="right_btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!post.files[filePage + 1]) {
-                return;
-              }
-              setFilePage(filePage + 1);
-            }}
-            style={filePage === post.files.length - 1 ? { opacity: "0" } : {}}
-          />
-        </FileButtonBox>
-      </StyledFile>}
-      <Text onClick={() => {
-          OpenPostHandler(post.id);
-        }}>
         <div className="text">{post.content}</div>
       </Text>
       <LikeComment>
         {!isLike ? (
+
           <FaRegHeart className="like_button" onClick={() => {
             if (!login) {
               alert('로그인 후 이용가능합니다')
@@ -287,21 +292,30 @@ export const PostCard = ({ post }: IProps) => {
             }
             likeHandler(false)
           }}/>
+
         )}
       </LikeComment>
-      <CommentBox onClick={() => {
-            OpenPostHandler(post.id);
-          }}>
+      <CommentBox
+        onClick={() => {
+          OpenPostHandler(post.id);
+        }}
+      >
         <div className="likes_num">{likeLength} 명이 좋아합니다.</div>
         <div className="comments_info">
           {post.comments.length === 0 ? (
             ""
           ) : (
-            <img className="photo" src={post.comments[0].user.profile} alt="" onClick={(e) => {
-              e.stopPropagation()
-              navigate(`/mypage/${post.comments[0].user.id}`)
-            }}/>
+            <img
+              className="photo"
+              src={post.comments[0].user.profile}
+              alt=""
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/mypage/${post.comments[0].user.id}`);
+              }}
+            />
           )}
+
           <div className="username" onClick={(e) => {
             e.stopPropagation()
             if (!login) {
@@ -310,6 +324,7 @@ export const PostCard = ({ post }: IProps) => {
             }
             navigate(`/mypage/${post.comments[0].user.id}`)
           }}>
+
             {post.comments.length === 0 ? null : post.comments[0].user.nickname}
           </div>
           <div className="text">
