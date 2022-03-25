@@ -16,6 +16,8 @@ import {
   isLogin,
   hamberger,
 } from "../store/store";
+import { FollowModal } from "./FollowModal";
+import { FollowerModal } from "./FollowerModal";
 const Container = styled.div`
   z-index: 999;
   font-family: "SUIT-Light";
@@ -25,6 +27,7 @@ const Container = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 999;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
@@ -112,7 +115,7 @@ function HambergerSideBar({
 }: IProps) {
   const [follower, setFollower] = useState(0);
   const [follow, setFollow] = useState(0);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("asd");
   const [profile, setProfile] = useState("");
   const [userId, setUserId] = useState(0);
   const navigate = useNavigate();
@@ -157,6 +160,8 @@ function HambergerSideBar({
   };
   return (
     <Container>
+      {isFollowerModalOn ? <FollowerModal id={userId} /> : ""}
+      {isFollowModalOn ? <FollowModal id={userId}/> : ''}
       <SideBar hamberger={hamberger}>
         <Search
           placeholder="search..."
@@ -189,17 +194,26 @@ function HambergerSideBar({
           onClick={() => setHamberger(false)}
           to={`/mypage/${userId}`}
         >
-          <img
-            style={{
-              width: "40px",
-              height: "40px",
-              marginRight: "10%",
-              borderRadius: "50%",
-            }}
-            className="photo"
-            src={profile}
-            alt=""
-          />
+          <div style={{display:'flex', justifyContent:'space-around'}}>
+            <img
+              style={{
+                width: "40px",
+                height: "40px",
+                marginRight: "10px",
+                borderRadius: "50%",
+              }}
+              className="photo"
+              src={profile}
+              alt=""
+            />
+            <div style={{
+              marginRight:'10%',
+              display: 'flex',
+              alignItems: 'center',
+              height: '40px',
+              color: 'black'
+              }}>{username}</div>
+          </div>
         </Link>
         <div
           style={login ? { display: "none" } : {}}
