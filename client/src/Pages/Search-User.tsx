@@ -12,9 +12,9 @@ import styled from "styled-components";
 const MainOuter = styled.div`
   padding-top: 48px;
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
-  background-color: #fcfcfc;
 `;
 
 const MainContainer = styled.div`
@@ -23,6 +23,7 @@ const MainContainer = styled.div`
   grid-template-columns: repeat(12, 1fr);
   column-gap: 24px;
   align-items: center;
+  margin-bottom: auto;
   /* transition: all 0.5s; */
   @media only screen and (max-width: 1200px) {
     transition-duration: 0.3s;

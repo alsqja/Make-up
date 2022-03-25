@@ -36,7 +36,6 @@ export const StyledFile = styled.div<IImgProps>`
 const Label = styled.label`
   width: 60%;
   height: 100%;
-  background-color: #f3f3f3;
   &:hover {
     border: 2px solid var(--main-color);
   }
@@ -72,10 +71,17 @@ interface IProps {
   filePage: number;
   setFilePage: Dispatch<SetStateAction<number>>;
   setInputFile: Dispatch<SetStateAction<File[]>>;
-  inputFile: File[]
+  inputFile: File[];
 }
 
-const DragDrop = ({ files, setFiles, filePage, setFilePage, setInputFile, inputFile }: IProps) => {
+const DragDrop = ({
+  files,
+  setFiles,
+  filePage,
+  setFilePage,
+  setInputFile,
+  inputFile,
+}: IProps) => {
   const [isDragging, setIsDragging] = useState<boolean>(false); //드래그
   const dragRef = useRef<HTMLLabelElement | null>(null); //드래그 이벤트 감지하는 ref 참조 변수(label 태그에 들어감)
   const fileId = useRef<number>(0); //선택한 파일들의 id
@@ -101,7 +107,7 @@ const DragDrop = ({ files, setFiles, filePage, setFilePage, setInputFile, inputF
           },
         ];
       }
-      setInputFile([...inputFile, ...e.target.files])
+      setInputFile([...inputFile, ...e.target.files]);
       setFiles(tempFiles);
       if (files.length >= 1) setFilePage(files.length);
     },
