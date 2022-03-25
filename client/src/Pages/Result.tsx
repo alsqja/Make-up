@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ShareModal from "../Components/ShareModal";
 import { defaultProfile } from "../Dummys/dummy";
@@ -88,10 +88,11 @@ export const Result = () => {
   const location = useLocation().pathname.split("/")[2];
   const uuid = location;
   const [shareModal, setShareModal] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get(`http://52.79.250.177:8080/result/${uuid}`).then((res) => {
+    axios.get(`https://52.79.250.177:8080/result/${uuid}`).then((res) => {
       setImg(res.data.file);
       setIsLoading(false);
     });
@@ -137,7 +138,9 @@ export const Result = () => {
         <BtnBox>
           <Btn onClick={ShareOnClick}>공유하기</Btn>
           <Btn onClick={downloadImage}>저장하기</Btn>
-          <Btn>게시글 작성</Btn>
+          <Btn onClick={() => {
+            navigate(`/createpost/${uuid}`)
+          }}>게시글 작성</Btn>
         </BtnBox>
       </Container>
       {shareModal ? <ShareModal setShareModal={setShareModal}/> : ""}

@@ -48,6 +48,33 @@ function ShareModal({setShareModal}: IProps) {
     });
   }
 
+  const copyClipboard = async (
+    text: string,
+    successAction?: () => void,
+    failAction?: () => void,
+  ) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      successAction && successAction();
+    } catch (err) {
+      failAction && failAction();
+    }
+  };
+
+  const copyUrl = () => {
+    copyClipboard(
+      location,
+      () => {
+        // 성공했을 경우 Toast 메시지 팝업
+        alert('클립보드에 복사되었습니다')
+      },
+      () => {
+        // 실패했을 경우 Toast 메시지 팝업
+        alert('다시 시도해주세요')
+      },
+    );
+  };
+
   return (
     <Outer onClick={() => {
       setShareModal(false)
@@ -79,13 +106,14 @@ function ShareModal({setShareModal}: IProps) {
             flexDirection: "column",
             alignItems: "center",
           }}
+          onClick={copyUrl}
         >
           <img
             src={`${process.env.PUBLIC_URL}/share.png`}
             alt="share"
             style={{ width: "50px" }}
           />
-          링크
+          링크복사
         </div>
       </Modal>
     </Outer>

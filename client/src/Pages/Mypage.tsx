@@ -169,7 +169,7 @@ export const Mypage = () => {
     setIsLoading(true);
     const accessToken = window.localStorage.getItem("accessToken");
     axios
-      .get(`http://52.79.250.177:8080/user?id=${id}&cursor=-1`, {
+      .get(`https://52.79.250.177:8080/user?id=${id}&cursor=-1`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -201,7 +201,7 @@ export const Mypage = () => {
         setIsLoading(true);
         axios
           .get(
-            `http://52.79.250.177:8080/user?id=${id}&cursor=${cursor.current}`,
+            `https://52.79.250.177:8080/user?id=${id}&cursor=${cursor.current}`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -257,7 +257,7 @@ export const Mypage = () => {
     const accessToken = window.localStorage.getItem("accessToken");
     axios
       .post(
-        "http://52.79.250.177:8080/follow",
+        "https://52.79.250.177:8080/follow",
         {
           userId: id,
           isPlus: !isFollowed,
