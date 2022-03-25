@@ -92,7 +92,7 @@ function User() {
     setUserList([])
     setIsLoading(true);
     axios
-      .get(`http://52.79.250.177:8080/user/search?query=${query}&cursor=-1`)
+      .get(`https://52.79.250.177:8080/user/search?query=${query}&cursor=-1`)
       .then((res) => {
         console.log(res.data)
         if (res.data.length === 0) {
@@ -121,7 +121,7 @@ function User() {
         setIsLoading(true);
         axios
           .get(
-            `http://52.79.250.177:8080/user/search?query=${query}&cursor=${cursor}`
+            `https://52.79.250.177:8080/user/search?query=${query}&cursor=${cursor}`
           )
           .then((res) => {
             if (res.data.length === 0) {

@@ -144,7 +144,7 @@ export const FollowModal = ({id}: IProps) => {
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .get(
-        `http://52.79.250.177:8080/following?id=${id}&cursor=-1`,
+        `https://52.79.250.177:8080/following?id=${id}&cursor=-1`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`
@@ -173,7 +173,7 @@ export const FollowModal = ({id}: IProps) => {
       if (Math.round(scrollTop + innerHeight) >= scrollHeight && !isEnd) {
         const accessToken = localStorage.getItem('accessToken');
         axios
-          .get(`http://52.79.250.177:8080/following?id=${id}&cursor=${cursor.current}`, {
+          .get(`https://52.79.250.177:8080/following?id=${id}&cursor=${cursor.current}`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -201,7 +201,7 @@ export const FollowModal = ({id}: IProps) => {
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .post(
-        'http://52.79.250.177:8080/follow',
+        'https://52.79.250.177:8080/follow',
         {
           userId: id,
           isPlus: false

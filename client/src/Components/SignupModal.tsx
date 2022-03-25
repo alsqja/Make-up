@@ -168,7 +168,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
     if (!profile) {
       axios
         .post(
-          'http://52.79.250.177:8080/signup',
+          'https://52.79.250.177:8080/signup',
           {
             email,
             nickname,
@@ -187,7 +187,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
     const uuid = v4()
     axios
       .post(
-        'http://52.79.250.177:8080/geturl',
+        'https://52.79.250.177:8080/geturl',
         {
           files: [
             `${uuid}/${profile.name}`
@@ -208,7 +208,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
           .then(() => {
             axios
               .post(
-                'http://52.79.250.177:8080/signup',
+                'https://52.79.250.177:8080/signup',
                 {
                   email,
                   nickname,

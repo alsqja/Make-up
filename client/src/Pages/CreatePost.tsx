@@ -90,7 +90,7 @@ function CreatePost() {
     const copy = [...inputFile];
     const uuids: string[] = [];
     axios
-      .post("http://52.79.250.177:8080/geturl", {
+      .post("https://52.79.250.177:8080/geturl", {
         files: copy.map((file) => {
           const uuid = v4();
           uuids.push(uuid);
@@ -119,7 +119,7 @@ function CreatePost() {
         const response = await dataHandler(res.data);
         axios
           .post(
-            "http://52.79.250.177:8080/post",
+            "https://52.79.250.177:8080/post",
             {
               content: contents,
               files: uuids.map((el: string, idx: number) => {

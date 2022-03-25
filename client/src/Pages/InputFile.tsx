@@ -138,7 +138,7 @@ export const InputFile = () => {
 
   const makeupHandler = () => {
     axios
-      .post("http://52.79.250.177:8080/geturl/makeup", {
+      .post("https://52.79.250.177:8080/geturl/makeup", {
         files: [`${uuid}/source/source.png`, `${uuid}/target/target.png`],
       })
       .then((res) => {

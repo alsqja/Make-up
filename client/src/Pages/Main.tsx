@@ -55,7 +55,7 @@ export const Main = () => {
     let id = window.localStorage.getItem("userId") || '-1';
     setIsLoading(true);
     axios
-      .get(`http://52.79.250.177:8080/getpost?id=${id}&cursor=-1`)
+      .get(`https://52.79.250.177:8080/getpost?id=${id}&cursor=-1`)
       .then((res) => {
         if (res.data.posts.length === 0) {
           setIsDefaultId(true);
@@ -92,7 +92,7 @@ export const Main = () => {
         setIsLoading(true);
         axios
           .get(
-            `http://52.79.250.177:8080/getpost?id=${id}&cursor=${cursor.current}`
+            `https://52.79.250.177:8080/getpost?id=${id}&cursor=${cursor.current}`
           )
           .then((res) => {
             if (res.data.posts.length === 0) {
