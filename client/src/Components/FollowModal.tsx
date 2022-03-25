@@ -144,7 +144,7 @@ export const FollowModal = ({id}: IProps) => {
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .get(
-        `https://52.79.250.177:8080/following?id=${id}&cursor=-1`,
+        `https://www.bbo-sharp.com/api/following?id=${id}&cursor=-1`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`
@@ -173,7 +173,7 @@ export const FollowModal = ({id}: IProps) => {
       if (Math.round(scrollTop + innerHeight) >= scrollHeight && !isEnd) {
         const accessToken = localStorage.getItem('accessToken');
         axios
-          .get(`https://52.79.250.177:8080/following?id=${id}&cursor=${cursor.current}`, {
+          .get(`https://www.bbo-sharp.com/api/following?id=${id}&cursor=${cursor.current}`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -201,7 +201,7 @@ export const FollowModal = ({id}: IProps) => {
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .post(
-        'https://52.79.250.177:8080/follow',
+        'https://www.bbo-sharp.com/api/follow',
         {
           userId: id,
           isPlus: false

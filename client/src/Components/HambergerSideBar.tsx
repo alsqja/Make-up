@@ -119,7 +119,7 @@ function HambergerSideBar({
   const [profile, setProfile] = useState("");
   const [userId, setUserId] = useState(0);
   const navigate = useNavigate();
-  const [Hamberger, setHamberger] = useRecoilState(hamberger);
+  const setHamberger = useSetRecoilState(hamberger)
   const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
   const [isFollowerModalOn, setIsFollowerModalOn] =
     useRecoilState(followerModal);
@@ -132,7 +132,7 @@ function HambergerSideBar({
       return;
     }
     axios
-      .get(`http://52.79.250.177:8080/user?id=${userId}&cursor=-1`, {
+      .get(`https://www.bbo-sharp.com/api/user?id=${userId}&cursor=-1`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -92,7 +92,7 @@ export const Result = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get(`https://52.79.250.177:8080/result/${uuid}`).then((res) => {
+    axios.get(`https://www.bbo-sharp.com/api/result/${uuid}`).then((res) => {
       setImg(res.data.file);
       setIsLoading(false);
     });

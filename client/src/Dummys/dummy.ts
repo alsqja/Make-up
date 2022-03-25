@@ -315,4 +315,4 @@ export const dummyFollow: IPostUser[] = [
   },
 ]
 
-export const serverUrl = 'https://52.79.250.177:8080/'
+export const serverUrl = 'https://www.bbo-sharp.com/api/'

@@ -90,7 +90,7 @@ function CreatePost() {
     const copy = [...inputFile];
     const uuids: string[] = [];
     axios
-      .post("https://52.79.250.177:8080/geturl", {
+      .post("https://www.bbo-sharp.com/api/geturl", {
         files: copy.map((file) => {
           const uuid = v4();
           uuids.push(uuid);
@@ -119,7 +119,7 @@ function CreatePost() {
         const response = await dataHandler(res.data);
         axios
           .post(
-            "https://52.79.250.177:8080/post",
+            "https://www.bbo-sharp.com/api/post",
             {
               content: contents,
               files: uuids.map((el: string, idx: number) => {
