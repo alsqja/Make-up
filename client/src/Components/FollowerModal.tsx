@@ -140,7 +140,7 @@ export const FollowerModal = ({id}: IProps) => {
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .get(
-        `http://52.79.250.177:8080/follower?id=${id}&cursor=-1`,
+        `https://52.79.250.177:8080/follower?id=${id}&cursor=-1`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`
@@ -169,7 +169,7 @@ export const FollowerModal = ({id}: IProps) => {
       if (Math.round(scrollTop + innerHeight) >= scrollHeight && !isEnd) {
         const accessToken = localStorage.getItem('accessToken');
         axios
-          .get(`http://52.79.250.177:8080/follower?id=${id}&cursor=${cursor.current}`, {
+          .get(`https://52.79.250.177:8080/follower?id=${id}&cursor=${cursor.current}`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },

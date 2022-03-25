@@ -307,7 +307,7 @@ export const Post = () => {
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .get(
-        `http://52.79.250.177:8080/post/${id}`,
+        `https://52.79.250.177:8080/post/${id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`
@@ -331,7 +331,7 @@ export const Post = () => {
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .delete(
-        `http://52.79.250.177:8080/post/${id}`,
+        `https://52.79.250.177:8080/post/${id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`

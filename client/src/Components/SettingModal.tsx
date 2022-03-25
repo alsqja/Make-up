@@ -229,7 +229,7 @@ function SettingModal({ userInfo }: IProps) {
       };
       axios
         .put(
-          `http://52.79.250.177:8080/user/me`,
+          `https://52.79.250.177:8080/user/me`,
           {
             nickname,
             profile: profileMaker(userInfo?.profile),
@@ -250,7 +250,7 @@ function SettingModal({ userInfo }: IProps) {
     }
     const uuid = v4();
     axios
-      .post("http://52.79.250.177:8080/geturl", {
+      .post("https://52.79.250.177:8080/geturl", {
         files: [`${uuid}/${profile.name}`],
       })
       .then((res) => {
@@ -264,7 +264,7 @@ function SettingModal({ userInfo }: IProps) {
             // console.log(`${uuid}/${profile.name}`)
             axios
               .put(
-                `http://52.79.250.177:8080/user/me`,
+                `https://52.79.250.177:8080/user/me`,
                 {
                   nickname,
                   profile: `${uuid}/${profile.name}`,
@@ -292,7 +292,7 @@ function SettingModal({ userInfo }: IProps) {
     }
     const accessToken = window.localStorage.getItem("accessToken");
     axios
-      .delete("http://52.79.250.177:8080/user/me", {
+      .delete("https://52.79.250.177:8080/user/me", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

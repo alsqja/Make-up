@@ -121,7 +121,7 @@ const LoginModal: React.FunctionComponent<IProps> = ({
   const loginHandler = () => {
     axios
       .post(
-        'http://52.79.250.177:8080/signin',
+        'https://52.79.250.177:8080/signin',
         {
           email: inputValue.email,
           password: inputValue.password

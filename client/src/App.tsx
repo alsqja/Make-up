@@ -12,6 +12,7 @@ import { Result } from "./Pages/Result";
 import { Start } from "./Pages/Start";
 import Search from "./Pages/Search";
 import { kakaoInit } from "./Dummys/initialize";
+import { CreateResultPost } from "./Pages/CreateResultPost";
 
 function App() {
   const [isLoginModalOn, setIsLoginModalOn] = useState(false);
@@ -57,6 +58,7 @@ useEffect(() => {
           <Route path="/makeup" element={<InputFile />} />
           <Route path="/result/:uuid" element={<Result />} />
           <Route path="search/:query" element={<Search />} />
+          <Route path="createpost/:id" element={<CreateResultPost />} />
         </Routes>
       </RecoilRoot>
     </Router>
