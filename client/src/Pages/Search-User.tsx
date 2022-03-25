@@ -1,11 +1,11 @@
-import { useLocation } from "react-router-dom";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
 import { IPostUser } from "../Dummys/dummy";
 import { SideBar } from "../Components/SideBar";
 import FloatBtn from "../Components/FloatBtn";
 import axios from "axios";
 import Loading from "../Components/Loading";
-import { following, isLogin } from "../store/store";
+import { isLogin } from "../store/store";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 
@@ -81,16 +81,19 @@ function User() {
   const [userList, setUserList] = useState<IPostUser[]>([]);
   const [scrollTopBtnIsVisible, setScrollTopBtnIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const cursor = useRef(-1);
+  const [cursor, setCursor] = useState(-1)
   const [isEnd, setIsEnd] = useState(false);
-  const isFollowing = useRecoilValue(following);
+  // const isFollowing = useRecoilValue(following);
   const login = useRecoilValue(isLogin);
 
   useEffect(() => {
+    setCursor(-1)
+    setUserList([])
     setIsLoading(true);
     axios
       .get(`http://52.79.250.177:8080/user/search?query=${query}&cursor=-1`)
       .then((res) => {
+        console.log(res.data)
         if (res.data.length === 0) {
           setIsLoading(false);
           setIsEnd(true);
@@ -98,16 +101,12 @@ function User() {
         }
         setUserList(res.data);
         setIsLoading(false);
-        cursor.current = res.data[res.data.length - 1].id;
+        setCursor(res.data[res.data.length - 1].id)
       })
       .catch((err) => console.log("err:", err));
-  }, [isEnd, query]);
+  }, [query]);
 
   const handleScroll = useCallback((): void => {
-    let id = window.localStorage.getItem("userId");
-    if (!id || !isFollowing) {
-      id = "-1";
-    }
 
     const { innerHeight } = window;
     const { scrollHeight } = document.body;
@@ -121,7 +120,7 @@ function User() {
         setIsLoading(true);
         axios
           .get(
-            `http://52.79.250.177:8080/user/search?query=${query}&cursor=${cursor.current}`
+            `http://52.79.250.177:8080/user/search?query=${query}&cursor=${cursor}`
           )
           .then((res) => {
             if (res.data.length === 0) {
@@ -131,12 +130,12 @@ function User() {
             }
             setUserList([...userList, ...res.data]);
             setIsLoading(false);
-            cursor.current = res.data[res.data.length - 1].id;
+            setCursor(res.data[res.data.length - 1].id)
           })
           .catch((err) => console.log("err::", err));
       }
     }
-  }, [isEnd, query]);
+  }, [cursor, isEnd, query, userList]);
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, true);
     return () => {
@@ -162,11 +161,24 @@ function User() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const Users = ({ nickname, profile }: IPostUser) => {
+  const Users = ({ nickname, profile, id }: IPostUser) => {
+    const navigate = useNavigate()
     return (
       <PostCardContainer>
-        <img className="photo" src={profile} alt="profile" />
-        <div>{nickname}</div>
+        <img className="photo" src={profile} alt="profile" onClick={() => {
+        if (!login) {
+          alert('로그인 후 이용가능합니다.')
+          return;
+        }
+        navigate(`/mypage/${id}`)
+      }}/>
+        <div onClick={() => {
+        if (!login) {
+          alert('로그인 후 이용가능합니다.')
+          return;
+        }
+        navigate(`/mypage/${id}`)
+      }}>{nickname}</div>
       </PostCardContainer>
     );
   };
@@ -175,13 +187,13 @@ function User() {
     <MainOuter>
       <MainContainer>
         <SideBar />
-        {userList.map((user, index) => {
+        {userList.map((user) => {
           return (
             <Users
-              key={index}
+              key={user.id}
               nickname={user.nickname}
               profile={user.profile}
-              id={0}
+              id={user.id}
             />
           );
         })}

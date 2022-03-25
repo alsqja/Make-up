@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { serverUrl } from "../Dummys/dummy";
 import { HeaderLogo, Search, Btn, ButtonBox } from "./Header";
 const HeaderOuter = styled.div`
   position: fixed;
@@ -73,7 +72,7 @@ export const LogedHeader = ({ setQuery, query }: IProps) => {
                 return;
               }
 
-              navigate(`/post/search/${query}`, {
+              navigate(`/search/${query}`, {
                 state: query,
               });
               // setIsMiniOpen(false);
