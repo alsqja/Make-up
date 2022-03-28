@@ -29,3 +29,14 @@ export const hamberger = atom<boolean>({
   key: "hamberger",
   default: false,
 });
+
+interface INotify {
+  uuid: string;
+  message: string;
+  dismissTime: number;
+}
+
+export const notify = atom<INotify[]>({
+  key: "notify",
+  default: []
+})
