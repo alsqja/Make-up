@@ -1,6 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { v4 } from "uuid";
 import { dummyUser } from "../Dummys/dummy";
+import { notify } from "../store/store";
 
 const Outer = styled.div`
   position: fixed;
@@ -30,6 +33,18 @@ interface IProps {
 
 function ShareModal({setShareModal}: IProps) {
   const location = window.location.href
+
+  const [notification, setNotification] = useRecoilState(notify)
+
+  const notifyHandler = (message: string) => {
+    const uuid = v4()
+    setTimeout(() => {
+      setNotification([...notification, {uuid, message, dismissTime: 2000}])
+    }, 0)
+    setTimeout(() => {
+      setNotification([])
+    }, 2000)
+  }
 
   const { Kakao } = window;
 
@@ -66,11 +81,11 @@ function ShareModal({setShareModal}: IProps) {
       location,
       () => {
         // 성공했을 경우 Toast 메시지 팝업
-        alert('클립보드에 복사되었습니다')
+        notifyHandler('클립보드에 복사되었습니다')
       },
       () => {
         // 실패했을 경우 Toast 메시지 팝업
-        alert('다시 시도해주세요')
+        notifyHandler('다시 시도해주세요')
       },
     );
   };

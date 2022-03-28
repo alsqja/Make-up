@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { v4 } from "uuid";
 import { ImageUpload } from "../Components/ImageUpload";
+import { notify } from "../store/store";
 
 const Outer = styled.div`
   font-family: "SUIT-Light";
@@ -129,6 +131,17 @@ export const InputFile = () => {
   const [uuid, setuuid] = useState("");
   const [before, setBefore] = useState<File>();
   const [after, setAfter] = useState<File>();
+  const [notification, setNotification] = useRecoilState(notify)
+
+  const notifyHandler = (message: string) => {
+    const uuid = v4()
+    setTimeout(() => {
+      setNotification([...notification, {uuid, message, dismissTime: 2000}])
+    }, 0)
+    setTimeout(() => {
+      setNotification([])
+    }, 2000)
+  }
 
   const navigate = useNavigate();
 
@@ -143,7 +156,7 @@ export const InputFile = () => {
       })
       .then((res) => {
         if (!before || !after) {
-          alert("사진을 넣어주세요");
+          notifyHandler("사진을 넣어주세요");
           return;
         }
         axios

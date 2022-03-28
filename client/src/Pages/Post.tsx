@@ -11,8 +11,9 @@ import {
 } from "react-icons/fa";
 import { AiOutlineDelete } from 'react-icons/ai';
 import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { isLogin } from "../store/store";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isLogin, notify } from "../store/store";
+import { v4 } from "uuid";
 
 const PostOuter = styled.div`
   font-family: "SUIT-Light";
@@ -302,6 +303,17 @@ export const Post = () => {
   const [isMine, setIsMine] = useState(false)
   const [commentValue, setCommentValue] = useState('')
   const login = useRecoilValue(isLogin)
+  const [notification, setNotification] = useRecoilState(notify)
+
+  const notifyHandler = (message: string) => {
+    const uuid = v4()
+    setTimeout(() => {
+      setNotification([...notification, {uuid, message, dismissTime: 2000}])
+    }, 0)
+    setTimeout(() => {
+      setNotification([])
+    }, 2000)
+  }
 
   useEffect(() => {
     const accessToken = window.localStorage.getItem('accessToken')
@@ -345,11 +357,11 @@ export const Post = () => {
 
   const commentHandler = () => {
     if (!login) {
-      alert('로그인 후 이용가능합니다.')
+      notifyHandler('로그인 후 이용가능합니다.')
       return;
     }
     if (commentValue.length === 0) {
-      alert('댓글을 입력해주세요')
+      notifyHandler('댓글을 입력해주세요')
       return;
     }
     const accessToken = window.localStorage.getItem('accessToken')

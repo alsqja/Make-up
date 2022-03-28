@@ -13,6 +13,7 @@ import { Start } from "./Pages/Start";
 import Search from "./Pages/Search";
 import { kakaoInit } from "./Dummys/initialize";
 import { CreateResultPost } from "./Pages/CreateResultPost";
+import Notification from "./Components/Notification";
 
 function App() {
   const [isLoginModalOn, setIsLoginModalOn] = useState(false);
@@ -60,6 +61,7 @@ useEffect(() => {
           <Route path="search/:query" element={<Search />} />
           <Route path="createpost/:id" element={<CreateResultPost />} />
         </Routes>
+        <Notification/>
       </RecoilRoot>
     </Router>
   );

@@ -9,3 +9,12 @@
   margin: 0 0 1px 0;
   padding: 0px;
 }
+
+@keyframes toast-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
