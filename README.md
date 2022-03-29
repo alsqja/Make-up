@@ -100,6 +100,9 @@
 - [Uplioad Image](https://github.com/alsqja/Make-up/wiki/UploadImage)
 - [Flask ML](https://github.com/alsqja/Make-up/wiki/flask)
 
+## ✨최종 보고서
+- [보고서](https://github.com/alsqja/Make-up/wiki/report)
+
 ## ✨위키
 
 자세한 내용은 [이곳](https://github.com/alsqja/Make-up/wiki) 참조
