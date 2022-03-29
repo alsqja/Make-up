@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { IPost, serverUrl } from "../Dummys/dummy";
+import { checkTime, IPost, serverUrl } from "../Dummys/dummy";
 import {
   FaChevronRight,
   FaChevronLeft,
@@ -208,6 +208,7 @@ export const PostCard = ({ post }: IProps) => {
   };
 
   const likeHandler = (isPlus: boolean) => {
+    checkTime()
     const accessToken = window.localStorage.getItem("accessToken");
     axios
       .post(

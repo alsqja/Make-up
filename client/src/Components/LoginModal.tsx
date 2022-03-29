@@ -144,12 +144,8 @@ const LoginModal: React.FunctionComponent<IProps> = ({
         window.localStorage.setItem('accessToken', res.data.accessToken)
         window.localStorage.setItem('userId', res.data.user.id)
         window.localStorage.setItem('username', res.data.user.nickname)
-        setTimeout(() => {
-          window.localStorage.removeItem('isLogin')
-          window.localStorage.removeItem('accessToken')
-          window.localStorage.removeItem('userId')
-          window.localStorage.removeItem('username')
-        }, 1000 * 60 * 60 * 24)
+        const expire = Date.now() + 1000 * 60
+        window.localStorage.setItem('expire', JSON.stringify(expire))
         setIsLogin(true)
         loginModalHandler(1)
         signupModalHandler(1)

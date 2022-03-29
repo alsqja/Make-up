@@ -18,6 +18,7 @@ import {
 } from "../store/store";
 import { FollowModal } from "./FollowModal";
 import { FollowerModal } from "./FollowerModal";
+import { checkTime } from "../Dummys/dummy";
 const Container = styled.div`
   z-index: 999;
   font-family: "SUIT-Light";
@@ -126,6 +127,7 @@ function HambergerSideBar({
   const login = useRecoilValue(isLogin);
   const setIsFollowing = useSetRecoilState(following);
   useEffect(() => {
+    checkTime()
     const userId = window.localStorage.getItem("userId");
     const accessToken = window.localStorage.getItem("accessToken");
     if (!userId) {
