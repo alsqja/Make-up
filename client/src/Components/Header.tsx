@@ -6,7 +6,7 @@ import { LogedHeader } from "./LogedHeader";
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
 import "../fonts/fonts.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import HambergerSideBar from "./HambergerSideBar";
 
 const HeaderOuter = styled.div`

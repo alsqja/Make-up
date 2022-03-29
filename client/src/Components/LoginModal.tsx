@@ -143,9 +143,17 @@ const LoginModal: React.FunctionComponent<IProps> = ({
         window.localStorage.setItem('isLogin', 'true')
         window.localStorage.setItem('accessToken', res.data.accessToken)
         window.localStorage.setItem('userId', res.data.user.id)
+        window.localStorage.setItem('username', res.data.user.nickname)
+        setTimeout(() => {
+          window.localStorage.removeItem('isLogin')
+          window.localStorage.removeItem('accessToken')
+          window.localStorage.removeItem('userId')
+          window.localStorage.removeItem('username')
+        }, 1000 * 60 * 60 * 24)
         setIsLogin(true)
         loginModalHandler(1)
         signupModalHandler(1)
+        notifyHandler('로그인이 완료되었습니다.')
       })
       .catch((err) => {
         console.log(err)

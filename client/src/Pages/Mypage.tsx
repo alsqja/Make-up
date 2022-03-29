@@ -281,6 +281,7 @@ export const Mypage = () => {
     window.localStorage.setItem("isLogin", "false");
     window.localStorage.setItem("accessToken", "");
     window.localStorage.setItem("userId", "-1");
+    window.localStorage.setItem('username', '')
     setLogin(false);
     navigate("/");
   };
