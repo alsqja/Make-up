@@ -83,6 +83,10 @@
 - [DB schema](https://github.com/alsqja/Make-up/wiki/DB-Schema)
 - [Wireframe](https://github.com/alsqja/Make-up/wiki/Wireframe)
 
+## ✨흐름도
+- [Uplioad Image](https://github.com/alsqja/Make-up/wiki/SpringToFlask)
+- [Flask ML](https://github.com/alsqja/Make-up/wiki/flask)
+
 ## ✨위키
 
 자세한 내용은 [이곳](https://github.com/alsqja/Make-up/wiki) 참조
