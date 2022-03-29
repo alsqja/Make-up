@@ -16,42 +16,55 @@
  <details>
 <summary>메인 화면 (무한스크롤)</summary>
 <div markdown="1">
-  gif
+  <img src='https://user-images.githubusercontent.com/58978285/160533384-69623383-fb45-4f3c-b60b-0f53a8ea0d39.gif'/>
   </div>
 </details>
  <details>
 <summary>메이크업</summary>
 <div markdown="1">
+<img src='https://user-images.githubusercontent.com/58978285/160534167-54c89811-a7b3-45b7-ac83-6b406be2c892.gif'/>
   </div>
 </details>
  <details>
 <summary>게시글 작성</summary>
 <div markdown="1">
+  <img src='https://user-images.githubusercontent.com/58978285/160534059-1db03973-d1fb-418c-b8f3-ef5f5039d9d1.gif'/>
   </div>
 </details>
  <details>
 <summary>검색</summary>
 <div markdown="1">
+ <img src='https://user-images.githubusercontent.com/58978285/160534553-42cfe21c-ca91-45e5-a388-8c23c58bf4f2.gif'/>
   </div>
 </details>
  <details>
-<summary>댓글</summary>
+<summary>댓글, 좋아요</summary>
 <div markdown="1">
+   <img src='https://user-images.githubusercontent.com/58978285/160533827-f8d271f6-95ec-4293-a5c3-1c48352f9d6b.gif'/>
   </div>
 </details>
  <details>
-<summary>마이페이지</summary>
+ <summary>결과물 공유, 저장, 게시물 작성</summary>
 <div markdown="1">
+  <img src='https://user-images.githubusercontent.com/58978285/160534408-fcff71cc-cd37-4b7a-b42f-021b65fef9f9.gif'/>
   </div>
 </details>
  <details>
-<summary>회원 정보 수정</summary>
+ <summary>팔로워, 팔로우 모달</summary>
 <div markdown="1">
+  <img src='https://user-images.githubusercontent.com/58978285/160534883-37547f4b-d097-4f62-a071-8b4814522f3c.gif'/>
+  </div>
+</details>
+ <details>
+<summary>마이페이지 (회원 정보 수정 및 회원탈퇴)</summary>
+<div markdown="1">
+  <img src='https://user-images.githubusercontent.com/58978285/160534655-43405270-537c-4f1d-af50-d577f6287a97.gif'/>
   </div>
 </details>
  <details>
 <summary>반응형 화면</summary>
 <div markdown="1">
+  <img src='https://user-images.githubusercontent.com/58978285/160534733-b0f630d3-0f59-4d8d-95d6-5393390d22c1.gif'/>
   </div>
 </details>
 
