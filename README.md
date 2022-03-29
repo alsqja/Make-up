@@ -84,7 +84,7 @@
 - [Wireframe](https://github.com/alsqja/Make-up/wiki/Wireframe)
 
 ## ✨흐름도
-- [Uplioad Image](https://github.com/alsqja/Make-up/wiki/SpringToFlask)
+- [Uplioad Image](https://github.com/alsqja/Make-up/wiki/UploadImage)
 - [Flask ML](https://github.com/alsqja/Make-up/wiki/flask)
 
 ## ✨위키
