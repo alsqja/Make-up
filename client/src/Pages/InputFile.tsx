@@ -48,6 +48,20 @@ const Container = styled.div`
   padding: 50px 0;
 `;
 
+const TextBox = styled.div`
+  grid-column: span 12;
+  font-size: large;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  @media only screen and (max-width: 500px) {
+    margin-top: 70px;
+    grid-column: span 6;
+  }
+`
+
 const ImgBox = styled.div`
   grid-column: span 5;
   height: 500px;
@@ -182,6 +196,7 @@ export const InputFile = () => {
   return (
     <Outer>
       <Container>
+        <TextBox>최대한 음영이 없는 정면 사진을 넣어주세요</TextBox>
         <ImgBox>
           <ImageUpload setFile={setBefore} />
         </ImgBox>
