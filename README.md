@@ -3,16 +3,59 @@
 
 주제 : 인공지능을 이용한 메이크업 서비스
 
-## 기능
+## ✨기능
 
 - 자신의 사진과 원하는 메이크업을 한 사진을 첨부해 그 화장을 한 자신의 얼굴을 미리 볼 수 있습니다.
 - 결과물을 SNS 혹은 자체 커뮤니티에 공유하여 다른 사람과 함께 볼 수 있습니다.
 - 자체 커뮤니티를 통해 메이크업에 대한 정보를 공유하거나 얻을 수 있습니다.
 - Feed 기능으로 자신의 화장품 정보, 화장법, 서비스 사용을 위한 모델 사진 등을 업로드하여 타인에게 알릴 수 있습니다.
-- 재미있거나 유용한 Feed, 게시글에 좋아요, 댓글로 의견을 남길 수 있습니다.
-- 검색 기능으로 원하는 게시글 또는 Feed 를 찾아볼 수 있습니다.
+- 재미있거나 유용한 `Feed`, 게시글에 `좋아요`, `댓글`로 의견을 남길 수 있습니다.
+- `검색` 기능으로 원하는 게시글 또는 Feed 를 찾아볼 수 있습니다.
 
-## 멤버
+## ✨기능별 시연
+ <details>
+<summary>메인 화면 (무한스크롤)</summary>
+<div markdown="1">
+  gif
+  </div>
+</details>
+ <details>
+<summary>메이크업</summary>
+<div markdown="1">
+  </div>
+</details>
+ <details>
+<summary>게시글 작성</summary>
+<div markdown="1">
+  </div>
+</details>
+ <details>
+<summary>검색</summary>
+<div markdown="1">
+  </div>
+</details>
+ <details>
+<summary>댓글</summary>
+<div markdown="1">
+  </div>
+</details>
+ <details>
+<summary>마이페이지</summary>
+<div markdown="1">
+  </div>
+</details>
+ <details>
+<summary>회원 정보 수정</summary>
+<div markdown="1">
+  </div>
+</details>
+ <details>
+<summary>반응형 화면</summary>
+<div markdown="1">
+  </div>
+</details>
+
+## ✨멤버
 
 | 이름              | Github 프로필  | 포지션     | 역할 |
 | ----------------- | -------------- | ---------- | ---- |
@@ -31,10 +74,15 @@
 [yjlim0428]: https://github.com/yjlim0428
 [Oh-JunYoung]: https://github.com/Oh-JunYoung
 
-## 유사한 서비스
+## ✨유사한 서비스
 
 - [LOOKS](https://play.google.com/store/apps/details?id=com.linecorp.looks.android&hl=ko&gl=US)
 
-## 위키
+## ✨사용 스택 기능
+- [Stacks](https://github.com/alsqja/Make-up/wiki/Tech-Stacks)
+- [DB schema](https://github.com/alsqja/Make-up/wiki/DB-Schema)
+- [Wireframe](https://github.com/alsqja/Make-up/wiki/Wireframe)
+
+## ✨위키
 
 자세한 내용은 [이곳](https://github.com/alsqja/Make-up/wiki) 참조
