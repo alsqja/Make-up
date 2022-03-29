@@ -398,6 +398,7 @@ function SettingModal({ userInfo }: IProps) {
             <Set>
               <div>기존 비밀번호</div>
               <Input
+                type={'password'}
                 value={password}
                 onChange={(e) => onChangeValue("password", e)}
               />
@@ -405,6 +406,7 @@ function SettingModal({ userInfo }: IProps) {
             <Set>
               <div>새 비밀번호</div>
               <Input
+                type={'password'}
                 value={newPassword}
                 onChange={(e) => onChangeValue("Newpw", e)}
               />
@@ -412,6 +414,7 @@ function SettingModal({ userInfo }: IProps) {
             <Set>
               <div>새 비밀번호 확인</div>
               <Input
+                type={'password'}
                 value={newCheckpw}
                 onChange={(e) => onChangeValue("NewCheckpw", e)}
               />

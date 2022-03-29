@@ -96,6 +96,9 @@ export const SideBar = () => {
     if (!userId) {
       return;
     }
+    if (!login) {
+      return;
+    }
     axios
       .get(`https://www.bbo-sharp.com/api/user?id=${userId}&cursor=-1`, {
         headers: {
