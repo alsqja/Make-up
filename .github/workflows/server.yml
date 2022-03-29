@@ -3,7 +3,7 @@ name: test
 on:
   push:
     branches:
-      - server
+      - main
 #   pull_request:
 #     branches:
 #       - server
