@@ -35,3 +35,13 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### properties ###
+application-aws.properties
+application-db.properties
+application-jwt.properties
+application-flask.properties
+application-https.properties
+
+### keystore ###
+keystore.p12
