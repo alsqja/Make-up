@@ -1,6 +1,5 @@
-# [뽀 #me]
+# [뽀 #me](https://www.bbo-sharp.com)
 ![image](https://user-images.githubusercontent.com/91926455/160519675-28fa8e3b-63c7-4ce6-8859-b1aaa415d3c8.png)
-[뽀 #me]: https://www.bbo-sharp.com
 
 주제 : 인공지능을 이용한 메이크업 서비스
 
