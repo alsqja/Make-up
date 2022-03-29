@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useState, useCallback, useRef } from "react";
-import { IPost, serverUrl } from "../Dummys/dummy";
+import { checkTime, IPost, serverUrl } from "../Dummys/dummy";
 import { PostCard } from "../Components/PostCard";
 import { SideBar } from "../Components/SideBar";
 import FloatBtn from "../Components/FloatBtn";
@@ -52,6 +52,7 @@ export const Main = () => {
   const [isDefaultId, setIsDefaultId] = useState(false);
 
   useEffect(() => {
+    checkTime()
     let id = window.localStorage.getItem("userId") || '-1';
     setIsLoading(true);
     axios

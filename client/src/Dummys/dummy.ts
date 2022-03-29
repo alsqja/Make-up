@@ -316,3 +316,15 @@ export const dummyFollow: IPostUser[] = [
 ]
 
 export const serverUrl = 'https://www.bbo-sharp.com/api/'
+
+export const checkTime = () => {
+  const now = Date.now()
+  const before = window.localStorage.getItem('expire')
+  if (!before) return;
+  if (JSON.parse(before) - now < 0) {
+    window.localStorage.removeItem('isLogin')
+    window.localStorage.removeItem('accessToken')
+    window.localStorage.removeItem('userId')
+    window.localStorage.removeItem('username')
+  }
+}

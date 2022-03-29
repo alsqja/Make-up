@@ -7,6 +7,7 @@ import { followerModal, following, followModal, isLogin } from "../store/store";
 import { FollowModal } from "./FollowModal";
 import { FollowerModal } from "./FollowerModal";
 import axios from "axios";
+import { checkTime } from "../Dummys/dummy";
 
 const Container = styled.div`
   transition-duration: 0.3s;
@@ -89,6 +90,7 @@ export const SideBar = () => {
   const setIsFollowing = useSetRecoilState(following);
 
   useEffect(() => {
+    checkTime()
     const userId = window.localStorage.getItem("userId");
     const accessToken = window.localStorage.getItem("accessToken");
     if (!userId) {

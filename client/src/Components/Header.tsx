@@ -8,6 +8,7 @@ import SignupModal from "./SignupModal";
 import "../fonts/fonts.css";
 import { useEffect } from "react";
 import HambergerSideBar from "./HambergerSideBar";
+import { checkTime } from "../Dummys/dummy";
 
 const HeaderOuter = styled.div`
   position: fixed;
@@ -172,8 +173,12 @@ export const Header = ({
   const navigate = useNavigate();
   const [Hamberger, setHamberger] = useRecoilState(hamberger);
   useEffect(() => {
+    checkTime()
     if (window.localStorage.getItem("isLogin") === "true") {
       setLogin(true);
+    }
+    else {
+      setLogin(false)
     }
   }, [setLogin]);
 

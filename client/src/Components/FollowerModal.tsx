@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import { useSetRecoilState } from "recoil";
 import { followerModal } from "../store/store";
-import { IPostUser } from "../Dummys/dummy";
+import { checkTime, IPostUser } from "../Dummys/dummy";
 import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -137,6 +137,7 @@ export const FollowerModal = ({id}: IProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    checkTime()
     const accessToken = window.localStorage.getItem('accessToken')
     axios
       .get(
@@ -167,6 +168,7 @@ export const FollowerModal = ({id}: IProps) => {
       scrollHeight !== undefined
     ) {
       if (Math.round(scrollTop + innerHeight) >= scrollHeight && !isEnd) {
+        checkTime()
         const accessToken = localStorage.getItem('accessToken');
         axios
           .get(`https://www.bbo-sharp.com/api/follower?id=${id}&cursor=${cursor.current}`, {
