@@ -5,7 +5,11 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { v4 } from "uuid";
 import { ImageUpload } from "../Components/ImageUpload";
+
+import MakeupError from "./MakeupError";
+
 import { notify } from "../store/store";
+
 
 const Outer = styled.div`
   font-family: "SUIT-Light";
@@ -145,6 +149,9 @@ export const InputFile = () => {
   const [uuid, setuuid] = useState("");
   const [before, setBefore] = useState<File>();
   const [after, setAfter] = useState<File>();
+
+  const [serverError, setServerError] = useState("");
+
   const [notification, setNotification] = useRecoilState(notify)
 
   const notifyHandler = (message: string) => {
@@ -156,6 +163,7 @@ export const InputFile = () => {
       setNotification([])
     }, 2000)
   }
+
 
   const navigate = useNavigate();
 
@@ -188,11 +196,47 @@ export const InputFile = () => {
               })
               .then((res) => {
                 navigate(`/result/${uuid}`);
+              })
+              .catch((err) => {
+                const status = err.response.status;
+                if (axios.isAxiosError(err)) {
+                  if (err.response !== undefined) {
+                    if (status >= 500) {
+                      setServerError(err.response.data.message);
+                    } else {
+                      console.log(err.response.data.message);
+                    }
+                    return;
+                  }
+                  if (err.request !== undefined) {
+                    console.log(err.message);
+                  }
+                }
               });
+          })
+          .catch((err) => {
+            const status = err.response.status;
+            if (axios.isAxiosError(err)) {
+              if (err.response !== undefined) {
+                if (status >= 500) {
+                  setServerError(err.response.data.message);
+                } else {
+                  console.log(err.response.data.message);
+                }
+                return;
+              }
+              if (err.request !== undefined) {
+                console.log(err.message);
+              }
+            }
           });
       });
   };
 
+
+  if (serverError !== "") {
+    return <MakeupError err={serverError} />;
+  }
   return (
     <Outer>
       <Container>
@@ -214,4 +258,5 @@ export const InputFile = () => {
       </Container>
     </Outer>
   );
+
 };

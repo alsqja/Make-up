@@ -18,7 +18,11 @@ import {
 } from "../store/store";
 import { FollowModal } from "./FollowModal";
 import { FollowerModal } from "./FollowerModal";
+
+import ServerError from "../Pages/ServerError";
+
 import { checkTime } from "../Dummys/dummy";
+
 const Container = styled.div`
   z-index: 999;
   font-family: "SUIT-Light";
@@ -120,16 +124,18 @@ function HambergerSideBar({
   const [profile, setProfile] = useState("");
   const [userId, setUserId] = useState(0);
   const navigate = useNavigate();
-  const setHamberger = useSetRecoilState(hamberger)
+  const setHamberger = useSetRecoilState(hamberger);
   const [isFollowModalOn, setIsFollowModalOn] = useRecoilState(followModal);
   const [isFollowerModalOn, setIsFollowerModalOn] =
     useRecoilState(followerModal);
   const login = useRecoilValue(isLogin);
   const setIsFollowing = useSetRecoilState(following);
+  const [serverError, setServerError] = useState("");
   useEffect(() => {
     checkTime()
     const userId = window.localStorage.getItem("userId");
     const accessToken = window.localStorage.getItem("accessToken");
+
     if (!userId) {
       return;
     }
@@ -148,6 +154,22 @@ function HambergerSideBar({
         if (res.data.user.following !== 0) {
           setIsFollowing(true);
         }
+      })
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
       });
   }, [login, setIsFollowing]);
 
@@ -160,10 +182,15 @@ function HambergerSideBar({
     setHamberger(false);
     navigate("/makeup");
   };
+
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
+  }
+
   return (
     <Container>
       {isFollowerModalOn ? <FollowerModal id={userId} /> : ""}
-      {isFollowModalOn ? <FollowModal id={userId}/> : ''}
+      {isFollowModalOn ? <FollowModal id={userId} /> : ""}
       <SideBar hamberger={hamberger}>
         <Search
           placeholder="search..."
@@ -196,7 +223,7 @@ function HambergerSideBar({
           onClick={() => setHamberger(false)}
           to={`/mypage/${userId}`}
         >
-          <div style={{display:'flex', justifyContent:'space-around'}}>
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
             <img
               style={{
                 width: "40px",
@@ -208,13 +235,17 @@ function HambergerSideBar({
               src={profile}
               alt=""
             />
-            <div style={{
-              marginRight:'10%',
-              display: 'flex',
-              alignItems: 'center',
-              height: '40px',
-              color: 'black'
-              }}>{username}</div>
+            <div
+              style={{
+                marginRight: "10%",
+                display: "flex",
+                alignItems: "center",
+                height: "40px",
+                color: "black",
+              }}
+            >
+              {username}
+            </div>
           </div>
         </Link>
         <div

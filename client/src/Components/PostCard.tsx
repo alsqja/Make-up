@@ -9,9 +9,11 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 import { useRecoilState, useRecoilValue } from "recoil";
 import { isLogin, notify } from "../store/store";
 import { v4 } from "uuid";
+import ServerError from "../Pages/ServerError";
 
 const PostCardContainer = styled.div`
   font-family: "SUIT-Light";
@@ -188,8 +190,9 @@ export const PostCard = ({ post }: IProps) => {
   );
   const [likeLength, setLikeLength] = useState(post.likes.length);
   const login = useRecoilValue(isLogin);
-  const [notification, setNotification] = useRecoilState(notify)
 
+  const [notification, setNotification] = useRecoilState(notify)
+ const [serverError, setServerError] = useState("");
   const notifyHandler = (message: string) => {
     const uuid = v4()
     setTimeout(() => {
@@ -199,6 +202,7 @@ export const PostCard = ({ post }: IProps) => {
       setNotification([])
     }, 2000)
   }
+
 
   const OpenPostHandler = (id: number) => {
     if (!login) {
@@ -232,8 +236,27 @@ export const PostCard = ({ post }: IProps) => {
           setLikeLength(likeLength - 1);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
+      });
   };
+
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
+  }
 
   return (
     <PostCardContainer>

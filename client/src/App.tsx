@@ -19,10 +19,10 @@ function App() {
   const [isLoginModalOn, setIsLoginModalOn] = useState(false);
   const [isSignupModalOn, setIsSignupModalOn] = useState(false);
   const [query, setQuery] = useState("");
-    
-useEffect(() => {
- kakaoInit();
-}, [])
+
+  useEffect(() => {
+    kakaoInit();
+  }, []);
   const loginModalHandler = (modalState: number) => {
     if (modalState === 0) {
       setIsLoginModalOn(true);

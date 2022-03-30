@@ -6,7 +6,7 @@ import { checkTime, IPostUser } from "../Dummys/dummy";
 import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import ServerError from "../Pages/ServerError";
 const ModalBackdrop = styled.div`
   font-family: "SUIT-Light";
   position: fixed;
@@ -126,38 +126,52 @@ const ChildWrapper = styled.div`
 `;
 
 interface IProps {
-  id: number
+  id: number;
 }
 
-export const FollowerModal = ({id}: IProps) => {
+export const FollowerModal = ({ id }: IProps) => {
   const setIsFollowerModalOn = useSetRecoilState(followerModal);
   const [userList, setUserList] = useState<IPostUser[]>([]);
   const [isEnd, setIsEnd] = useState(false);
-  const cursor = useRef(-1)
+  const cursor = useRef(-1);
   const navigate = useNavigate();
-
+  const [serverError, setServerError] = useState("");
   useEffect(() => {
+
     checkTime()
     const accessToken = window.localStorage.getItem('accessToken')
+
     axios
-      .get(
-        `https://www.bbo-sharp.com/api/follower?id=${id}&cursor=-1`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
-      )
+      .get(`https://www.bbo-sharp.com/api/follower?id=${id}&cursor=-1`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((res) => {
-        setUserList(res.data.user)
+        setUserList(res.data.user);
         cursor.current = res.data.user[res.data.user.length - 1].id;
       })
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
+      });
   }, [id]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback((): void => {
-
     const innerHeight = scrollRef.current?.clientHeight; // 브라우저 창 내용 크기 (스크롤 포함 x)
     const scrollHeight = scrollRef.current?.scrollHeight; // 브라우저 총 내용 크기 (스크롤 포함)
     const scrollTop = scrollRef.current?.scrollTop; // 현 스크롤바 위치
@@ -168,33 +182,57 @@ export const FollowerModal = ({id}: IProps) => {
       scrollHeight !== undefined
     ) {
       if (Math.round(scrollTop + innerHeight) >= scrollHeight && !isEnd) {
+
         checkTime()
         const accessToken = localStorage.getItem('accessToken');
+
         axios
-          .get(`https://www.bbo-sharp.com/api/follower?id=${id}&cursor=${cursor.current}`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
+          .get(
+            `https://www.bbo-sharp.com/api/follower?id=${id}&cursor=${cursor.current}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          )
           .then((res) => {
             if (res.data.user.length === 0) {
               setIsEnd(true);
               return;
             }
-            setUserList([...userList, ...res.data.user])
+            setUserList([...userList, ...res.data.user]);
             cursor.current = res.data.user[res.data.user.length - 1].id;
+          })
+          .catch((err) => {
+            const status = err.response.status;
+            if (axios.isAxiosError(err)) {
+              if (err.response !== undefined) {
+                if (status >= 500) {
+                  setServerError(err.response.data.message);
+                } else {
+                  console.log(err.response.data.message);
+                }
+                return;
+              }
+              if (err.request !== undefined) {
+                console.log(err.message);
+              }
+            }
           });
       }
     }
   }, [id, isEnd, userList]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener("scroll", handleScroll, true);
     return () => {
-      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener("scroll", handleScroll, true);
     };
   }, [handleScroll]);
 
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
+  }
 
   return (
     <ModalBackdrop
@@ -227,9 +265,12 @@ export const FollowerModal = ({id}: IProps) => {
               <ChildWrapper key={user.id}>
                 <div className="profile_box">
                   <img className="profile" src={user.profile} alt="" />
-                  <div className="username" onClick={() => {
-                    navigate(`/mypage/${user.id}`)
-                  }}>
+                  <div
+                    className="username"
+                    onClick={() => {
+                      navigate(`/mypage/${user.id}`);
+                    }}
+                  >
                     {user.nickname}
                   </div>
                 </div>
