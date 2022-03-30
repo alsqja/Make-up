@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
 import { v4 } from "uuid";
-
+import ServerError from "./ServerError";
 const Container = styled.div`
   font-family: "SUIT-Light";
   position: fixed;
@@ -81,6 +81,7 @@ function CreatePost() {
   const [contents, setcontents] = useState("");
   const [inputFile, setInputFile] = useState<File[]>([]);
   const navigate = useNavigate();
+  const [serverError, setServerError] = useState("");
   const onChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setcontents(e.target.value);
   };
@@ -138,7 +139,20 @@ function CreatePost() {
             navigate("/");
           })
           .catch((err) => {
-            console.log(`err: ${err}`);
+            const status = err.response.status;
+            if (axios.isAxiosError(err)) {
+              if (err.response !== undefined) {
+                if (status >= 500) {
+                  setServerError(err.response.data.message);
+                } else {
+                  console.log(err.response.data.message);
+                }
+                return;
+              }
+              if (err.request !== undefined) {
+                console.log(err.message);
+              }
+            }
           });
       });
   };
@@ -153,6 +167,10 @@ function CreatePost() {
   };
 
   useEffect(() => {}, [files]);
+
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
+  }
 
   return (
     <Container>

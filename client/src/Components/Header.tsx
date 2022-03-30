@@ -8,7 +8,6 @@ import SignupModal from "./SignupModal";
 import "../fonts/fonts.css";
 import { useEffect, useState } from "react";
 import HambergerSideBar from "./HambergerSideBar";
-
 const HeaderOuter = styled.div`
   position: fixed;
   top: 0;

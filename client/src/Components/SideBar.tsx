@@ -7,7 +7,7 @@ import { followerModal, following, followModal, isLogin } from "../store/store";
 import { FollowModal } from "./FollowModal";
 import { FollowerModal } from "./FollowerModal";
 import axios from "axios";
-
+import ServerError from "../Pages/ServerError";
 const Container = styled.div`
   transition-duration: 0.3s;
   font-family: "SUIT-Light";
@@ -87,7 +87,7 @@ export const SideBar = () => {
     useRecoilState(followerModal);
   const login = useRecoilValue(isLogin);
   const setIsFollowing = useSetRecoilState(following);
-
+  const [serverError, setServerError] = useState("");
   useEffect(() => {
     const userId = window.localStorage.getItem("userId");
     const accessToken = window.localStorage.getItem("accessToken");
@@ -109,6 +109,22 @@ export const SideBar = () => {
         if (res.data.user.following !== 0) {
           setIsFollowing(true);
         }
+      })
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
       });
   }, [login, setIsFollowing]);
 
@@ -118,6 +134,10 @@ export const SideBar = () => {
   const handleMakeup = () => {
     navigate("/makeup");
   };
+
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
+  }
 
   return (
     <Container>

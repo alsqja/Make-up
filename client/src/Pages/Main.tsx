@@ -8,6 +8,8 @@ import axios from "axios";
 import Loading from "../Components/Loading";
 import { isLogin } from "../store/store";
 import { useRecoilValue } from "recoil";
+import ServerError from "./ServerError";
+
 const MainOuter = styled.div`
   padding-top: 48px;
   width: 100%;
@@ -50,9 +52,9 @@ export const Main = () => {
   const [isEnd, setIsEnd] = useState(false);
   const login = useRecoilValue(isLogin);
   const [isDefaultId, setIsDefaultId] = useState(false);
-
+  const [serverError, setServerError] = useState("");
   useEffect(() => {
-    let id = window.localStorage.getItem("userId") || '-1';
+    let id = window.localStorage.getItem("userId") || "-1";
     setIsLoading(true);
     axios
       .get(`https://www.bbo-sharp.com/api/getpost?id=${id}&cursor=-1`)
@@ -71,7 +73,22 @@ export const Main = () => {
         setIsLoading(false);
         cursor.current = res.data.posts[res.data.posts.length - 1].id;
       })
-      .catch((err) => console.log("err:", err));
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
+      });
   }, [login]);
 
   const handleScroll = useCallback((): void => {
@@ -105,7 +122,22 @@ export const Main = () => {
             setIsLoading(false);
             cursor.current = res.data.posts[res.data.posts.length - 1].id;
           })
-          .catch((err) => console.log("err::", err));
+          .catch((err) => {
+            const status = err.response.status;
+            if (axios.isAxiosError(err)) {
+              if (err.response !== undefined) {
+                if (status >= 500) {
+                  setServerError(err.response.data.message);
+                } else {
+                  console.log(err.response.data.message);
+                }
+                return;
+              }
+              if (err.request !== undefined) {
+                console.log(err.message);
+              }
+            }
+          });
       }
     }
   }, [isDefaultId, isEnd, posts]);
@@ -133,6 +165,10 @@ export const Main = () => {
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
+  }
 
   return (
     <MainOuter>

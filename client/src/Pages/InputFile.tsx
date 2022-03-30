@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { v4 } from "uuid";
 import { ImageUpload } from "../Components/ImageUpload";
-
+import MakeupError from "./MakeupError";
 const Outer = styled.div`
   font-family: "SUIT-Light";
   padding-top: 48px;
@@ -129,7 +129,7 @@ export const InputFile = () => {
   const [uuid, setuuid] = useState("");
   const [before, setBefore] = useState<File>();
   const [after, setAfter] = useState<File>();
-
+  const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -161,29 +161,66 @@ export const InputFile = () => {
               })
               .then((res) => {
                 navigate(`/result/${uuid}`);
+              })
+              .catch((err) => {
+                const status = err.response.status;
+                if (axios.isAxiosError(err)) {
+                  if (err.response !== undefined) {
+                    if (status >= 500) {
+                      setServerError(err.response.data.message);
+                    } else {
+                      console.log(err.response.data.message);
+                    }
+                    return;
+                  }
+                  if (err.request !== undefined) {
+                    console.log(err.message);
+                  }
+                }
               });
+          })
+          .catch((err) => {
+            const status = err.response.status;
+            if (axios.isAxiosError(err)) {
+              if (err.response !== undefined) {
+                if (status >= 500) {
+                  setServerError(err.response.data.message);
+                } else {
+                  console.log(err.response.data.message);
+                }
+                return;
+              }
+              if (err.request !== undefined) {
+                console.log(err.message);
+              }
+            }
           });
       });
   };
 
-  return (
-    <Outer>
-      <Container>
-        <ImgBox>
-          <ImageUpload setFile={setBefore} />
-        </ImgBox>
-        <MiniLabel>화장할 사진을 넣어주세요</MiniLabel>
-        <Plus>+</Plus>
-        <ImgBox>
-          <ImageUpload setFile={setAfter} />
-        </ImgBox>
-        <MiniLabel>화장된 사진을 넣어주세요</MiniLabel>
-        <BeforeMessage>화장할 사진을 넣어주세요</BeforeMessage>
-        <BeforeMessage style={{ gridColumn: "8 / span 5" }}>
-          화장된 사진을 넣어주세요
-        </BeforeMessage>
-        <Btn onClick={makeupHandler}>화장하기</Btn>
-      </Container>
-    </Outer>
-  );
+  if (serverError !== "") {
+    return <MakeupError err={serverError} />;
+  }
+  return <MakeupError err={serverError} />;
+
+  // return (
+  //   <Outer>
+  //     <Container>
+  //       <ImgBox>
+  //         <ImageUpload setFile={setBefore} />
+  //       </ImgBox>
+  //       <MiniLabel>화장할 사진을 넣어주세요</MiniLabel>
+  //       <Plus>+</Plus>
+  //       <ImgBox>
+  //         <ImageUpload setFile={setAfter} />
+  //       </ImgBox>
+  //       <MiniLabel>화장된 사진을 넣어주세요</MiniLabel>
+  //       <BeforeMessage>화장할 사진을 넣어주세요</BeforeMessage>
+  //       <BeforeMessage style={{ gridColumn: "8 / span 5" }}>
+  //         화장된 사진을 넣어주세요
+  //       </BeforeMessage>
+  //       <Btn onClick={makeupHandler}>화장하기</Btn>
+  //     </Container>
+  //   </Outer>
+  // );
 };

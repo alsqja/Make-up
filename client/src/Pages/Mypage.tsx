@@ -17,6 +17,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import axios from "axios";
 import FloatBtn from "../Components/FloatBtn";
 import Loading from "../Components/Loading";
+import ServerError from "./ServerError";
 const Outer = styled.div`
   padding-top: 48px;
   width: 100%;
@@ -164,7 +165,7 @@ export const Mypage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const cursor = useRef(-1);
   const [isEnd, setIsEnd] = useState(false);
-
+  const [serverError, setServerError] = useState("");
   useEffect(() => {
     setIsLoading(true);
     const accessToken = window.localStorage.getItem("accessToken");
@@ -184,11 +185,26 @@ export const Mypage = () => {
         }
         setIsFollowed(res.data.follow);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
+      });
   }, [id]);
 
   const handleScroll = useCallback((): void => {
-    const accessToken = window.localStorage.getItem('accessToken')
+    const accessToken = window.localStorage.getItem("accessToken");
     const { innerHeight } = window;
     const { scrollHeight } = document.body;
     const { scrollTop } = document.documentElement;
@@ -204,8 +220,8 @@ export const Mypage = () => {
             `https://www.bbo-sharp.com/api/user?id=${id}&cursor=${cursor.current}`,
             {
               headers: {
-                Authorization: `Bearer ${accessToken}`
-              }
+                Authorization: `Bearer ${accessToken}`,
+              },
             }
           )
           .then((res) => {
@@ -219,7 +235,22 @@ export const Mypage = () => {
             setIsLoading(false);
             cursor.current = res.data.posts[res.data.posts.length - 1].id;
           })
-          .catch((err) => console.log("err::", err));
+          .catch((err) => {
+            const status = err.response.status;
+            if (axios.isAxiosError(err)) {
+              if (err.response !== undefined) {
+                if (status >= 500) {
+                  setServerError(err.response.data.message);
+                } else {
+                  console.log(err.response.data.message);
+                }
+                return;
+              }
+              if (err.request !== undefined) {
+                console.log(err.message);
+              }
+            }
+          });
       }
     }
   }, [id, isEnd, postList]);
@@ -270,9 +301,28 @@ export const Mypage = () => {
       )
       .then(() => {
         window.location.href = `/mypage/${id}`;
+      })
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
       });
   };
 
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
+  }
   // const settingClick = () => {
   //   setSettingModal(true);
   // };
@@ -288,8 +338,8 @@ export const Mypage = () => {
   return (
     <Outer>
       {isUserSettingModalOn ? <SettingModal userInfo={userInfo} /> : ""}
-      {isFollowModalOn ? <FollowModal id={id}/> : ""}
-      {isFollowerModalOn ? <FollowerModal id={id}/> : ""}
+      {isFollowModalOn ? <FollowModal id={id} /> : ""}
+      {isFollowerModalOn ? <FollowerModal id={id} /> : ""}
       <MyContainer>
         <UserBox>
           <img className="profile" src={userInfo?.profile} alt="" />

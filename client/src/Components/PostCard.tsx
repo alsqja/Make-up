@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "../store/store";
-
+import ServerError from "../Pages/ServerError";
 const PostCardContainer = styled.div`
   font-family: "SUIT-Light";
   grid-column: 4 / span 9;
@@ -187,7 +187,7 @@ export const PostCard = ({ post }: IProps) => {
   );
   const [likeLength, setLikeLength] = useState(post.likes.length);
   const login = useRecoilValue(isLogin);
-
+  const [serverError, setServerError] = useState("");
   const OpenPostHandler = (id: number) => {
     if (!login) {
       alert("로그인 후 이용가능합니다");
@@ -220,8 +220,27 @@ export const PostCard = ({ post }: IProps) => {
           setLikeLength(likeLength - 1);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
+      });
   };
+
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
+  }
 
   return (
     <PostCardContainer>

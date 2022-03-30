@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { defaultProfile } from "../Dummys/dummy";
 import { Filebox, StyledFile } from "./SettingModal";
 import { v4 } from "uuid";
-
+import ServerError from "../Pages/ServerError";
 const Canvas = styled.div`
   position: fixed;
   left: 0;
@@ -147,7 +147,7 @@ const SignupModal: React.FunctionComponent<IProps> = ({
   const [isCheck, setIsCheck] = useState(true);
   const [file, setFile] = useState(""); //프로필사진
   const [profile, setProfile] = useState<File>();
-
+  const [serverError, setServerError] = useState("");
   const checkPassHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checkValue = e.target.value;
     setCheckPass(checkValue);
@@ -168,20 +168,32 @@ const SignupModal: React.FunctionComponent<IProps> = ({
     if (!profile) {
       axios
 
-        .post(
-          'https://www.bbo-sharp.com/api/signup',
-          {
-            email,
-            nickname,
-            password,
-            profile: 'defaultProfile.jpeg'
-          }
-        )
+        .post("https://www.bbo-sharp.com/api/signup", {
+          email,
+          nickname,
+          password,
+          profile: "defaultProfile.jpeg",
+        })
 
         .then((res) => {
           console.log(res);
         })
-        .catch((err) => console.log(err.reponse));
+        .catch((err) => {
+          const status = err.response.status;
+          if (axios.isAxiosError(err)) {
+            if (err.response !== undefined) {
+              if (status >= 500) {
+                setServerError(err.response.data.message);
+              } else {
+                console.log(err.response.data.message);
+              }
+              return;
+            }
+            if (err.request !== undefined) {
+              console.log(err.message);
+            }
+          }
+        });
       loginModalHandler(1);
       signupModalHandler(1);
       return;
@@ -189,14 +201,9 @@ const SignupModal: React.FunctionComponent<IProps> = ({
     const uuid = v4();
     axios
 
-      .post(
-        'https://www.bbo-sharp.com/api/geturl',
-        {
-          files: [
-            `${uuid}/${profile.name}`
-          ]
-        }
-      )
+      .post("https://www.bbo-sharp.com/api/geturl", {
+        files: [`${uuid}/${profile.name}`],
+      })
 
       .then((res) => {
         axios
@@ -208,25 +215,40 @@ const SignupModal: React.FunctionComponent<IProps> = ({
           .then(() => {
             axios
 
-              .post(
-                'https://www.bbo-sharp.com/api/signup',
-                {
-                  email,
-                  nickname,
-                  password,
-                  profile: `${uuid}/${profile.name}`
-                }
-              )
+              .post("https://www.bbo-sharp.com/api/signup", {
+                email,
+                nickname,
+                password,
+                profile: `${uuid}/${profile.name}`,
+              })
 
               .then((res) => {
                 loginModalHandler(1);
                 signupModalHandler(1);
                 console.log(profile);
               })
-              .catch((err) => console.log(err));
+              .catch((err) => {
+                const status = err.response.status;
+                if (axios.isAxiosError(err)) {
+                  if (err.response !== undefined) {
+                    if (status >= 500) {
+                      setServerError(err.response.data.message);
+                    } else {
+                      console.log(err.response.data.message);
+                    }
+                    return;
+                  }
+                  if (err.request !== undefined) {
+                    console.log(err.message);
+                  }
+                }
+              });
           });
       });
   };
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
+  }
 
   return (
     <>

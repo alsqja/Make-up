@@ -6,7 +6,7 @@ import { IPostUser } from "../Dummys/dummy";
 import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import ServerError from "../Pages/ServerError";
 const ModalBackdrop = styled.div`
   font-family: "SUIT-Light";
   position: fixed;
@@ -133,34 +133,46 @@ interface IProps {
   id: number;
 }
 
-export const FollowModal = ({id}: IProps) => {
+export const FollowModal = ({ id }: IProps) => {
   const setIsFollowModalOn = useSetRecoilState(followModal);
   const [userList, setUserList] = useState<IPostUser[]>([]);
   const [isEnd, setIsEnd] = useState(false);
-  const cursor = useRef(-1)
-  const navigate = useNavigate()
-
+  const cursor = useRef(-1);
+  const navigate = useNavigate();
+  const [serverError, setServerError] = useState("");
   useEffect(() => {
-    const accessToken = window.localStorage.getItem('accessToken')
+    const accessToken = window.localStorage.getItem("accessToken");
     axios
-      .get(
-        `https://www.bbo-sharp.com/api/following?id=${id}&cursor=-1`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
-      )
+      .get(`https://www.bbo-sharp.com/api/following?id=${id}&cursor=-1`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((res) => {
-        setUserList(res.data.user)
+        setUserList(res.data.user);
         cursor.current = res.data.user[res.data.user.length - 1].id;
       })
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
+      });
   }, [id]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback((): void => {
-
     const innerHeight = scrollRef.current?.clientHeight; // 브라우저 창 내용 크기 (스크롤 포함 x)
     const scrollHeight = scrollRef.current?.scrollHeight; // 브라우저 총 내용 크기 (스크롤 포함)
     const scrollTop = scrollRef.current?.scrollTop; // 현 스크롤바 위치
@@ -171,51 +183,90 @@ export const FollowModal = ({id}: IProps) => {
       scrollHeight !== undefined
     ) {
       if (Math.round(scrollTop + innerHeight) >= scrollHeight && !isEnd) {
-        const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem("accessToken");
         axios
-          .get(`https://www.bbo-sharp.com/api/following?id=${id}&cursor=${cursor.current}`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
+          .get(
+            `https://www.bbo-sharp.com/api/following?id=${id}&cursor=${cursor.current}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          )
           .then((res) => {
             if (res.data.user.length === 0) {
               setIsEnd(true);
               return;
             }
-            setUserList([...userList, ...res.data.user])
+            setUserList([...userList, ...res.data.user]);
             cursor.current = res.data.user[res.data.user.length - 1].id;
+          })
+          .catch((err) => {
+            const status = err.response.status;
+            if (axios.isAxiosError(err)) {
+              if (err.response !== undefined) {
+                if (status >= 500) {
+                  setServerError(err.response.data.message);
+                } else {
+                  console.log(err.response.data.message);
+                }
+                return;
+              }
+              if (err.request !== undefined) {
+                console.log(err.message);
+              }
+            }
           });
       }
     }
   }, [id, isEnd, userList]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener("scroll", handleScroll, true);
     return () => {
-      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener("scroll", handleScroll, true);
     };
   }, [handleScroll]);
 
   const followCanceler = (id: number) => {
-    const accessToken = window.localStorage.getItem('accessToken')
+    const accessToken = window.localStorage.getItem("accessToken");
     axios
       .post(
-        'https://www.bbo-sharp.com/api/follow',
+        "https://www.bbo-sharp.com/api/follow",
         {
           userId: id,
-          isPlus: false
+          isPlus: false,
         },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       )
       .then(() => {
-        setIsFollowModalOn(true)
-        setUserList(userList.filter((el) => el.id !== id))
+        setIsFollowModalOn(true);
+        setUserList(userList.filter((el) => el.id !== id));
       })
+      .catch((err) => {
+        const status = err.response.status;
+        if (axios.isAxiosError(err)) {
+          if (err.response !== undefined) {
+            if (status >= 500) {
+              setServerError(err.response.data.message);
+            } else {
+              console.log(err.response.data.message);
+            }
+            return;
+          }
+          if (err.request !== undefined) {
+            console.log(err.message);
+          }
+        }
+      });
+  };
+
+  if (serverError !== "") {
+    return <ServerError err={serverError} />;
   }
 
   return (
@@ -249,15 +300,23 @@ export const FollowModal = ({id}: IProps) => {
               <ChildWrapper key={user.id}>
                 <div className="profile_box">
                   <img className="profile" src={user.profile} alt="" />
-                  <div className="username" onClick={() => {
-                    navigate(`/mypage/${user.id}`)
-                  }}>
+                  <div
+                    className="username"
+                    onClick={() => {
+                      navigate(`/mypage/${user.id}`);
+                    }}
+                  >
                     {user.nickname}
                   </div>
                 </div>
-                <div className="cancel_btn" onClick={() => {
-                  followCanceler(user.id)
-                }}>팔로우 취소</div>
+                <div
+                  className="cancel_btn"
+                  onClick={() => {
+                    followCanceler(user.id);
+                  }}
+                >
+                  팔로우 취소
+                </div>
               </ChildWrapper>
             );
           })}
