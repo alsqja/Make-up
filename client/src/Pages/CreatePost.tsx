@@ -5,7 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
 import { v4 } from "uuid";
+
 import ServerError from "./ServerError";
+
+import { checkTime } from "../Dummys/dummy";
+
+
 const Container = styled.div`
   font-family: "SUIT-Light";
   position: fixed;
@@ -87,6 +92,7 @@ function CreatePost() {
   };
 
   const createPostFunc = () => {
+    checkTime()
     const accessToken = window.localStorage.getItem("accessToken");
     const copy = [...inputFile];
     const uuids: string[] = [];

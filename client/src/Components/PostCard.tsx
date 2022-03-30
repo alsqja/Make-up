@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { IPost, serverUrl } from "../Dummys/dummy";
+import { checkTime, IPost, serverUrl } from "../Dummys/dummy";
 import {
   FaChevronRight,
   FaChevronLeft,
@@ -9,9 +9,12 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { isLogin } from "../store/store";
+
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isLogin, notify } from "../store/store";
+import { v4 } from "uuid";
 import ServerError from "../Pages/ServerError";
+
 const PostCardContainer = styled.div`
   font-family: "SUIT-Light";
   grid-column: 4 / span 9;
@@ -187,16 +190,29 @@ export const PostCard = ({ post }: IProps) => {
   );
   const [likeLength, setLikeLength] = useState(post.likes.length);
   const login = useRecoilValue(isLogin);
-  const [serverError, setServerError] = useState("");
+
+  const [notification, setNotification] = useRecoilState(notify)
+ const [serverError, setServerError] = useState("");
+  const notifyHandler = (message: string) => {
+    const uuid = v4()
+    setTimeout(() => {
+      setNotification([...notification, {uuid, message, dismissTime: 2000}])
+    }, 0)
+    setTimeout(() => {
+      setNotification([])
+    }, 2000)
+  }
+
+
   const OpenPostHandler = (id: number) => {
     if (!login) {
-      alert("로그인 후 이용가능합니다");
       return;
     }
     navigate(`/post/${id}`);
   };
 
   const likeHandler = (isPlus: boolean) => {
+    checkTime()
     const accessToken = window.localStorage.getItem("accessToken");
     axios
       .post(
@@ -247,7 +263,7 @@ export const PostCard = ({ post }: IProps) => {
       <UserInfo
         onClick={() => {
           if (!login) {
-            alert("로그인 후 이용가능합니다");
+            notifyHandler('로그인 후 이용가능합니다.')
             return;
           }
           navigate(`/mypage/${post.user.id}`);
@@ -302,7 +318,7 @@ export const PostCard = ({ post }: IProps) => {
             className="like_button"
             onClick={() => {
               if (!login) {
-                alert("로그인 후 이용가능합니다");
+                notifyHandler("로그인 후 이용가능합니다");
                 return;
               }
               likeHandler(true);
@@ -314,7 +330,6 @@ export const PostCard = ({ post }: IProps) => {
             style={{ color: "red" }}
             onClick={() => {
               if (!login) {
-                alert("로그인 후 이용가능합니다");
                 return;
               }
               likeHandler(false);
@@ -348,7 +363,7 @@ export const PostCard = ({ post }: IProps) => {
             onClick={(e) => {
               e.stopPropagation();
               if (!login) {
-                alert("로그인 후 이용가능합니다.");
+                notifyHandler("로그인 후 이용가능합니다.");
                 return;
               }
               navigate(`/mypage/${post.comments[0].user.id}`);

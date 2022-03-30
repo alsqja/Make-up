@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { v4 } from "uuid";
 import { IUserInfo } from "../Dummys/dummy";
-import { userSettingModal } from "../store/store";
+import { notify, userSettingModal } from "../store/store";
 import { Button1 } from "./SignupModal";
 const Outer = styled.div`
   font-family: "S-CoreDream-3Light";
@@ -189,6 +190,19 @@ function SettingModal({ userInfo }: IProps) {
     setProfile(e.target.files[0]);
   };
 
+  const [notification, setNotification] = useRecoilState(notify)
+  const navigate = useNavigate()
+
+  const notifyHandler = (message: string) => {
+    const uuid = v4()
+    setTimeout(() => {
+      setNotification([...notification, {uuid, message, dismissTime: 2000}])
+    }, 0)
+    setTimeout(() => {
+      setNotification([])
+    }, 2000)
+  }
+
   const onChangeValue = (
     str: string,
     e: React.ChangeEvent<HTMLInputElement>
@@ -243,9 +257,12 @@ function SettingModal({ userInfo }: IProps) {
           }
         )
         .then((res) => {
-          alert("ok");
+          notifyHandler("수정이 완료되었습니다.");
           window.location.href = `/mypage/${userInfo?.id}`;
-        });
+        })
+        .catch((err) => {
+          notifyHandler(err.response.message)
+        })
       return;
     }
     const uuid = v4();
@@ -279,7 +296,7 @@ function SettingModal({ userInfo }: IProps) {
               )
               .then(() => {
                 window.location.href = `/mypage/${userInfo?.id}`;
-                alert("ok");
+                notifyHandler("수정이 완료되었습니다.");
               });
           });
       });
@@ -287,7 +304,7 @@ function SettingModal({ userInfo }: IProps) {
 
   const withdrawalHandler = () => {
     if (ghldnjsxkfxhl !== "회원탈퇴") {
-      alert("정확히 입력해주세요");
+      notifyHandler("정확히 입력해주세요");
       return;
     }
     const accessToken = window.localStorage.getItem("accessToken");
@@ -298,11 +315,11 @@ function SettingModal({ userInfo }: IProps) {
         },
       })
       .then(() => {
-        alert("회원탈퇴");
+        notifyHandler("회원탈퇴");
         window.localStorage.setItem("accessToken", "");
         window.localStorage.setItem("userId", "-1");
         window.localStorage.setItem("isLogin", "false");
-        window.location.href = "/";
+        navigate('/')
       });
   };
 
@@ -381,6 +398,7 @@ function SettingModal({ userInfo }: IProps) {
             <Set>
               <div>기존 비밀번호</div>
               <Input
+                type={'password'}
                 value={password}
                 onChange={(e) => onChangeValue("password", e)}
               />
@@ -388,6 +406,7 @@ function SettingModal({ userInfo }: IProps) {
             <Set>
               <div>새 비밀번호</div>
               <Input
+                type={'password'}
                 value={newPassword}
                 onChange={(e) => onChangeValue("Newpw", e)}
               />
@@ -395,6 +414,7 @@ function SettingModal({ userInfo }: IProps) {
             <Set>
               <div>새 비밀번호 확인</div>
               <Input
+                type={'password'}
                 value={newCheckpw}
                 onChange={(e) => onChangeValue("NewCheckpw", e)}
               />

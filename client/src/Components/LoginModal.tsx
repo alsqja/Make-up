@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { isLogin } from "../store/store";
+import { isLogin, notify } from "../store/store";
 import { Button } from "./SignupModal";
 import "../fonts/fonts.css";
 import axios from "axios";
+import { v4 } from "uuid";
 const Canvas = styled.div`
   position: fixed;
   left: 0;
@@ -117,6 +118,17 @@ const LoginModal: React.FunctionComponent<IProps> = ({
   });
 
   const setIsLogin = useSetRecoilState(isLogin);
+  const [notification, setNotification] = useRecoilState(notify)
+
+  const notifyHandler = (message: string) => {
+    const uuid = v4()
+    setTimeout(() => {
+      setNotification([...notification, {uuid, message, dismissTime: 2000}])
+    }, 0)
+    setTimeout(() => {
+      setNotification([])
+    }, 2000)
+  }
 
   const loginHandler = () => {
     axios
@@ -131,13 +143,17 @@ const LoginModal: React.FunctionComponent<IProps> = ({
         window.localStorage.setItem('isLogin', 'true')
         window.localStorage.setItem('accessToken', res.data.accessToken)
         window.localStorage.setItem('userId', res.data.user.id)
+        window.localStorage.setItem('username', res.data.user.nickname)
+        const expire = Date.now() + 1000 * 60 * 60 * 24
+        window.localStorage.setItem('expire', JSON.stringify(expire))
         setIsLogin(true)
         loginModalHandler(1)
         signupModalHandler(1)
+        notifyHandler('로그인이 완료되었습니다.')
       })
       .catch((err) => {
         console.log(err)
-        alert('잘못된 아이디 혹은 비밀번호입니다.')
+        notifyHandler('잘못된 아이디 혹은 비밀번호입니다.')
       })
   };
 

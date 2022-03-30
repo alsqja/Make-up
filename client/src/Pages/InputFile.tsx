@@ -1,10 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { v4 } from "uuid";
 import { ImageUpload } from "../Components/ImageUpload";
+
 import MakeupError from "./MakeupError";
+
+import { notify } from "../store/store";
+
+
 const Outer = styled.div`
   font-family: "SUIT-Light";
   padding-top: 48px;
@@ -45,6 +51,20 @@ const Container = styled.div`
 
   padding: 50px 0;
 `;
+
+const TextBox = styled.div`
+  grid-column: span 12;
+  font-size: large;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  @media only screen and (max-width: 500px) {
+    margin-top: 70px;
+    grid-column: span 6;
+  }
+`
 
 const ImgBox = styled.div`
   grid-column: span 5;
@@ -129,7 +149,22 @@ export const InputFile = () => {
   const [uuid, setuuid] = useState("");
   const [before, setBefore] = useState<File>();
   const [after, setAfter] = useState<File>();
+
   const [serverError, setServerError] = useState("");
+
+  const [notification, setNotification] = useRecoilState(notify)
+
+  const notifyHandler = (message: string) => {
+    const uuid = v4()
+    setTimeout(() => {
+      setNotification([...notification, {uuid, message, dismissTime: 2000}])
+    }, 0)
+    setTimeout(() => {
+      setNotification([])
+    }, 2000)
+  }
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -143,7 +178,7 @@ export const InputFile = () => {
       })
       .then((res) => {
         if (!before || !after) {
-          alert("사진을 넣어주세요");
+          notifyHandler("사진을 넣어주세요");
           return;
         }
         axios
@@ -198,29 +233,30 @@ export const InputFile = () => {
       });
   };
 
+
   if (serverError !== "") {
     return <MakeupError err={serverError} />;
   }
-  return <MakeupError err={serverError} />;
+  return (
+    <Outer>
+      <Container>
+        <TextBox>최대한 음영이 없는 정면 사진을 넣어주세요</TextBox>
+        <ImgBox>
+          <ImageUpload setFile={setBefore} />
+        </ImgBox>
+        <MiniLabel>화장할 사진을 넣어주세요</MiniLabel>
+        <Plus>+</Plus>
+        <ImgBox>
+          <ImageUpload setFile={setAfter} />
+        </ImgBox>
+        <MiniLabel>화장된 사진을 넣어주세요</MiniLabel>
+        <BeforeMessage>화장할 사진을 넣어주세요</BeforeMessage>
+        <BeforeMessage style={{ gridColumn: "8 / span 5" }}>
+          화장된 사진을 넣어주세요
+        </BeforeMessage>
+        <Btn onClick={makeupHandler}>화장하기</Btn>
+      </Container>
+    </Outer>
+  );
 
-  // return (
-  //   <Outer>
-  //     <Container>
-  //       <ImgBox>
-  //         <ImageUpload setFile={setBefore} />
-  //       </ImgBox>
-  //       <MiniLabel>화장할 사진을 넣어주세요</MiniLabel>
-  //       <Plus>+</Plus>
-  //       <ImgBox>
-  //         <ImageUpload setFile={setAfter} />
-  //       </ImgBox>
-  //       <MiniLabel>화장된 사진을 넣어주세요</MiniLabel>
-  //       <BeforeMessage>화장할 사진을 넣어주세요</BeforeMessage>
-  //       <BeforeMessage style={{ gridColumn: "8 / span 5" }}>
-  //         화장된 사진을 넣어주세요
-  //       </BeforeMessage>
-  //       <Btn onClick={makeupHandler}>화장하기</Btn>
-  //     </Container>
-  //   </Outer>
-  // );
 };

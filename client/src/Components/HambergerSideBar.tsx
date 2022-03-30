@@ -18,7 +18,11 @@ import {
 } from "../store/store";
 import { FollowModal } from "./FollowModal";
 import { FollowerModal } from "./FollowerModal";
+
 import ServerError from "../Pages/ServerError";
+
+import { checkTime } from "../Dummys/dummy";
+
 const Container = styled.div`
   z-index: 999;
   font-family: "SUIT-Light";
@@ -128,6 +132,7 @@ function HambergerSideBar({
   const setIsFollowing = useSetRecoilState(following);
   const [serverError, setServerError] = useState("");
   useEffect(() => {
+    checkTime()
     const userId = window.localStorage.getItem("userId");
     const accessToken = window.localStorage.getItem("accessToken");
 

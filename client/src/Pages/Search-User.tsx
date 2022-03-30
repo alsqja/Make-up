@@ -5,9 +5,10 @@ import { SideBar } from "../Components/SideBar";
 import FloatBtn from "../Components/FloatBtn";
 import axios from "axios";
 import Loading from "../Components/Loading";
-import { isLogin } from "../store/store";
-import { useRecoilValue } from "recoil";
+import { isLogin, notify } from "../store/store";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { v4 } from "uuid";
 
 const MainOuter = styled.div`
   padding-top: 48px;
@@ -85,6 +86,17 @@ function User() {
   const [isEnd, setIsEnd] = useState(false);
   // const isFollowing = useRecoilValue(following);
   const login = useRecoilValue(isLogin);
+  const [notification, setNotification] = useRecoilState(notify)
+
+  const notifyHandler = (message: string) => {
+    const uuid = v4()
+    setTimeout(() => {
+      setNotification([...notification, {uuid, message, dismissTime: 2000}])
+    }, 0)
+    setTimeout(() => {
+      setNotification([])
+    }, 2000)
+  }
 
   useEffect(() => {
     setCursor(-1)
@@ -168,14 +180,14 @@ function User() {
       <PostCardContainer>
         <img className="photo" src={profile} alt="profile" onClick={() => {
         if (!login) {
-          alert('로그인 후 이용가능합니다.')
+          notifyHandler('로그인 후 이용가능합니다.')
           return;
         }
         navigate(`/mypage/${id}`)
       }}/>
         <div onClick={() => {
         if (!login) {
-          alert('로그인 후 이용가능합니다.')
+          notifyHandler('로그인 후 이용가능합니다.')
           return;
         }
         navigate(`/mypage/${id}`)

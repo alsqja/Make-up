@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { hamberger } from "../store/store";
+import { hamberger, isLogin } from "../store/store";
 import { HeaderLogo, Search, ButtonBox } from "./Header";
 import { HambergerContainer } from "./Header";
 import HambergerSideBar from "./HambergerSideBar";
+import { useEffect } from "react";
+import { checkTime } from "../Dummys/dummy";
 const HeaderOuter = styled.div`
   position: fixed;
   top: 0;
@@ -77,10 +79,20 @@ export const LogedHeader = ({
   const navigate = useNavigate();
 
   const [Hamberger, setHamberger] = useRecoilState(hamberger);
+  const myname = window.localStorage.getItem('username')
+  const setLogin = useSetRecoilState(isLogin)
   const userInfoHandler = () => {
     const id = window.localStorage.getItem("userId");
     navigate(`/mypage/${id}`);
   };
+
+  useEffect(() => {
+    checkTime()
+    const login = window.localStorage.getItem('isLogin')
+    if (login === 'false') {
+      setLogin(false)
+    }
+  })
 
   return (
     <>
@@ -116,7 +128,7 @@ export const LogedHeader = ({
               style={{ fontSize: "14px", marginRight: "20px" }}
               onClick={userInfoHandler}
             >
-              username
+              {myname}
             </Btn>
             <HambergerContainer hamberger={Hamberger}>
               <input
