@@ -26,7 +26,6 @@ public class FollowService {
 
     @Value("${cloud.aws.s3.fileprefix}")
     private String filePrefix;
-
     private Long getCount(User user, int flag){
         if(flag == 1)
             return followRepository.countByFollowing(user);

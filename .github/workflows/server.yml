@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-#   pull_request:
-#     branches:
-#       - server
+  #   pull_request:
+  #     branches:
+  #       - server
 
   workflow_dispatch:
 
@@ -26,29 +26,29 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      
-#       - name: Grant execute permission for gradlew
-#         run: chmod +x ./gradlew
-#         shell: bash
-#         working-directory: ${{ env.working-directory }}
-        
-#       - name: Build with Gradle
-#         run: ./gradlew build
-#         shell: bash
-#         working-directory: ${{ env.working-directory }}
-        
+
+      #       - name: Grant execute permission for gradlew
+      #         run: chmod +x ./gradlew
+      #         shell: bash
+      #         working-directory: ${{ env.working-directory }}
+
+      #       - name: Build with Gradle
+      #         run: ./gradlew build
+      #         shell: bash
+      #         working-directory: ${{ env.working-directory }}
+
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip .
         shell: bash
         working-directory: ${{ env.working-directory }}
-        
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials/@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
-          
+
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
         working-directory: ${{ env.working-directory }}
