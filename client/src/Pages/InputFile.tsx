@@ -235,7 +235,7 @@ export const InputFile = () => {
 
 
   if (serverError !== "") {
-    return <MakeupError err={serverError} />;
+    return <MakeupError/>;
   }
   return (
     <Outer>

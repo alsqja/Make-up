@@ -5,6 +5,7 @@ import styled from "styled-components";
 import ShareModal from "../Components/ShareModal";
 import { defaultProfile } from "../Dummys/dummy";
 import { Loading } from "./Loading";
+import MakeupError from "./MakeupError";
 
 const Outer = styled.div`
   padding-top: 48px;
@@ -89,14 +90,28 @@ export const Result = () => {
   const uuid = location;
   const [shareModal, setShareModal] = useState(false);
   const navigate = useNavigate();
+  const [isFace, setIsFace] = useState(true)
 
   useEffect(() => {
     setIsLoading(true);
     axios.get(`https://www.bbo-sharp.com/api/result/${uuid}`).then((res) => {
       setImg(res.data.file);
       setIsLoading(false);
-    });
+    })
+    .then(() => {
+      setIsFace(true)
+    })
+    .catch((err) => {
+      console.log(err.response)
+      if (err.response.status === 400) {
+        setIsFace(false)
+      }
+    })
   }, [uuid]);
+
+  if (!isFace) {
+    return <MakeupError/>
+  }
 
   if (isLoading) {
     return <Loading />;
@@ -127,7 +142,7 @@ export const Result = () => {
         a.remove();
       })
       .catch((err) => {
-        console.error("err: ", err);
+        console.log(err)
       });
   };
 

@@ -33,10 +33,7 @@ const Item1 = styled.div`
   }
 `;
 
-interface Props {
-  err: string;
-}
-function MakeupError({ err }: Props) {
+function MakeupError() {
   return (
     <Container>
       <Item>Error!</Item>
