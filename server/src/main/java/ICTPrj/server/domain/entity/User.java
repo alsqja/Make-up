@@ -50,7 +50,3 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Likes> likes = new ArrayList<>();
 }
-
-
-
-
