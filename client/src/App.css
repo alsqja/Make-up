@@ -1,0 +1,20 @@
+:root {
+  --main-color: #eeadb2;
+}
+
+* {
+  list-style: none;
+  text-decoration: none;
+  border-collapse: collapse;
+  margin: 0 0 1px 0;
+  padding: 0px;
+}
+
+@keyframes toast-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
