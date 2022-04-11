@@ -98,6 +98,7 @@ https://www.bbo-sharp.com/
 - [Stacks](https://github.com/alsqja/Make-up/wiki/Tech-Stacks)
 - [DB schema](https://github.com/alsqja/Make-up/wiki/DB-Schema)
 - [Wireframe](https://github.com/alsqja/Make-up/wiki/Wireframe)
+- [Flask ML](https://github.com/Oh-JunYoung/MakeUpFlaskServer.git)
 
 ## ✨흐름도
 - [Uplioad Image](https://github.com/alsqja/Make-up/wiki/UploadImage)
